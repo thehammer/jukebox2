@@ -13,7 +13,7 @@
 (defn random-song []
   (let [music-file (rand-nth (music-files))
         path (.getPath music-file)]
-    {:name path :track (jukebox.PlayableTrackFactory/build path)}))
+    {:name (.getName music-file) :track (jukebox.PlayableTrackFactory/build path)}))
 
 (defn set-current-song! []
   (if (nil? @*current-song*)
