@@ -10,5 +10,4 @@
      [:h1 "Playlist"]
      [:ul
       [:li (link-to "/player/play" "Play")]
-      [:li (link-to "/player/pause" "Pause")]
-      ]]))
+      [:li (link-to "/player/pause" "Pause")]]]))
