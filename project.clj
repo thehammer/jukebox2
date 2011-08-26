@@ -1,6 +1,6 @@
 (defproject
-  jukebox-web "1.0.0-SNAPSHOT"
-  :description "Jukebox web server"
+  jukebox "1.0.0-SNAPSHOT"
+  :description "Jukebox"
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [compojure "0.6.5"]]
