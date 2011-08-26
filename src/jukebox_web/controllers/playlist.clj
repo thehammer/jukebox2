@@ -3,4 +3,8 @@
             [jukebox-web.models.playlist :as playlist]))
 
 (defn index [request]
-  (view/index (playlist/current-song)))
+  (view/index (playlist/current-song) (playlist/queued-songs)))
+
+(defn add-one [request]
+  (playlist/add-random-song!)
+  {:status 302 :headers {"Location" "/playlist"}})
