@@ -1,4 +1,4 @@
-(ns jukebox-web.playlist)
+(ns jukebox-web.models.playlist)
 
 (def *current-song* (atom nil))
 

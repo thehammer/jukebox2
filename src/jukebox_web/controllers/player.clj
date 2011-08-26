@@ -1,5 +1,5 @@
 (ns jukebox-web.controllers.player
-  (:require [jukebox-web.playlist :as playlist]))
+  (:require [jukebox-web.models.playlist :as playlist]))
 
 (defn- pause-track []
   (.pause (:track (playlist/current-song))))
