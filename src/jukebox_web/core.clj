@@ -6,10 +6,11 @@
             [jukebox-web.player :as player]))
 
 (defroutes main-routes
-  (GET "/" [] "<h1>Hello World</h1>")
+  (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
   (GET "/playlist" [] playlist/index)
   (GET "/player/play" [] player/play)
   (GET "/player/pause" [] player/pause)
+  (GET "/player/skip" [] player/skip)
   (route/resources "/")
   (route/not-found "Page not found"))
 

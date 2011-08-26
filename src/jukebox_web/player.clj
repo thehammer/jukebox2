@@ -1,11 +1,20 @@
-(ns jukebox-web.player)
+(ns jukebox-web.player
+  (:require [jukebox-web.playlist :as playlist]))
 
-(def *current-song* (jukebox.PlayableTrackFactory/build "/Users/pair/12-01 Come Together.m4a"))
+
+(defn- pause-track []
+  (.pause (:track (playlist/current-song))))
 
 (defn play [request]
-  (.play *current-song*)
+  (playlist/set-current-song!)
+  (.play (:track (playlist/current-song)))
   {:status 302 :headers {"Location" "/playlist"}})
 
 (defn pause [request]
-  (.pause *current-song*)
+  (pause-track)
   {:status 302 :headers {"Location" "/playlist"}})
+
+(defn skip [request]
+  (pause-track)
+  (playlist/skip-current-song!)
+  {:status 302 :headers {"Location" "/player/play"}})
