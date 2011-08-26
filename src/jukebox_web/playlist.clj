@@ -1,5 +1,4 @@
-(ns jukebox-web.playlist
-  (:require [jukebox-web.views.playlist :as view]))
+(ns jukebox-web.playlist)
 
 (def *current-song* (atom nil))
 
@@ -21,6 +20,3 @@
 
 (defn skip-current-song! []
   (reset! *current-song* nil))
-
-(defn index [request]
-  (view/index (current-song)))
