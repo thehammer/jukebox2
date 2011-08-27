@@ -3,9 +3,11 @@
 (def *current-song* (atom nil))
 (def *queued-songs* (atom []))
 
-(defn- music-files []
+(defn music-files []
   (let [contents (file-seq (java.io.File. "music"))]
-    (filter #(.isFile %) contents)))
+    (->> contents
+      (filter #(.isFile %))
+      (filter #(not (= \. (first (.getName %))))))))
 
 (defn- random-song []
   (let [music-file (rand-nth (music-files))
