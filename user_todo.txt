@@ -1,0 +1,3 @@
+* sign up page
+* bcrypt password
+* pick a db (hypersonic? neo4j?)
