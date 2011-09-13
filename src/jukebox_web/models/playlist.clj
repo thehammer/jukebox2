@@ -40,3 +40,12 @@
 (defn reset-state! []
   (reset! *current-song* nil)
   (reset! *queued-songs* []))
+
+(defn- next-track [_]
+  (if-let [queued (first @*queued-songs*)]
+    (do (swap! *queued-songs* rest) (reset! *current-song* queued))
+    (reset! *current-song* (random-song)))
+  @*current-song*)
+
+(defn playlist-seq []
+  (iterate next-track (next-track "")))

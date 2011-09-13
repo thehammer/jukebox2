@@ -1,4 +1,4 @@
-(ns jukebox-web.controllers.user-spec
+(ns jukebox-web.controllers.users-spec
   (:require [jukebox-web.controllers.users :as users-controller])
   (:require [jukebox-web.models.user :as user])
   (:require [jukebox-web.models.factory :as factory])

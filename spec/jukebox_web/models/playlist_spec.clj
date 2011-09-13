@@ -28,6 +28,22 @@
         (playlist/add-random-song!)
         (let [next-in-queue (playlist/next-song)]
           (playlist/set-current-song!)
-          (should= next-in-queue (playlist/current-song))))))
+          (should= next-in-queue (playlist/current-song)))))
+
+  (describe "playlist-seq"
+    (it "passes"
+      (should true))
+
+    (it "returns a random track if there are no tracks queued up"
+      (should (empty? (playlist/queued-songs)))
+      (should-not (nil? (first (playlist/playlist-seq)))))
+
+    (it "returns the first queued track"
+      (playlist/add-random-song!)
+      (let [expected (first (playlist/queued-songs))]
+        (should= expected (first (playlist/playlist-seq)))))
+
+    (it "will return random tracks indefinitely"
+      (should-not (nil? (first (drop 10 (playlist/playlist-seq))))))))
 
 (run-specs)
