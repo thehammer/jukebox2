@@ -4,13 +4,13 @@
     [jukebox-web.models.playlist :as playlist]))
 
 (defn play [request]
-  (player/play)
+  (player/play!)
   {:status 302 :headers {"Location" "/playlist"}})
 
 (defn pause [request]
-  (player/pause)
+  (player/pause!)
   {:status 302 :headers {"Location" "/playlist"}})
 
 (defn skip [request]
-  (player/skip)
-  {:status 302 :headers {"Location" "/player/play"}})
+  (player/skip!)
+  {:status 302 :headers {"Location" "/playlist"}})

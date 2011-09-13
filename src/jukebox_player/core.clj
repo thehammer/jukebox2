@@ -35,7 +35,7 @@
       (condp = @player-state
         :play (do (play-track (load-track file)) (recur (rest files-to-play)))
         :stop (do (Thread/sleep 100) (recur files-to-play))
-        :skip (do (reset! player-state :play) (recur (rest files-to-play)))
+        :skip (do (play!) (recur files-to-play))
         nil))))
 
 (defn start [files]
@@ -43,7 +43,7 @@
     (.start player)
     player))
 
-(defn pause [] (reset! player-state :pause))
-(defn play  [] (reset! player-state :play))
-(defn skip  [] (reset! player-state :skip))
-(defn stop  [] (reset! player-state :stop))
+(defn pause! [] (reset! player-state :pause))
+(defn play!  [] (reset! player-state :play))
+(defn skip!  [] (reset! player-state :skip))
+(defn stop!  [] (reset! player-state :stop))

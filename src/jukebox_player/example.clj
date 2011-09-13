@@ -8,9 +8,7 @@
   (let [player (start files)]
     (play)
     (Thread/sleep 5000)
-    (pause)
-    (Thread/sleep 5000)
-    (play)
+    (skip)
     (Thread/sleep 5000)
     (stop)
     (.join player)))
