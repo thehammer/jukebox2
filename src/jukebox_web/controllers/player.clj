@@ -1,6 +1,6 @@
 (ns jukebox-web.controllers.player
   (:require
-    [jukebox-player.player :as player]
+    [jukebox-player.core :as player]
     [jukebox-web.models.playlist :as playlist]))
 
 (defn play [request]

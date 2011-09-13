@@ -19,9 +19,6 @@
           (should= first-value (first (playlist/queued-songs))))))
 
   (describe "playlist-seq"
-    (it "passes"
-      (should true))
-
     (it "returns a random track if there are no tracks queued up"
       (should (empty? (playlist/queued-songs)))
       (should-not (nil? (first (playlist/playlist-seq)))))

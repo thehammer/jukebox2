@@ -1,4 +1,4 @@
-(ns jukebox-player.player
+(ns jukebox-player.core
   (:use [jukebox-player.playable]
         [jukebox-player.mp4-track :as mp4]
         [jukebox-player.basic-track :as basic])

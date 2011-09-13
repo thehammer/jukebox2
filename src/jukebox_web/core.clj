@@ -2,7 +2,7 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-            [jukebox-player.player :as player]
+            [jukebox-player.core :as player]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]

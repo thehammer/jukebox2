@@ -1,6 +1,6 @@
 (ns jukebox-player.example
   (:use [jukebox-player.playable]
-        [jukebox-player.player]
+        [jukebox-player.core]
         [jukebox-player.mp4-track :as mp4]
         [jukebox-player.basic-track :as basic]))
 
