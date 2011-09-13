@@ -2,6 +2,8 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
+            [jukebox-player.player :as player]
+            [jukebox-web.models.playlist :as playlist]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.users :as users-controller]))
@@ -16,6 +18,8 @@
   (GET "/users/sign-in" [] users-controller/sign-in)
   (route/resources "/")
   (route/not-found "Page not found"))
+
+(player/start (playlist/playlist-seq))
 
 (def app
   (handler/site main-routes))

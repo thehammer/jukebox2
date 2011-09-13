@@ -8,9 +8,9 @@
      (include-css "/css/style.css")]
     [:body
      [:h3 "Current Song"]
-     [:p (:name current-song)]
+     [:p current-song]
      [:h3 "Queued Songs"]
-     [:ul (map #(vector :li (:name %)) queued-songs)]
+     [:ul (map #(vector :li %) queued-songs)]
      [:h3 "Operations"]
      [:ul
       [:li (link-to "/player/play" "Play")]

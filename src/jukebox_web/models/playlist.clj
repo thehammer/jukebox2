@@ -10,29 +10,14 @@
       (filter #(not (= \. (first (.getName %))))))))
 
 (defn- random-song []
-  (let [music-file (rand-nth (music-files))
-        path (.getPath music-file)]
-    {:name (.getName music-file) :track (jukebox.PlayableTrackFactory/build path)}))
+  (let [music-file (rand-nth (music-files))]
+    (.getPath music-file)))
 
 (defn current-song []
   @*current-song*)
 
 (defn queued-songs []
   @*queued-songs*)
-
-(defn next-song []
-  (first @*queued-songs*))
-
-(defn set-current-song! []
-  (if (nil? @*current-song*)
-    (if (empty? @*queued-songs*)
-      (reset! *current-song* (random-song))
-      (do
-        (reset! *current-song* (next-song))
-        (swap! *queued-songs* rest)))))
-
-(defn skip-current-song! []
-  (reset! *current-song* nil))
 
 (defn add-random-song! []
   (swap! *queued-songs* conj (random-song)))

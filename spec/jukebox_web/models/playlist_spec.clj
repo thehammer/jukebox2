@@ -14,21 +14,9 @@
 
     (it "adds the song to the end of the queue"
         (playlist/add-random-song!)
-        (let [first-value (playlist/next-song)]
+        (let [first-value (first (playlist/queued-songs))]
           (playlist/add-random-song!)
-          (should= first-value (playlist/next-song)))))
-
-  (describe "set-current-song!"
-    (it "sets the current song to a random song if the queue is empty"
-        (should (empty? (playlist/queued-songs)))
-        (playlist/set-current-song!)
-        (should-not= nil (playlist/current-song)))
-
-    (it "sets the current song to to the first song in the queue if the queue is not empty"
-        (playlist/add-random-song!)
-        (let [next-in-queue (playlist/next-song)]
-          (playlist/set-current-song!)
-          (should= next-in-queue (playlist/current-song)))))
+          (should= first-value (first (playlist/queued-songs))))))
 
   (describe "playlist-seq"
     (it "passes"

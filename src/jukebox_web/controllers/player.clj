@@ -1,19 +1,16 @@
 (ns jukebox-web.controllers.player
-  (:require [jukebox-web.models.playlist :as playlist]))
-
-(defn- pause-track []
-  (.pause (:track (playlist/current-song))))
+  (:require
+    [jukebox-player.player :as player]
+    [jukebox-web.models.playlist :as playlist]))
 
 (defn play [request]
-  (playlist/set-current-song!)
-  (.play (:track (playlist/current-song)))
+  (player/play)
   {:status 302 :headers {"Location" "/playlist"}})
 
 (defn pause [request]
-  (pause-track)
+  (player/pause)
   {:status 302 :headers {"Location" "/playlist"}})
 
 (defn skip [request]
-  (pause-track)
-  (playlist/skip-current-song!)
+  (player/skip)
   {:status 302 :headers {"Location" "/player/play"}})
