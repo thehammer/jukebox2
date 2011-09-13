@@ -4,15 +4,13 @@
         [jukebox-player.mp4-track :as mp4]
         [jukebox-player.basic-track :as basic]))
 
-
 (defn -main [& files]
-  (let [player (Thread. #(start files))]
-    (.start player)
+  (let [player (start files)]
     (play)
-    (Thread/sleep 10000)
+    (Thread/sleep 5000)
     (pause)
-    (Thread/sleep 10000)
+    (Thread/sleep 5000)
     (play)
-    (Thread/sleep 10000)
+    (Thread/sleep 5000)
     (stop)
     (.join player)))

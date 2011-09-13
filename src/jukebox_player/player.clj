@@ -29,7 +29,7 @@
         nil))
      (doto speaker (.close))))
 
-(defn start [files]
+(defn- start-player [files]
   (loop [files-to-play files]
     (when-let [file (first files-to-play)]
       (condp = @player-state
@@ -37,6 +37,11 @@
         :stop (do (Thread/sleep 100) (recur files-to-play))
         :skip (do (reset! player-state :play) (recur (rest files-to-play)))
         nil))))
+
+(defn start [files]
+  (let [player (Thread. #(start-player files))]
+    (.start player)
+    player))
 
 (defn pause [] (reset! player-state :pause))
 (defn play  [] (reset! player-state :play))
