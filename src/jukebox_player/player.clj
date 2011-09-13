@@ -26,16 +26,17 @@
                 (.write speaker buffer 0 bytes-read)
                 (recur (.read audio-stream buffer)))
         :pause (do (Thread/sleep 100) (recur bytes-read))
-        "do nothing"))
+        nil))
      (doto speaker (.close))))
 
 (defn start [files]
   (loop [files-to-play files]
     (when-let [file (first files-to-play)]
-      (cond
-        (= :play @player-state) (do (play-track (load-track file)) (recur (rest files-to-play)))
-        (= :stop @player-state) (do (Thread/sleep 100) (recur files-to-play))
-        (= :skip @player-state) (do (reset! player-state :play) (recur (rest files-to-play)))))))
+      (condp = @player-state
+        :play (do (play-track (load-track file)) (recur (rest files-to-play)))
+        :stop (do (Thread/sleep 100) (recur files-to-play))
+        :skip (do (reset! player-state :play) (recur (rest files-to-play)))
+        nil))))
 
 (defn pause [] (reset! player-state :pause))
 (defn play  [] (reset! player-state :play))
