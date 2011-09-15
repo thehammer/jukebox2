@@ -4,7 +4,7 @@
         [jukebox-player.basic-track :as basic])
   (:import [javax.sound.sampled AudioSystem]))
 
-(def buffer-size 4096)
+(def *buffer-size* 4096)
 (def player-state (atom :stop))
 
 (defn pause! [] (reset! player-state :pause))
@@ -27,7 +27,7 @@
 (defn- play-snippet [playable start-time end-time]
   (let [start-index (byte-index-for-time playable start-time)
         snippet-length (- (byte-index-for-time playable end-time) start-index)
-        buffer (byte-array buffer-size)
+        buffer (byte-array *buffer-size*)
         speaker (build-line-out playable)
         audio-stream (in-stream playable)]
     (doto speaker (.open) (.start))
@@ -42,7 +42,7 @@
 (defn play-track [playable]
   (let [speaker (build-line-out playable)
         audio-stream (in-stream playable)
-        buffer (byte-array buffer-size)]
+        buffer (byte-array *buffer-size*)]
     (doto speaker (.open) (.start))
     (loop [bytes-read (.read audio-stream buffer)]
       (condp = @player-state
