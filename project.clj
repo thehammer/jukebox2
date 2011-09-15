@@ -3,6 +3,7 @@
   :description "Jukebox"
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
+                 [org.jaudiotagger/jaudiotagger "2.0.1"]
                  [compojure "0.6.5"]]
   :dev-dependencies [[lein-ring "0.4.5"]
                      [lein-javac "1.2.1-SNAPSHOT"]
