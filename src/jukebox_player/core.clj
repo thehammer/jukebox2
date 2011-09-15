@@ -7,6 +7,11 @@
 (def buffer-size 4096)
 (def player-state (atom :stop))
 
+(defn pause! [] (reset! player-state :pause))
+(defn play!  [] (reset! player-state :play))
+(defn skip!  [] (reset! player-state :skip))
+(defn stop!  [] (reset! player-state :stop))
+
 (defn load-track [file]
   (if (re-matches #".*\.m4a$" file)
     (mp4/load-mp4-track file)
@@ -14,6 +19,25 @@
 
 (defn- build-line-out [playable]
   (AudioSystem/getSourceDataLine (out-format playable)))
+
+(defn- byte-index-for-time [playable time]
+  (let [format (out-format playable)]
+    (* time (* (.getFrameRate format) (.getFrameSize format)))))
+
+(defn- play-snippet [playable start-time end-time]
+  (let [start-index (byte-index-for-time playable start-time)
+        snippet-length (- (byte-index-for-time playable end-time) start-index)
+        buffer (byte-array buffer-size)
+        speaker (build-line-out playable)
+        audio-stream (in-stream playable)]
+    (doto speaker (.open) (.start))
+    (.skip audio-stream start-index)
+    (loop [bytes-to-play (.read audio-stream buffer)
+           bytes-played 0]
+      (when-not (or (> bytes-played snippet-length) (= bytes-to-play -1))
+        (.write speaker buffer 0 bytes-to-play)
+        (recur (.read audio-stream buffer) (+ bytes-played bytes-to-play))))
+    (doto speaker (.close))))
 
 (defn play-track [playable]
   (let [speaker (build-line-out playable)
@@ -43,7 +67,8 @@
     (.start player)
     player))
 
-(defn pause! [] (reset! player-state :pause))
-(defn play!  [] (reset! player-state :play))
-(defn skip!  [] (reset! player-state :skip))
-(defn stop!  [] (reset! player-state :stop))
+(defn hammertime! [file start end]
+  (let [old-state @player-state]
+    (when (= :play @player-state) (pause!))
+    (play-snippet (load-track file) start end)
+    (reset! player-state old-state)))

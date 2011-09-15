@@ -6,9 +6,11 @@
 
 (defn -main [& files]
   (let [player (start files)]
-    (play)
+    (play!)
     (Thread/sleep 5000)
-    (skip)
+    (skip!)
     (Thread/sleep 5000)
-    (stop)
+    (hammertime! (first files) 15 20)
+    (Thread/sleep 5000)
+    (stop!)
     (.join player)))
