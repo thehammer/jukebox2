@@ -1,7 +1,6 @@
 (ns jukebox-web.models.user
-  (:use [clojure.contrib.string :only (blank?)]))
-
-(def *users* (atom []))
+  (:use [clojure.contrib.string :only (blank?)]
+        [jukebox-web.models.db :as db]))
 
 (defn validate [user]
   (conj {}
@@ -10,10 +9,10 @@
     (when (blank? (:login user)) [:login "is required"])))
 
 (defn sign-up! [user-args]
-  (swap! *users* conj user-args))
+  (db/insert "user" user-args))
 
 (defn find-by-login [login]
-  (first (filter #(= login (:login %)) @*users*)))
+  (first (db/find-by-field "user" "login" login)))
 
 (defn authenticate [login password]
   (let [user (find-by-login login)]

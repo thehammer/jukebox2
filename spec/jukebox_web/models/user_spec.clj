@@ -1,9 +1,12 @@
 (ns jukebox-web.models.playlist-spec
-  (:require [jukebox-web.models.user :as user])
-  (:require [jukebox-web.models.factory :as factory])
-  (:use [speclj.core]))
+  (:require [jukebox-web.models.user :as user]
+            [jukebox-web.models.factory :as factory])
+  (:use [speclj.core]
+        [jukebox-web.spec-helper]))
 
 (describe "sign-up!"
+  (around [spec] (with-database-connection spec))
+
   (it "stores a new user"
     (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
     (let [hammer (user/find-by-login "hammer")]
@@ -24,6 +27,8 @@
       (should= "is required" (:password errors)))))
 
 (describe "authenticate"
+  (around [spec] (with-database-connection spec))
+
   (it "returns true if credentials are valid"
     (user/sign-up! (factory/user {:login "a" :password "p"}))
     (should (user/authenticate "a" "p")))

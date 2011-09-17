@@ -2,9 +2,12 @@
   (:require [jukebox-web.controllers.users :as users-controller])
   (:require [jukebox-web.models.user :as user])
   (:require [jukebox-web.models.factory :as factory])
-  (:use [speclj.core]))
+  (:use [speclj.core]
+        [jukebox-web.spec-helper]))
 
 (describe "authenticate"
+  (around [spec] (with-database-connection spec))
+
   (it "redirects to the playlist if credentials are correct"
     (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
           request {:params {:login "bob" :password "pass"}}

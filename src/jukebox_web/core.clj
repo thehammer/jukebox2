@@ -2,7 +2,9 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
+            [fleetdb.embedded :as fleetdb]
             [jukebox-player.core :as player]
+            [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
@@ -21,5 +23,13 @@
 
 (player/start (playlist/playlist-seq))
 
+(defn with-connection [handler]
+  (fn [request]
+    (let [connection (fleetdb/init-persistent "data/jukebox.fdb")
+          response (binding [db/*db* connection] (handler request))]
+      (fleetdb/close connection)
+      response)))
+
 (def app
-  (handler/site main-routes))
+  (-> (handler/site main-routes)
+      (with-connection)))
