@@ -18,6 +18,7 @@
   (GET "/player/pause" [] player-controller/pause)
   (GET "/player/skip" [] player-controller/skip)
   (GET "/users/sign-in" [] users-controller/sign-in)
+  (GET "/users/sign-up" [] users-controller/sign-up-form)
   (route/resources "/")
   (route/not-found "Page not found"))
 

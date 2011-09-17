@@ -27,7 +27,7 @@
       [:li (link-to "/playlist/add-one" "Add random track")]]
      [:h3 "Users"]
      [:ul
-      [:li (link-to "/users/sign-in" "Sign In")]
       [:li (link-to "/users/sign-up" "Sign Up")]
+      [:li (link-to "/users/sign-in" "Sign In")]
       [:li (link-to "/users/sign-out" "Sign Out")]
   ]))

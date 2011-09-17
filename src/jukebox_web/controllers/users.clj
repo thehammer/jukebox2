@@ -10,3 +10,6 @@
 
 (defn sign-in [request]
   (view/sign-in))
+
+(defn sign-up-form [request]
+  (view/sign-up))
