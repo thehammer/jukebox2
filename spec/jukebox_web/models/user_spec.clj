@@ -8,9 +8,15 @@
   (around [spec] (with-database-connection spec))
 
   (it "stores a new user"
-    (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
-    (let [hammer (user/find-by-login "hammer")]
-      (should= "http://gravitar.org/somepic" (:avatar hammer)))))
+    (let [errors (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
+          hammer (user/find-by-login "hammer")]
+      (should (empty? errors))
+      (should= "http://gravitar.org/somepic" (:avatar hammer))))
+
+  (it "returns errors if the user is not valid"
+    (let [errors (user/sign-up! {})]
+      (should-not (empty? errors))
+      (should= "is required" (:login errors)))))
 
 
 (describe "validate"

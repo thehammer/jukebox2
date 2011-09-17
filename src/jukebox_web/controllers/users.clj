@@ -12,4 +12,10 @@
   (view/sign-in))
 
 (defn sign-up-form [request]
-  (view/sign-up))
+  (view/sign-up {}))
+
+(defn sign-up [request]
+  (let [errors (user/sign-up! (:params request))]
+    (if (empty? errors)
+      {:status 302 :headers {"Location" "/playlist"}}
+      (view/sign-up errors))))

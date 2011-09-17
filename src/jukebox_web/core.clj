@@ -2,7 +2,6 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
-            [fleetdb.embedded :as fleetdb]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
@@ -18,7 +17,9 @@
   (GET "/player/pause" [] player-controller/pause)
   (GET "/player/skip" [] player-controller/skip)
   (GET "/users/sign-in" [] users-controller/sign-in)
+  (POST "/users/authenticate" [] users-controller/authenticate)
   (GET "/users/sign-up" [] users-controller/sign-up-form)
+  (POST "/users/sign-up" [] users-controller/sign-up)
   (route/resources "/")
   (route/not-found "Page not found"))
 
@@ -26,9 +27,9 @@
 
 (defn with-connection [handler]
   (fn [request]
-    (let [connection (fleetdb/init-persistent "data/jukebox.fdb")
+    (let [connection (db/open-db "data/jukebox.fdb")
           response (binding [db/*db* connection] (handler request))]
-      (fleetdb/close connection)
+      (db/close-db connection)
       response)))
 
 (def app

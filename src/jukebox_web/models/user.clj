@@ -9,7 +9,10 @@
     (when (blank? (:login user)) [:login "is required"])))
 
 (defn sign-up! [user-args]
-  (db/insert "user" user-args))
+  (let [errors (validate user-args)]
+    (when (empty? errors)
+      (db/insert "user" user-args))
+    errors))
 
 (defn find-by-login [login]
   (first (db/find-by-field "user" "login" login)))

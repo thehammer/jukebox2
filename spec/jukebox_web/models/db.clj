@@ -1,9 +1,18 @@
 (ns jukebox-web.models.db
-  (:import [java.util UUID])
+  (:import [java.util UUID]
+           [java.io File])
   (:use [fleetdb.embedded :as fleetdb]
         [clojure.contrib.string :only [as-str]]))
 
 (def *db* :no-database-connection)
+
+(defn open-db [file]
+  (if (.exists (File. file))
+    (fleetdb/load-persistent file)
+    (fleetdb/init-persistent file)))
+
+(defn close-db [connection]
+  (fleetdb/close connection))
 
 (defn- create-pk [record]
   (conj record ["id" (str ( UUID/randomUUID))]))
@@ -19,3 +28,6 @@
 
 (defn find-by-field [model field value]
   (map keys-to-keywords (fleetdb/query *db* ["select" model {"where" ["=" field value]}])))
+
+(defn find-all [model]
+  (map keys-to-keywords (fleetdb/query *db* ["select" model])))

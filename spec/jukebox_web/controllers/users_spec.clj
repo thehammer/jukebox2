@@ -21,3 +21,23 @@
           response (users-controller/authenticate request)]
       (should= nil (:status response))
       (should= nil (:headers response)))))
+
+(describe "sign-up"
+  (around [spec] (with-database-connection spec))
+
+  (it "saves a valid user"
+    (let [request {:params (factory/user {:login "test"})}
+          response (users-controller/sign-up request)]
+      (should-not (nil? (user/find-by-login "test")))))
+
+  (it "redirects valid requests to the playlist"
+    (let [request {:params (factory/user {:login "test"})}
+          response (users-controller/sign-up request)]
+      (should= 302 (:status response))
+      (should= {"Location" "/playlist"} (:headers response))))
+
+  (it "rerenders the sign-up page if the user is invalid"
+    (let [request {:params (factory/user {:login ""})}
+          response (users-controller/sign-up request)]
+      (should= nil (:status response))
+      (should= nil (:headers response)))))

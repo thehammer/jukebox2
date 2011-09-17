@@ -11,19 +11,17 @@
       (password-field "password")
       (submit-button "Sign In"))))
 
-(defn sign-up []
+(defn- labeled-field [field-type id label-text errors]
+  [:div
+    (label id label-text)
+    (field-type id)
+    [:span (id errors)]])
+
+(defn sign-up [errors]
   (layout/main "Sign Up"
     (form-to [:post "/users/sign-up"]
-      [:div
-        (label "login" "Login")
-        (text-field "login")]
-      [:div
-        (label "password" "Password")
-        (password-field "password")]
-      [:div
-        (label "password_confirmation" "Confirm Password")
-        (password-field "password_confirmation")]
-      [:div
-        (label "avatar" "Avatar URL")
-        (text-field "avatar")]
+      (labeled-field text-field :login "Login" errors)
+      (labeled-field password-field :password "Password" errors)
+      (labeled-field password-field :password_confirmation "Password Confirmation" errors)
+      (labeled-field text-field :avatar "Avatar" errors)
       [:div (submit-button "Sign Up")])))
