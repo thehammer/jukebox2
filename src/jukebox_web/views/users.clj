@@ -1,15 +1,12 @@
 (ns jukebox-web.views.users
-  (:use [hiccup core page-helpers form-helpers]))
+  (:use [hiccup core page-helpers form-helpers]
+        [jukebox-web.views.layout :as layout]))
 
 (defn sign-in []
-  (html5
-    [:head
-     [:title ""]
-     (include-css "/css/style.css")]
-    [:body
-     (form-to [:post "/users/authenticate"]
-       (label "login" "Login")
-       (text-field "login")
-       (label "password" "Password")
-       (password-field "password")
-       (submit-button "Login")) ]))
+  (layout/main "Sign In"
+    (form-to [:post "/users/authenticate"]
+      (label "login" "Login")
+      (text-field "login")
+      (label "password" "Password")
+      (password-field "password")
+      (submit-button "Sign In"))))
