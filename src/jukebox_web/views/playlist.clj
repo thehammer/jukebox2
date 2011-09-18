@@ -1,5 +1,6 @@
 (ns jukebox-web.views.playlist
   (:use [hiccup core page-helpers]
+        [hiccup core form-helpers]
         [jukebox-player.tags]
         [jukebox-web.views.layout :as layout]))
 
@@ -31,5 +32,7 @@
         [:li "logged in as: " current-user])
       [:li (link-to "/users/sign-up" "Sign Up")]
       [:li (link-to "/users/sign-in" "Sign In")]
-      [:li (link-to "/users/sign-out" "Sign Out")]
+      [:li
+       (form-to [:post "/users/sign-out"]
+         (submit-button "Sign Out"))]
   ]))

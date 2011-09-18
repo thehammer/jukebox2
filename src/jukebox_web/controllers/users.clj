@@ -11,6 +11,9 @@
 (defn sign-in [request]
   (view/sign-in))
 
+(defn sign-out [request]
+  {:status 302 :headers {"Location" "/playlist"} :session {:current-user nil}})
+
 (defn sign-up-form [request]
   (view/sign-up {}))
 
