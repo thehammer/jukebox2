@@ -6,7 +6,7 @@
         [jukebox-web.spec-helper]))
 
 (describe "authenticate"
-  (around [spec] (with-database-connection spec))
+  (with-database-connection)
 
   (it "redirects to the playlist if credentials are correct"
     (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
@@ -30,7 +30,7 @@
       (should= nil (:headers response)))))
 
 (describe "sign-up"
-  (around [spec] (with-database-connection spec))
+  (with-database-connection)
 
   (it "saves a valid user"
     (let [request {:params (factory/user {:login "test"})}

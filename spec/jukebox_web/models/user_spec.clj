@@ -5,7 +5,7 @@
         [jukebox-web.spec-helper]))
 
 (describe "sign-up!"
-  (around [spec] (with-database-connection spec))
+  (with-database-connection)
 
   (it "stores a new user"
     (let [errors (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
@@ -33,7 +33,7 @@
       (should= "is required" (:password errors)))))
 
 (describe "authenticate"
-  (around [spec] (with-database-connection spec))
+  (with-database-connection)
 
   (it "returns true if credentials are valid"
     (user/sign-up! (factory/user {:login "a" :password "p"}))
