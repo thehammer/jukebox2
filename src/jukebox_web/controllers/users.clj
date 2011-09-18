@@ -20,5 +20,5 @@
 (defn sign-up [request]
   (let [errors (user/sign-up! (:params request))]
     (if (empty? errors)
-      {:status 302 :headers {"Location" "/playlist"}}
+      {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
       (view/sign-up errors))))

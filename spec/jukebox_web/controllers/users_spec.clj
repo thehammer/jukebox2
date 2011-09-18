@@ -41,6 +41,11 @@
         (should= 302 (:status response))
         (should= {"Location" "/playlist"} (:headers response))))
 
+    (it "logs you in when you sign up"
+      (let [request {:params (factory/user {:login "test"})}
+            response (users-controller/sign-up request)]
+        (should= "test" (-> response :session :current-user))))
+
     (it "rerenders the sign-up page if the user is invalid"
       (let [request {:params (factory/user {:login ""})}
             response (users-controller/sign-up request)]
