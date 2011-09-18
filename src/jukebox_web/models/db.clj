@@ -24,10 +24,13 @@
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
 
 (defn insert [model record]
-  (fleetdb/query *db* ["insert" model (create-pk (keys-to-strings record))]))
+  (fleetdb/query *db* ["insert" (as-str model) (create-pk (keys-to-strings record))]))
 
 (defn find-by-field [model field value]
-  (map keys-to-keywords (fleetdb/query *db* ["select" model {"where" ["=" field value]}])))
+  (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) {"where" ["=" field value]}])))
 
 (defn find-all [model]
-  (map keys-to-keywords (fleetdb/query *db* ["select" model])))
+  (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model)])))
+
+(defn update [model updates field value]
+  (fleetdb/query *db* ["update" (as-str model) (keys-to-strings updates) {"where" ["=" (as-str field) value]}]))

@@ -13,6 +13,10 @@
       (should (empty? errors))
       (should= "http://gravitar.org/somepic" (:avatar hammer))))
 
+  (it "sets the users skip-count to zero"
+    (user/sign-up! (factory/user {:login "test"}))
+    (should= 0 (:skip-count (user/find-by-login "test"))))
+
   (it "returns errors if the user is not valid"
     (let [errors (user/sign-up! {})]
       (should-not (empty? errors))
@@ -42,5 +46,20 @@
   (it "returns false if credentials are invalid"
     (user/sign-up! (factory/user {:login "a" :password "p"}))
     (should-not (user/authenticate "a" "wrong"))))
+
+(describe "increment-skip-count"
+  (with-database-connection)
+
+  (it "increments the skip count for the given user"
+    (user/sign-up! (factory/user {:login "test"}))
+    (should= 0 (:skip-count (user/find-by-login "test")))
+    (user/increment-skip-count! "test")
+    (should= 1 (:skip-count (user/find-by-login "test"))))
+
+  (it "increments multiple skips"
+    (user/sign-up! (factory/user {:login "test"}))
+    (user/increment-skip-count! "test")
+    (user/increment-skip-count! "test")
+    (should= 2 (:skip-count (user/find-by-login "test")))))
 
 (run-specs)
