@@ -13,7 +13,7 @@
       [:span.album (:album tags)]
       ")"]))
 
-(defn index [current-song queued-songs]
+(defn index [current-user current-song queued-songs]
   (layout/main "Playlist"
      [:h3 "Current Song"]
      [:p (display-song current-song)]
@@ -27,6 +27,8 @@
       [:li (link-to "/playlist/add-one" "Add random track")]]
      [:h3 "Users"]
      [:ul
+      (when-not (nil? current-user)
+        [:li "logged in as: " current-user])
       [:li (link-to "/users/sign-up" "Sign Up")]
       [:li (link-to "/users/sign-in" "Sign In")]
       [:li (link-to "/users/sign-out" "Sign Out")]

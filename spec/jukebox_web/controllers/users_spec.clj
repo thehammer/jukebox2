@@ -15,6 +15,13 @@
       (should= 302 (:status response))
       (should= {"Location" "/playlist"} (:headers response))))
 
+  (it "sets the current user in the session"
+    (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
+          request {:params {:login "bob" :password "pass"}}
+          response (users-controller/authenticate request)]
+      (should= "bob" (-> response :session :current-user))
+    ))
+
   (it "rerenders the sign-in page if the credentials are incorrect"
     (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
           request {:params {:login "bob" :password "fat-finger"}}
@@ -41,3 +48,6 @@
           response (users-controller/sign-up request)]
       (should= nil (:status response))
       (should= nil (:headers response)))))
+
+(describe "sign-out"
+  (it "removes the current user from the session"))

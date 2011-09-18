@@ -3,7 +3,7 @@
             [jukebox-web.models.playlist :as playlist]))
 
 (defn index [request]
-  (view/index (playlist/current-song) (playlist/queued-songs)))
+  (view/index (-> request :session :current-user) (playlist/current-song) (playlist/queued-songs)))
 
 (defn add-one [request]
   (playlist/add-random-song!)

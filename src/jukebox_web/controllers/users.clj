@@ -5,7 +5,7 @@
 (defn authenticate [request]
   (let [{:keys [login password]} (:params request)]
     (if (user/authenticate login password)
-      {:status 302 :headers {"Location" "/playlist"}}
+      {:status 302 :headers {"Location" "/playlist"} :session {:current-user login}}
       (view/sign-in))))
 
 (defn sign-in [request]
