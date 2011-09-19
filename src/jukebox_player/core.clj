@@ -1,7 +1,7 @@
 (ns jukebox-player.core
-  (:use [jukebox-player.playable]
-        [jukebox-player.mp4-track :as mp4]
-        [jukebox-player.basic-track :as basic])
+  (:use [jukebox-player.playable])
+  (:require [jukebox-player.mp4-track :as mp4]
+            [jukebox-player.basic-track :as basic])
   (:import [javax.sound.sampled AudioSystem]))
 
 (def *buffer-size* 4096)

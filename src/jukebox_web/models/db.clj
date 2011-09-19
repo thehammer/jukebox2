@@ -1,8 +1,8 @@
 (ns jukebox-web.models.db
   (:import [java.util UUID]
            [java.io File])
-  (:use [fleetdb.embedded :as fleetdb]
-        [clojure.contrib.string :only [as-str]]))
+  (:require [fleetdb.embedded :as fleetdb])
+  (:use [clojure.contrib.string :only [as-str]]))
 
 (def *db* :no-database-connection)
 

@@ -62,4 +62,12 @@
     (user/increment-skip-count! "test")
     (should= 2 (:skip-count (user/find-by-login "test")))))
 
+(describe "find-all"
+  (with-database-connection)
+
+  (it "returns all the users"
+    (user/sign-up! (factory/user {}))
+    (user/sign-up! (factory/user {}))
+    (should= 2 (count (user/find-all)))))
+
 (run-specs)

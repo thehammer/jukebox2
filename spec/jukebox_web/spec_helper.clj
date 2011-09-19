@@ -1,7 +1,7 @@
 (ns jukebox-web.spec-helper
-  (:use [fleetdb.embedded :as fleetdb]
-        [jukebox-web.models.db :as db]
-        [speclj.core]))
+  (:require [fleetdb.embedded :as fleetdb]
+            [jukebox-web.models.db :as db])
+  (:use [speclj.core]))
 
 (defn with-database-connection []
   (around [spec]

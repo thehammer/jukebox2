@@ -1,6 +1,6 @@
 (ns jukebox-web.models.user
-  (:use [clojure.contrib.string :only (blank?)]
-        [jukebox-web.models.db :as db]))
+  (:require [jukebox-web.models.db :as db])
+  (:use [clojure.contrib.string :only (blank?)]))
 
 (def *model* :user)
 
@@ -18,6 +18,9 @@
 
 (defn find-by-login [login]
   (first (db/find-by-field *model* "login" login)))
+
+(defn find-all []
+  (db/find-all *model*))
 
 (defn authenticate [login password]
   (let [user (find-by-login login)]

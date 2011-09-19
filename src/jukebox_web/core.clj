@@ -16,6 +16,7 @@
   (GET "/player/play" [] player-controller/play)
   (GET "/player/pause" [] player-controller/pause)
   (GET "/player/skip" [] player-controller/skip)
+  (GET "/users" [] users-controller/index)
   (GET "/users/sign-in" [] users-controller/sign-in)
   (POST "/users/sign-out" [] users-controller/sign-out)
   (POST "/users/authenticate" [] users-controller/authenticate)

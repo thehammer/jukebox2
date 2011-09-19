@@ -1,6 +1,6 @@
 (ns jukebox-web.views.users
-  (:use [hiccup core page-helpers form-helpers]
-        [jukebox-web.views.layout :as layout]))
+  (:require [jukebox-web.views.layout :as layout])
+  (:use [hiccup core page-helpers form-helpers]))
 
 (defn sign-in []
   (layout/main "Sign In"
@@ -25,3 +25,15 @@
       (labeled-field password-field :password_confirmation "Password Confirmation" errors)
       (labeled-field text-field :avatar "Avatar" errors)
       [:div (submit-button "Sign Up")])))
+
+(defn- show-user [user]
+  [:tr
+    [:td [:img {:src (:avatar user)}]]
+    [:td [:span (:login user)]]
+    [:td [:span (:skip-count user)]]])
+
+(defn index [users]
+  (layout/main "Users"
+    [:table
+      [:tr [:th] [:th "Login"] [:th "Skips"]]
+      (map show-user users)]))

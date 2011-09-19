@@ -22,3 +22,6 @@
     (if (empty? errors)
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
       (view/sign-up errors))))
+
+(defn index[request]
+  (view/index (user/find-all)))

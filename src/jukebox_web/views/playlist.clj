@@ -1,8 +1,8 @@
 (ns jukebox-web.views.playlist
+  (:require [jukebox-web.views.layout :as layout])
   (:use [hiccup core page-helpers]
         [hiccup core form-helpers]
-        [jukebox-player.tags]
-        [jukebox-web.views.layout :as layout]))
+        [jukebox-player.tags]))
 
 (defn display-song [song]
   (let [tags (extract-tags song)]
@@ -29,6 +29,7 @@
         [:li (link-to "/playlist/add-one" "Add random track")]]
        [:h3 "Users"]
        [:ul
+        [:li (link-to "/users" "Users")]
         (when-not (nil? current-user) [:li (format "logged in as: %s (skips: %s)" login skip-count)])
         (when-not (nil? current-user) [:li (form-to [:post "/users/sign-out"] (submit-button "Sign Out"))])
         [:li (link-to "/users/sign-up" "Sign Up")]

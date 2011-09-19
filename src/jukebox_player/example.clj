@@ -1,10 +1,9 @@
 (ns jukebox-player.example
+  (:require [jukebox-player.mp4-track :as mp4]
+            [jukebox-player.basic-track :as basic])
   (:use [jukebox-player.playable]
         [jukebox-player.core]
-        [jukebox-player.tags]
-        [jukebox-player.mp4-track :as mp4]
-        [jukebox-player.basic-track :as basic])
-  )
+        [jukebox-player.tags]))
 
 (defn -main [& files]
   (println (map #(extract-tags %) files))
