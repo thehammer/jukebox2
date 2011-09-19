@@ -17,6 +17,10 @@
     (user/sign-up! (factory/user {:login "test"}))
     (should= 0 (:skip-count (user/find-by-login "test"))))
 
+  (it "enables the user"
+    (user/sign-up! (factory/user {:login "test"}))
+    (should (:enabled (user/find-by-login "test"))))
+
   (it "returns errors if the user is not valid"
     (let [errors (user/sign-up! {})]
       (should-not (empty? errors))
@@ -69,5 +73,18 @@
     (user/sign-up! (factory/user {}))
     (user/sign-up! (factory/user {}))
     (should= 2 (count (user/find-all)))))
+
+(describe "toggle-enabled"
+  (with-database-connection)
+
+  (it "enables a disabled user"
+    (user/sign-up! (factory/user {:login "test" :enabled false}))
+    (user/toggle-enabled! "test")
+    (should (:enabled (user/find-by-login "test"))))
+
+  (it "disables an enabled user"
+    (user/sign-up! (factory/user {:login "test" :enabled true}))
+    (user/toggle-enabled! "test")
+    (should-not (:enabled (user/find-by-login "test")))))
 
 (run-specs)

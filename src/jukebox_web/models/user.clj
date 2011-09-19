@@ -11,9 +11,10 @@
     (when (blank? (:login user)) [:login "is required"])))
 
 (defn sign-up! [user-args]
-  (let [errors (validate user-args)]
+  (let [errors (validate user-args)
+        defaults {:skip-count 0 :enabled true}]
     (when (empty? errors)
-      (db/insert *model* (merge {:skip-count 0} user-args)))
+      (db/insert *model* (merge defaults user-args)))
     errors))
 
 (defn find-by-login [login]
@@ -30,3 +31,7 @@
   (let [user (find-by-login login)
         skip-count (:skip-count user)]
   (db/update *model* {:skip-count (inc skip-count)} "login" login)))
+
+(defn toggle-enabled! [login]
+  (let [enabled (:enabled (find-by-login login))]
+    (db/update *model* {:enabled (not enabled)} :login login)))
