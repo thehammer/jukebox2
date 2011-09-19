@@ -30,7 +30,10 @@
   [:tr
     [:td [:img {:src (:avatar user)}]]
     [:td [:span (:login user)]]
-    [:td [:span (:skip-count user)]]])
+    [:td [:span (:skip-count user)]]
+    [:td (form-to [:post "/users/toggle-enabled"]
+           (hidden-field "login" (:login user))
+           (submit-button (if (:enabled user) "Disable" "Enable")))]])
 
 (defn index [users]
   (layout/main "Users"

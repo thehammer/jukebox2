@@ -23,5 +23,9 @@
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
       (view/sign-up errors))))
 
-(defn index[request]
+(defn index [request]
   (view/index (user/find-all)))
+
+(defn toggle-enabled [request]
+  (user/toggle-enabled! (-> request :params :login))
+  {:status 302 :headers {"Location" "/users"}})

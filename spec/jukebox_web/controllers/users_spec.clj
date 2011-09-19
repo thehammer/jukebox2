@@ -65,4 +65,11 @@
 
     (it "removes the current user from the session"
       (let [response (users-controller/sign-out {})]
-        (should= nil (-> response :session :current-user))))))
+        (should= nil (-> response :session :current-user)))))
+
+  (describe "toggle-enabled"
+    (it "redirects back to users index"
+      (let [response (users-controller/toggle-enabled {:params {:login "test"}})]
+        (should= 302 (:status response))
+        (should= {"Location" "/users"} (:headers response))))))
+
