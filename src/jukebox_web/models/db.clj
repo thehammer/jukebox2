@@ -27,7 +27,7 @@
   (fleetdb/query *db* ["insert" (as-str model) (create-pk (keys-to-strings record))]))
 
 (defn find-by-field [model field value]
-  (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) {"where" ["=" field value]}])))
+  (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) {"where" ["=" (as-str field) value]}])))
 
 (defn find-all [model]
   (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model)])))
