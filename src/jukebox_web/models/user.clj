@@ -1,8 +1,19 @@
 (ns jukebox-web.models.user
-  (:require [jukebox-web.models.db :as db])
+  (:require [jukebox-web.models.db :as db]
+            [jukebox-web.util.crypt :as crypt])
   (:use [clojure.contrib.string :only (blank?)]))
 
 (def *model* :user)
+
+(defn- merge-defaults [user-args]
+  (let [defaults {:skip-count 0 :enabled true}]
+    (merge defaults user-args)))
+
+(defn- hash-password [{password :password :as user-args}]
+  (assoc user-args :password (crypt/hash-password password)))
+
+(defn- build-user [user-args]
+  (-> user-args merge-defaults hash-password))
 
 (defn validate [user]
   (conj {}
@@ -11,10 +22,9 @@
     (when (blank? (:login user)) [:login "is required"])))
 
 (defn sign-up! [user-args]
-  (let [errors (validate user-args)
-        defaults {:skip-count 0 :enabled true}]
+  (let [errors (validate user-args)]
     (when (empty? errors)
-      (db/insert *model* (merge defaults user-args)))
+      (db/insert *model* (build-user user-args)))
     errors))
 
 (defn find-by-login [login]
@@ -25,7 +35,7 @@
 
 (defn authenticate [login password]
   (let [user (find-by-login login)]
-    (= password (:password user))))
+    (crypt/matches? password (:password user))))
 
 (defn increment-skip-count! [login]
   (let [user (find-by-login login)

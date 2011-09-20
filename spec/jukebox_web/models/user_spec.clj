@@ -1,8 +1,9 @@
-(ns jukebox-web.models.playlist-spec
+(ns jukebox-web.models.user-spec
   (:require [jukebox-web.models.user :as user]
             [jukebox-web.models.factory :as factory])
   (:use [speclj.core]
-        [jukebox-web.spec-helper]))
+        [jukebox-web.spec-helper])
+  (:import [org.mindrot.jbcrypt BCrypt]))
 
 (describe "sign-up!"
   (with-database-connection)
@@ -12,6 +13,12 @@
           hammer (user/find-by-login "hammer")]
       (should (empty? errors))
       (should= "http://gravitar.org/somepic" (:avatar hammer))))
+
+  (it "encrypts the password before storing"
+    (let [errors (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
+          hammer (user/find-by-login "hammer")
+          hashed-password (:password hammer)]
+      (should (BCrypt/checkpw "dont hurt em" hashed-password))))
 
   (it "sets the users skip-count to zero"
     (user/sign-up! (factory/user {:login "test"}))
@@ -25,7 +32,6 @@
     (let [errors (user/sign-up! {})]
       (should-not (empty? errors))
       (should= "is required" (:login errors)))))
-
 
 (describe "validate"
   (it "requires a login"
