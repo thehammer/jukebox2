@@ -1,6 +1,7 @@
 (ns jukebox-web.views.users
   (:require [jukebox-web.views.layout :as layout])
-  (:use [hiccup core page-helpers form-helpers]))
+  (:use [hiccup core page-helpers form-helpers]
+        [jukebox-web.views.forms]))
 
 (defn sign-in []
   (layout/main "Sign In"
@@ -10,12 +11,6 @@
       (label "password" "Password")
       (password-field "password")
       (submit-button "Sign In"))))
-
-(defn- labeled-field [field-type id label-text errors]
-  [:div
-    (label id label-text)
-    (field-type id)
-    [:span (id errors)]])
 
 (defn sign-up [errors]
   (layout/main "Sign Up"

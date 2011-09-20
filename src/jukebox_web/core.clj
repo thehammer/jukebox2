@@ -5,6 +5,7 @@
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
+            [jukebox-web.controllers.hammertimes :as hammertimes-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.users :as users-controller]))
@@ -23,6 +24,7 @@
   (GET "/users/sign-up" [] users-controller/sign-up-form)
   (POST "/users/sign-up" [] users-controller/sign-up)
   (POST "/users/toggle-enabled" [] users-controller/toggle-enabled)
+  (GET "/hammertimes" [] hammertimes-controller/create)
   (route/resources "/")
   (route/not-found "Page not found"))
 
