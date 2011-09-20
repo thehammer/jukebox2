@@ -19,3 +19,6 @@
 
 (defn find-by-name [name]
   (first (db/find-by-field *model* :name name)))
+
+(defn find-all []
+  (db/find-all *model*))

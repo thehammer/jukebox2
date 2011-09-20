@@ -29,3 +29,11 @@
   (it "requires a end time"
     (let [errors (validate (factory/hammertime {:end nil}))]
       (should= "is required" (:end errors)))))
+
+(describe "find-all"
+  (with-database-connection)
+
+  (it "returns all the hammertimes from the database"
+    (create! (factory/hammertime {}))
+    (create! (factory/hammertime {}))
+    (should= 2 (count (find-all)))))

@@ -33,4 +33,8 @@
         (when-not (nil? current-user) [:li (format "logged in as: %s (skips: %s)" login skip-count)])
         (when-not (nil? current-user) [:li (form-to [:post "/users/sign-out"] (submit-button "Sign Out"))])
         [:li (link-to "/users/sign-up" "Sign Up")]
-        [:li (link-to "/users/sign-in" "Sign In")]])))
+        [:li (link-to "/users/sign-in" "Sign In")]]
+       [:h3 "Hammertimes"]
+       [:ul
+         [:li (link-to "/hammertimes" "List")]
+         [:li (link-to "/hammertime" "Create")]])))
