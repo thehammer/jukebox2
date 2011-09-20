@@ -19,8 +19,8 @@
       (should= "is required" (:name errors))))
 
   (it "requires a path"
-    (let [errors (validate (factory/hammertime {:path nil}))]
-      (should= "is required" (:path errors))))
+    (let [errors (validate (factory/hammertime {:file nil}))]
+      (should= "is required" (:file errors))))
 
   (it "requires a start time"
     (let [errors (validate (factory/hammertime {:start nil}))]

@@ -24,7 +24,8 @@
   (GET "/users/sign-up" [] users-controller/sign-up-form)
   (POST "/users/sign-up" [] users-controller/sign-up)
   (POST "/users/toggle-enabled" [] users-controller/toggle-enabled)
-  (GET "/hammertimes" [] hammertimes-controller/create)
+  (GET "/hammertimes" [] hammertimes-controller/create-form)
+  (POST "/hammertimes" [] hammertimes-controller/create)
   (route/resources "/")
   (route/not-found "Page not found"))
 
