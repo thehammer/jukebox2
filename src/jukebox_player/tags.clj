@@ -1,13 +1,13 @@
 (ns jukebox-player.tags
-  (:import [java.io File]
-           [java.util.logging Logger Level]
+  (:import [java.util.logging Logger Level]
            [org.jaudiotagger.audio AudioFileIO]
-           [org.jaudiotagger.tag FieldKey]))
+           [org.jaudiotagger.tag FieldKey])
+  (:require [clojure.java.io :as io]))
 
 (.setLevel (Logger/getLogger "org.jaudiotagger") Level/WARNING)
 
 (defn extract-tags [file]
-  (let [audio-file (AudioFileIO/read (File. file))
+  (let [audio-file (AudioFileIO/read (io/as-file file))
         tags (.getTag audio-file)]
     (conj {}
       [:artist (.getFirst tags FieldKey/ARTIST)]
