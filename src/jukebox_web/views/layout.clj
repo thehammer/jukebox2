@@ -6,7 +6,10 @@
     [:head
      [:title title]
      [:script {:src "/js/jquery-1.6.4.min.js"}]
-     [:script {:src "/js/jquery.multifile-1.47.min.js"}]
+     [:script {:src "/js/jquery.plupload.queue.js"}]
+     [:script {:src "/js/plupload.full.js"}]
+     [:script {:src "/js/upload.js"}]
+     (include-css "/css/jquery.plupload.queue.css")
      (include-css "/css/style.css")]
     [:body
       content]))

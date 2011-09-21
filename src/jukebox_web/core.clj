@@ -6,6 +6,7 @@
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.controllers.hammertimes :as hammertimes-controller]
+            [jukebox-web.controllers.library :as library-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.users :as users-controller]))
@@ -28,6 +29,7 @@
   (GET "/hammertime" [] hammertimes-controller/create-form)
   (POST "/hammertime" [] hammertimes-controller/create)
   (POST "/hammertimes/play" [] hammertimes-controller/play)
+  (POST "/library/upload/:user" [] library-controller/upload)
   (route/resources "/")
   (route/not-found "Page not found"))
 
