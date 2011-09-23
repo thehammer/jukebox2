@@ -7,12 +7,12 @@
   (describe "list-directory"
     (it "returns a seq with the files contained in the root path with no arguments"
       (let [files (map #(.getPath %) (library/list-directory))]
-        (should (includes? files "music/jukebox2.mp3"))))
+        (should (includes? files "jukebox2.mp3"))))
 
     (it "returns the list of files for a given directory"
       (let [files (map #(.getPath %) (library/list-directory "user"))]
-        (should (includes? files "music/user/artist"))))
+        (should (includes? files "user/artist"))))
 
     (it "does not include dotfiles in the list"
       (let [files (map #(.getPath %) (library/list-directory))]
-        (should-not (includes? files "music/.gitkeep"))))))
+        (should-not (includes? files ".gitkeep"))))))

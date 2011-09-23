@@ -1,5 +1,6 @@
 (ns jukebox-web.models.playlist-spec
-  (:require [jukebox-web.models.playlist :as playlist])
+  (:require [jukebox-web.models.playlist :as playlist]
+            [jukebox-web.models.library :as library])
   (:use [speclj.core]))
 
 (describe "playlist"
@@ -11,7 +12,7 @@
         (should (empty? (playlist/queued-songs)))
         (playlist/add-song! "user/artist/track.mp3")
         (should= 1 (count (playlist/queued-songs)))
-        (should= "user/artist/track.mp3" (first (playlist/queued-songs))))
+        (should= (library/file-on-disk "user/artist/track.mp3") (first (playlist/queued-songs))))
 
     (it "adds the song to the end of the queue"
         (playlist/add-song! "user/artist/first_track.mp3")
@@ -38,9 +39,9 @@
       (playlist/add-song! "track-c")
       (let [next-track (playlist/next-track "")]
         (playlist/add-song! "track-d")
-        (should= "track-a" next-track)
-        (should= "track-b" (first (playlist/queued-songs)))
-        (should= ["track-c" "track-d"] (rest (playlist/queued-songs))))))
+        (should= (library/file-on-disk "track-a") next-track)
+        (should= (library/file-on-disk "track-b") (first (playlist/queued-songs)))
+        (should= (map library/file-on-disk ["track-c" "track-d"]) (rest (playlist/queued-songs))))))
 
   (describe "playlist-seq"
     (it "returns a random track if there are no tracks queued up"

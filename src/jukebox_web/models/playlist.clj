@@ -1,16 +1,11 @@
-(ns jukebox-web.models.playlist)
+(ns jukebox-web.models.playlist
+  (:require [jukebox-web.models.library :as library]))
 
 (def *current-song* (atom nil))
 (def *queued-songs* (atom []))
 
-(defn music-files []
-  (let [contents (file-seq (java.io.File. "music"))]
-    (->> contents
-      (filter #(.isFile %))
-      (filter #(not (= \. (first (.getName %))))))))
-
 (defn- random-song []
-  (let [music-file (rand-nth (music-files))]
+  (let [music-file (rand-nth (library/all-tracks))]
     (.getPath music-file)))
 
 (defn current-song []
@@ -20,7 +15,7 @@
   @*queued-songs*)
 
 (defn add-song! [song]
-  (swap! *queued-songs* conj song))
+  (swap! *queued-songs* conj (library/file-on-disk song)))
 
 (defn add-random-song! []
   (add-song! (random-song)))
@@ -29,12 +24,14 @@
   (reset! *current-song* nil)
   (reset! *queued-songs* []))
 
+(defn- move-to-next-track! []
+  (reset! *current-song* (first @*queued-songs*))
+  (swap! *queued-songs* (comp vec rest)))
+
 (defn next-track [_]
   (if-let [queued (first @*queued-songs*)]
-    (do
-      (swap! *queued-songs* (comp vec rest))
-      (reset! *current-song* queued))
-    (reset! *current-song* (random-song)))
+    (move-to-next-track!)
+    (do (add-random-song!) (move-to-next-track!)))
   @*current-song*)
 
 (defn playlist-seq []

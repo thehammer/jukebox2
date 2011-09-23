@@ -32,6 +32,7 @@
   (POST "/hammertime" [] hammertimes-controller/create)
   (POST "/hammertimes/play" [] hammertimes-controller/play)
   (POST "/library/upload/:user" [] library-controller/upload)
+  (GET "/library/browse" [] library-controller/browse-root)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
   (route/resources "/")
   (route/not-found "Page not found"))

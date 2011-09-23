@@ -35,6 +35,26 @@
 (defn- filter-dotfiles [files]
   (remove #(.startsWith (.getName %) ".") files))
 
+(defn- relativize [parent child]
+  (let [parent-uri (.toURI (io/file parent))
+        child-uri (.toURI (io/file child))]
+    (io/file (.getPath (.relativize parent-uri child-uri)))))
+
 (defn list-directory
-  ([path] (filter-dotfiles (.listFiles (io/file *music-library* path))))
-  ([] (filter-dotfiles (.listFiles (io/file *music-library*)))))
+  ([] (list-directory ""))
+  ([path]
+    (let [files (filter-dotfiles (.listFiles (io/file *music-library* path)))]
+      (map #(relativize *music-library* %) files))))
+
+(defn file-on-disk [relative-path]
+  (io/file *music-library* relative-path))
+
+(defn track? [relative-path]
+  (.isFile (file-on-disk relative-path)))
+
+(defn all-tracks []
+  (let [contents (file-seq (io/file *music-library*))]
+    (->> contents
+      (filter #(.isFile %))
+      (filter #(not (= \. (first (.getName %)))))
+      (map #(relativize *music-library* %)))))

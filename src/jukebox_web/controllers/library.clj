@@ -9,6 +9,9 @@
     (lib/save-file tempfile user (lib/extension filename)))
   "upload complete")
 
+(defn browse-root [request]
+  (view/browse "Music Library" (lib/list-directory)))
+
 (defn browse [request]
   (let [path (-> request :params :path)
         files (lib/list-directory path)]

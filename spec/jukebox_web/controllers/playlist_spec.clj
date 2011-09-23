@@ -1,5 +1,6 @@
 (ns jukebox-web.controllers.playlist-spec
   (:require [jukebox-web.models.playlist :as playlist]
+            [jukebox-web.models.library :as library]
             [jukebox-web.controllers.playlist :as playlist-controller])
   (:use [speclj.core]
         [jukebox-web.spec-helper]))
@@ -11,5 +12,5 @@
     (let [song "user/artist/album/track.mp3"
           request {:params {:song song}}
           response (playlist-controller/add request)]
-      (should= song (first (playlist/queued-songs))))))
+      (should= (library/file-on-disk song) (first (playlist/queued-songs))))))
 
