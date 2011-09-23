@@ -21,24 +21,29 @@
        [:p (display-song current-song)]
        [:h3 "Queued Songs"]
        [:ul (map #(vector :li (display-song %)) queued-songs)]
-       [:h3 "Operations"]
-       [:ul
-        [:li (link-to "/player/play" "Play")]
-        [:li (link-to "/player/pause" "Pause")]
-        (when-not (nil? current-user) [:li (link-to "/player/skip" "Skip")])]
-       [:h3 "Users"]
-       [:ul
-        [:li (link-to "/users" "Users")]
-        (when-not (nil? current-user) [:li (format "logged in as: %s (skips: %s)" login skip-count)])
-        (when-not (nil? current-user) [:li (form-to [:post "/users/sign-out"] (submit-button "Sign Out"))])
-        [:li (link-to "/users/sign-up" "Sign Up")]
-        [:li (link-to "/users/sign-in" "Sign In")]]
-       [:h3 "Library"]
-       [:ul
-         [:li (link-to "/playlist/add-one" "Add random track")]
-         [:li (link-to "/library/browse" "Add track from library")]
-         [:li [:form [:div#uploader]]]]
-       [:h3 "Hammertimes"]
-       [:ul
-         [:li (link-to "/hammertimes" "List")]
-         [:li (link-to "/hammertime" "Create")]])))
+       [:div.row
+         [:div.span3
+           [:h3 "Operations"]
+           [:ul.unstyled
+            [:li (link-to "/player/play" "Play")]
+            [:li (link-to "/player/pause" "Pause")]
+            (when-not (nil? current-user) [:li (link-to "/player/skip" "Skip")])]]
+         [:div.span3
+           [:h3 "Users"]
+           [:ul.unstyled
+            [:li (link-to "/users" "Users")]
+            (when-not (nil? current-user) [:li (format "logged in as: %s (skips: %s)" login skip-count)])
+            (when-not (nil? current-user) [:li (form-to [:post "/users/sign-out"] (submit-button "Sign Out"))])
+            [:li (link-to "/users/sign-up" "Sign Up")]
+            [:li (link-to "/users/sign-in" "Sign In")]]]
+         [:div.span3
+           [:h3 "Library"]
+           [:ul.unstyled
+             [:li (link-to "/playlist/add-one" "Add random track")]
+             [:li (link-to "/library/browse" "Add track from library")]]]
+         [:div.span3
+           [:h3 "Hammertimes"]
+           [:ul.unstyled
+             [:li (link-to "/hammertimes" "List")]
+             [:li (link-to "/hammertime" "Create")]]]]
+       [:div [:form [:div#uploader]]])))
