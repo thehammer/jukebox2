@@ -14,8 +14,4 @@
     (skip!)
     (Thread/sleep 5000)
     (hammertime! (first files) 15 20)
-    (Thread/sleep 5000)
-    (stop!)
-    (.join player))
-
-)
+    (.join player)))

@@ -5,12 +5,20 @@
   (:import [javax.sound.sampled AudioSystem]))
 
 (def *buffer-size* 4096)
-(def player-state (atom :stop))
+(def player-state (atom :pause))
+(def skipping-state (atom false))
+
+(defn skip!  [] (reset! skipping-state true))
 
 (defn pause! [] (reset! player-state :pause))
 (defn play!  [] (reset! player-state :play))
-(defn skip!  [] (reset! player-state :skip))
-(defn stop!  [] (reset! player-state :stop))
+
+(defn playing? [] (= @player-state :play))
+(defn paused? [] (= @player-state :pause))
+(defn skip-requested? [] @skipping-state)
+
+(defmacro with-skip-reset [& body]
+  `(do (reset! skipping-state false) ~@body))
 
 (defn load-track [file]
   (if (re-matches #".*\.m4a$" file)
@@ -45,22 +53,22 @@
         buffer (byte-array *buffer-size*)]
     (doto speaker (.open) (.start))
     (loop [bytes-read (.read audio-stream buffer)]
-      (condp = @player-state
-        :play (when-not (= bytes-read -1)
-                (.write speaker buffer 0 bytes-read)
-                (recur (.read audio-stream buffer)))
-        :pause (do (Thread/sleep 100) (recur bytes-read))
-        nil))
+      (cond
+        (skip-requested?) (with-skip-reset (.write speaker buffer 0 bytes-read) nil)
+        (playing?)
+          (when-not (= bytes-read -1)
+            (.write speaker buffer 0 bytes-read)
+            (recur (.read audio-stream buffer)))
+        (paused?) (do (Thread/sleep 100) (recur bytes-read))))
      (doto speaker (.close))))
 
 (defn- start-player [files]
   (loop [files-to-play files]
     (when-let [file (first files-to-play)]
-      (condp = @player-state
-        :play (do (play-track (load-track file)) (recur (rest files-to-play)))
-        :stop (do (Thread/sleep 100) (recur files-to-play))
-        :skip (do (play!) (recur files-to-play))
-        nil))))
+      (cond
+        (skip-requested?) (with-skip-reset (recur (rest files-to-play)))
+        (playing?) (do (play-track (load-track file)) (recur (rest files-to-play)))
+        (paused?) (do (Thread/sleep 100) (recur files-to-play))))))
 
 (defn start [files]
   (let [player (Thread. #(start-player files))]
