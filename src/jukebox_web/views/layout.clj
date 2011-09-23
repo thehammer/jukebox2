@@ -3,10 +3,15 @@
   (:use [hiccup core page-helpers form-helpers]))
 
 (defn- login-form []
-  [:form.pull-right {:method :post :action "/users/authenticate"}
-   [:input.input-small {:type "text" :placeholder "login" :name "login"}]
-   [:input.input-small {:type "password" :placeholder "password" :name "password"}]
-   [:button.btn {:type "submit"} "Sign In"]])
+  [:div.pull-right
+   [:ul
+    [:li.dropdown {:data-dropdown "dropdown"}
+     [:a.dropdown-toggle "would you like to log in?"]
+     [:ul.dropdown-menu
+      [:form.login {:method :post :action "/users/authenticate"}
+       [:input.input-small {:type "text" :placeholder "login" :name "login"}]
+       [:input.input-small {:type "password" :placeholder "password" :name "password"}]
+       [:input.btn.success {:type "submit" :value "Sign In"}]]]]]])
 
 (defn- logged-in [current-user]
   [:div.pull-right.logged-in

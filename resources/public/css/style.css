@@ -67,3 +67,16 @@ body {
   margin: 0.5em;
   width: 93%;
 }
+
+.topbar .login {
+  width: 100%;
+}
+
+.topbar .login input[type="submit"] {
+  margin: 0.5em;
+  width: 92%;
+}
+.topbar .login input {
+  margin: 0.5em;
+  width: 80%;
+}
