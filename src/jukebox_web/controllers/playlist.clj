@@ -4,9 +4,7 @@
             [jukebox-web.models.user :as user]))
 
 (defn index [request]
-  (let [login (-> request :session :current-user)
-        current-user (user/find-by-login login)]
-    (view/index current-user (playlist/current-song) (playlist/queued-songs))))
+  (view/index request (playlist/current-song) (playlist/queued-songs)))
 
 (defn add-one [request]
   (playlist/add-random-song!)

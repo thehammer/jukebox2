@@ -47,3 +47,17 @@ body {
 .topbar .btn {
   border: 0;
 }
+
+.topbar .logged-in p {
+  float: left;
+  padding: 0 1em;
+  color: #bfbfbf;
+}
+
+.topbar .logged-in p strong {
+  color: white;
+}
+
+.topbar .logged-in form {
+  padding: 0.3em 0;
+}

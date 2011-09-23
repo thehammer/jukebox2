@@ -6,25 +6,22 @@
   (let [{:keys [login password]} (:params request)]
     (if (user/authenticate login password)
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user login}}
-      (view/sign-in))))
-
-(defn sign-in [request]
-  (view/sign-in))
+      {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn sign-out [request]
   {:status 302 :headers {"Location" "/playlist"} :session {:current-user nil}})
 
 (defn sign-up-form [request]
-  (view/sign-up {}))
+  (view/sign-up request {}))
 
 (defn sign-up [request]
   (let [errors (user/sign-up! (:params request))]
     (if (empty? errors)
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
-      (view/sign-up errors))))
+      (view/sign-up request errors))))
 
 (defn index [request]
-  (view/index (user/find-all)))
+  (view/index request (user/find-all)))
 
 (defn toggle-enabled [request]
   (user/toggle-enabled! (-> request :params :login))

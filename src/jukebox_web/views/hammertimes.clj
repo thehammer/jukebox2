@@ -3,8 +3,8 @@
   (:use [hiccup core form-helpers page-helpers]
         [jukebox-web.views.forms]))
 
-(defn create [errors]
-  (layout/main "Create Hammertime"
+(defn create [request errors]
+  (layout/main request "Create Hammertime"
      (form-to [:post "/hammertime"]
        (labeled-field text-field :name "Name" errors)
        (labeled-field text-field :file "File" errors)
@@ -20,8 +20,9 @@
         (hidden-field :name (:name hammertime))
         (submit-button "Play"))]])
 
-(defn index [hammertimes]
-  (layout/main "Hamertimes"
+(defn index [request hammertimes]
+  (layout/main request "Hamertimes"
     [:table
       [:tr [:th "Name"] [:th]]
-      (map show-hammertime hammertimes)]))
+      (map show-hammertime hammertimes)]
+    [:a {:href "/hammertime"} [:button.btn.success "Add"]]))

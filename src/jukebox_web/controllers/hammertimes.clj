@@ -4,16 +4,16 @@
             [jukebox-web.models.hammertime :as hammertime]))
 
 (defn index [request]
-  (view/index (hammertime/find-all)))
+  (view/index request (hammertime/find-all)))
 
 (defn create-form [request]
-  (view/create {}))
+  (view/create request {}))
 
 (defn create [request]
   (let [errors (hammertime/create! (:params request))]
     (if (empty? errors)
       {:status 302 :headers {"Location" "/playlist"}}
-      (view/create errors))))
+      (view/create request errors))))
 
 (defn play [request]
   (let [{:keys [file start end]} (hammertime/find-by-name (-> request :params :name))]

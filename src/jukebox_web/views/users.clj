@@ -3,17 +3,8 @@
   (:use [hiccup core page-helpers form-helpers]
         [jukebox-web.views.forms]))
 
-(defn sign-in []
-  (layout/main "Sign In"
-    (form-to [:post "/users/authenticate"]
-      (label "login" "Login")
-      (text-field "login")
-      (label "password" "Password")
-      (password-field "password")
-      (submit-button "Sign In"))))
-
-(defn sign-up [errors]
-  (layout/main "Sign Up"
+(defn sign-up [request errors]
+  (layout/main request "Sign Up"
     (form-to [:post "/users/sign-up"]
       (labeled-field text-field :login "Login" errors)
       (labeled-field password-field :password "Password" errors)
@@ -30,8 +21,8 @@
            (hidden-field "login" (:login user))
            (submit-button (if (:enabled user) "Disable" "Enable")))]])
 
-(defn index [users]
-  (layout/main "Users"
+(defn index [request users]
+  (layout/main request "Users"
     [:table
       [:tr [:th] [:th "Login"] [:th "Skips"]]
       (map show-user users)]))
