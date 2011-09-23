@@ -21,9 +21,10 @@
   `(do (reset! skipping-state false) ~@body))
 
 (defn load-track [file]
-  (if (re-matches #".*\.m4a$" file)
-    (mp4/load-mp4-track file)
-    (basic/load-basic-track file)))
+  (let [path (.getPath file)]
+    (if (re-matches #".*\.m4a$" path)
+      (mp4/load-mp4-track path)
+      (basic/load-basic-track path))))
 
 (defn- build-line-out [playable]
   (AudioSystem/getSourceDataLine (out-format playable)))
