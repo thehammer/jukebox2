@@ -31,6 +31,17 @@
           (playlist/add-random-song!)
           (should= first-value (first (playlist/queued-songs))))))
 
+  (describe "next-track"
+    (it "returns the next track in the queue, retaining order"
+      (playlist/add-song! "track-a")
+      (playlist/add-song! "track-b")
+      (playlist/add-song! "track-c")
+      (let [next-track (playlist/next-track "")]
+        (playlist/add-song! "track-d")
+        (should= "track-a" next-track)
+        (should= "track-b" (first (playlist/queued-songs)))
+        (should= ["track-c" "track-d"] (rest (playlist/queued-songs))))))
+
   (describe "playlist-seq"
     (it "returns a random track if there are no tracks queued up"
       (should (empty? (playlist/queued-songs)))
