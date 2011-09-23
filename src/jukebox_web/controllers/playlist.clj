@@ -14,4 +14,5 @@
 
 (defn add [request]
   (let [song (-> request :params :song)]
-    (playlist/add-song! song)))
+    (playlist/add-song! song)
+    {:status 302 :headers {"Location" "/playlist"}}))

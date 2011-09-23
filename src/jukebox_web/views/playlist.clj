@@ -25,8 +25,7 @@
        [:ul
         [:li (link-to "/player/play" "Play")]
         [:li (link-to "/player/pause" "Pause")]
-        [:li (link-to "/player/skip" "Skip")]
-        [:li (link-to "/playlist/add-one" "Add random track")]]
+        [:li (link-to "/player/skip" "Skip")]]
        [:h3 "Users"]
        [:ul
         [:li (link-to "/users" "Users")]
@@ -34,7 +33,10 @@
         (when-not (nil? current-user) [:li (form-to [:post "/users/sign-out"] (submit-button "Sign Out"))])
         [:li (link-to "/users/sign-up" "Sign Up")]
         [:li (link-to "/users/sign-in" "Sign In")]]
-       [:h3 "Library"
+       [:h3 "Library"]
+       [:ul
+         [:li (link-to "/playlist/add-one" "Add random track")]
+         [:li (link-to "/library/browse" "Add track from library")]
          [:li [:form [:div#uploader]]]]
        [:h3 "Hammertimes"]
        [:ul

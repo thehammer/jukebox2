@@ -16,6 +16,7 @@
   (GET "/playlist" [] playlist-controller/index)
   (GET "/playlist/add-one" [] playlist-controller/add-one)
   (POST "/playlist/add" [] playlist-controller/add)
+  (GET ["/playlist/add/:song" :song #".*"] [] playlist-controller/add)
   (GET "/player/play" [] player-controller/play)
   (GET "/player/pause" [] player-controller/pause)
   (GET "/player/skip" [] player-controller/skip)
@@ -31,6 +32,7 @@
   (POST "/hammertime" [] hammertimes-controller/create)
   (POST "/hammertimes/play" [] hammertimes-controller/play)
   (POST "/library/upload/:user" [] library-controller/upload)
+  (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
   (route/resources "/")
   (route/not-found "Page not found"))
 

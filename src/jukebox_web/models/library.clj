@@ -31,3 +31,10 @@
   (let [file-with-ext (io/as-file (file-path *music-library* (str (UUID/randomUUID) "." ext)))]
     (io/copy tempfile file-with-ext)
     (rename-with-tags user file-with-ext)))
+
+(defn- filter-dotfiles [files]
+  (remove #(.startsWith (.getName %) ".") files))
+
+(defn list-directory
+  ([path] (filter-dotfiles (.listFiles (io/file *music-library* path))))
+  ([] (filter-dotfiles (.listFiles (io/file *music-library*)))))
