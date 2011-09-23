@@ -19,8 +19,11 @@
 (defn queued-songs []
   @*queued-songs*)
 
+(defn add-song! [song]
+  (swap! *queued-songs* conj song))
+
 (defn add-random-song! []
-  (swap! *queued-songs* conj (random-song)))
+  (add-song! (random-song)))
 
 (defn reset-state! []
   (reset! *current-song* nil)

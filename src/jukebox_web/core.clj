@@ -15,6 +15,7 @@
   (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
   (GET "/playlist" [] playlist-controller/index)
   (GET "/playlist/add-one" [] playlist-controller/add-one)
+  (POST "/playlist/add" [] player-controller/add)
   (GET "/player/play" [] player-controller/play)
   (GET "/player/pause" [] player-controller/pause)
   (GET "/player/skip" [] player-controller/skip)

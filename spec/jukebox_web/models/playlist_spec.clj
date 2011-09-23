@@ -6,6 +6,19 @@
   (before
     (playlist/reset-state!))
 
+  (describe "add-song!"
+    (it "adds the given song to the queued songs"
+        (should (empty? (playlist/queued-songs)))
+        (playlist/add-song! "user/artist/track.mp3")
+        (should= 1 (count (playlist/queued-songs)))
+        (should= "user/artist/track.mp3" (first (playlist/queued-songs))))
+
+    (it "adds the song to the end of the queue"
+        (playlist/add-song! "user/artist/first_track.mp3")
+        (let [first-value (first (playlist/queued-songs))]
+          (playlist/add-song! "user/artist/second_track.mp3")
+          (should= first-value (first (playlist/queued-songs))))))
+
   (describe "add-random-song!"
     (it "adds a random song to the queued songs"
         (should (empty? (playlist/queued-songs)))
