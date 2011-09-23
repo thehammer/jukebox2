@@ -55,7 +55,10 @@
 
   (it "returns false if credentials are invalid"
     (user/sign-up! (factory/user {:login "a" :password "p"}))
-    (should-not (user/authenticate "a" "wrong"))))
+    (should-not (user/authenticate "a" "wrong")))
+
+  (it "returns false if login is invalid"
+    (should-not (user/authenticate "bad_login" "wrong"))))
 
 (describe "increment-skip-count"
   (with-database-connection)

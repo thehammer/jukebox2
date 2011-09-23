@@ -35,7 +35,9 @@
 
 (defn authenticate [login password]
   (let [user (find-by-login login)]
-    (crypt/matches? password (:password user))))
+    (if user
+      (crypt/matches? password (:password user))
+      false)))
 
 (defn increment-skip-count! [login]
   (let [user (find-by-login login)
