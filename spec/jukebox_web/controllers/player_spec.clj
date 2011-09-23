@@ -14,4 +14,9 @@
             request {:session {:current-user "bob"}}
             response (player-controller/skip request)]
         (should= 302 (:status response))
-        (should= 1 (:skip-count (user/find-by-login "bob")))))))
+        (should= 1 (:skip-count (user/find-by-login "bob")))))
+
+    (it "does nothing unless you're logged in"
+      (let [request {:session {}}
+            response (player-controller/skip request)]
+        (should= 302 (:status response))))))

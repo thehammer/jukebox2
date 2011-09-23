@@ -25,7 +25,7 @@
        [:ul
         [:li (link-to "/player/play" "Play")]
         [:li (link-to "/player/pause" "Pause")]
-        [:li (link-to "/player/skip" "Skip")]]
+        (when-not (nil? current-user) [:li (link-to "/player/skip" "Skip")])]
        [:h3 "Users"]
        [:ul
         [:li (link-to "/users" "Users")]

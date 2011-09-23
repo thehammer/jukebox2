@@ -13,6 +13,7 @@
   {:status 302 :headers {"Location" "/playlist"}})
 
 (defn skip [request]
-  (player/skip!)
-  (user/increment-skip-count! (-> request :session :current-user))
+  (when-let [current-user (-> request :session :current-user)]
+    (player/skip!)
+    (user/increment-skip-count! current-user))
   {:status 302 :headers {"Location" "/playlist"}})
