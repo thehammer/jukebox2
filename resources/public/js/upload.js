@@ -1,6 +1,6 @@
 $(function() {
   $("#uploader").pluploadQueue({
-    runtimes : 'flash,html5',
+    runtimes : 'html5,flash',
     url : '/library/upload/tony',
     max_file_size : '20mb',
     unique_names : true,
