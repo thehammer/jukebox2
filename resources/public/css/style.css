@@ -54,10 +54,16 @@ body {
   color: #bfbfbf;
 }
 
-.topbar .logged-in p strong {
-  color: white;
+.topbar .logged-in img {
+  vertical-align: middle;
+  float: right;
 }
 
 .topbar .logged-in form {
-  padding: 0.3em 0;
+  width: 100%;
+}
+
+.topbar .logged-in form input {
+  margin: 0.5em;
+  width: 93%;
 }

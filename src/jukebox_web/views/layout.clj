@@ -2,6 +2,32 @@
   (:require [jukebox-web.models.user :as user])
   (:use [hiccup core page-helpers form-helpers]))
 
+(defn- login-form []
+  [:form.pull-right {:method :post :action "/users/authenticate"}
+   [:input.input-small {:type "text" :placeholder "login" :name "login"}]
+   [:input.input-small {:type "password" :placeholder "password" :name "password"}]
+   [:button.btn {:type "submit"} "Sign In"]])
+
+(defn- logged-in [current-user]
+  [:div.pull-right.logged-in
+    [:ul
+     [:li.dropdown {:data-dropdown "dropdown"}
+      [:a.dropdown-toggle "this is you " (:login current-user) " " ]
+      [:ul.dropdown-menu
+       [:li (form-to [:post "/users/sign-out"]
+                     (submit-button "Sign Out"))]]]
+     [:img {:src (str (:avatar current-user) "?s=37")}]]])
+
+(defn- nav-links []
+  [:ul.nav
+   [:li.dropdown {:data-dropdown "dropdown"}
+    [:a.dropdown-toggle {:href "#"} "Add"]
+    [:ul.dropdown-menu
+     [:li [:a {:href "/playlist/add-one"} "Random"]]
+     [:li [:a {:href "/library/browse"} "From Library"]]]]
+   [:li [:a {:href "/users"} "Users"]]
+   [:li [:a {:href "/hammertimes"} "Hammertimes"]]])
+
 (defn main [request title & content]
   (let [current-user (user/find-by-login (-> request :session :current-user))]
     (html5
@@ -21,25 +47,11 @@
         [:div.fill
          [:div.container
           [:a.brand {:href "/"} "jukebox2"]
-          [:ul.nav
-           [:li.dropdown {:data-dropdown "dropdown"}
-            [:a.dropdown-toggle {:href "#"} "Add"]
-            [:ul.dropdown-menu
-             [:li [:a {:href "/playlist/add-one"} "Random"]]
-             [:li [:a {:href "/library/browse"} "From Library"]]]]
-           [:li [:a {:href "/users"} "Users"]]
-           [:li [:a {:href "/hammertimes"} "Hammertimes"]]]
+          (nav-links)
           (if (nil? current-user)
-            [:form.pull-right {:method :post :action "/users/authenticate"}
-             [:input.input-small {:type "text" :placeholder "login" :name "login"}]
-             [:input.input-small {:type "password" :placeholder "password" :name "password"}]
-             [:button.btn {:type "submit"} "Sign In"]]
-            [:div.pull-right.logged-in
-              [:p "you are logged in as " [:strong (:login current-user)]]
-              (form-to [:post "/users/sign-out"] (submit-button "Sign Out"))]
-            )]]]
+            (login-form)
+            (logged-in current-user))]]]
        [:div.container
         [:div.content
-         [:div.page-header
-          [:h1 "jukebox2"]]
+         [:div.page-header [:h1 "jukebox2"]]
          content]]])))
