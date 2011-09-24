@@ -12,7 +12,7 @@ class Uploader
         else
           $element.trigger 'ajax:error', xhr
 
-    xhr.open 'POST', '/library/upload/cory'
+    xhr.open 'POST', '/library/upload'
 
     data = new FormData()
     data.append "file", file

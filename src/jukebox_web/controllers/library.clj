@@ -4,10 +4,10 @@
             [jukebox-web.models.user :as user]))
 
 (defn upload [request]
-  (let [{:keys [tempfile filename]} (-> request :params :file)
-        user (-> request :params :user)]
-    (lib/save-file tempfile user (lib/extension filename)))
-  "upload complete")
+  (when-let [current-user (-> request :session :current-user)]
+    (let [{:keys [tempfile filename]} (-> request :params :file)]
+    (lib/save-file tempfile current-user (lib/extension filename)))
+  "upload complete"))
 
 (defn browse-root [request]
   (view/browse "Music Library" (lib/list-directory)))
