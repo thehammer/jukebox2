@@ -1,16 +1,16 @@
-class Ajax
+class Uploader
 
   constructor: (@settings) ->
 
-  upload: (file) ->
+  send: (file, $element) ->
     xhr = new XMLHttpRequest()
 
     xhr.onreadystatechange = ->
       if xhr.readyState is 4
         if xhr.status < 300
-          @settings.element.trigger 'ajax:success', [xhr, xhr.responseText]
+          $element.trigger 'ajax:success', [xhr, xhr.responseText]
         else
-          @settings.element.trigger 'ajax:error', xhr
+          $element.trigger 'ajax:error', xhr
 
     xhr.open 'POST', '/library/upload/cory'
 
@@ -18,4 +18,4 @@ class Ajax
     data.append "file", file
     xhr.send data
 
-window.Ajax = Ajax
+window.Uploader = Uploader

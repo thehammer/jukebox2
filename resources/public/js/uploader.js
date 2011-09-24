@@ -1,18 +1,18 @@
 (function() {
-  var Ajax;
-  Ajax = (function() {
-    function Ajax(settings) {
+  var Uploader;
+  Uploader = (function() {
+    function Uploader(settings) {
       this.settings = settings;
     }
-    Ajax.prototype.upload = function(file) {
+    Uploader.prototype.send = function(file, $element) {
       var data, xhr;
       xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           if (xhr.status < 300) {
-            return this.settings.element.trigger('ajax:success', [xhr, xhr.responseText]);
+            return $element.trigger('ajax:success', [xhr, xhr.responseText]);
           } else {
-            return this.settings.element.trigger('ajax:error', xhr);
+            return $element.trigger('ajax:error', xhr);
           }
         }
       };
@@ -21,7 +21,7 @@
       data.append("file", file);
       return xhr.send(data);
     };
-    return Ajax;
+    return Uploader;
   })();
-  window.Ajax = Ajax;
+  window.Uploader = Uploader;
 }).call(this);

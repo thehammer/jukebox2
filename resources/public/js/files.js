@@ -5,15 +5,16 @@
     function Files(selector) {
       this.selector = selector;
       this.render = __bind(this.render, this);
+      this.validFiles = new RegExp($('body').attr('data-accept'), 'gi');
+      this.uploader = new Uploader;
       document.addEventListener("dragenter", this.stopActions, false);
       document.addEventListener("dragexit", this.stopActions, false);
       document.addEventListener("dragover", this.stopActions, false);
       document.addEventListener("drop", this.render, false);
-      this.ajax = new Ajax({
-        element: 'a_selector'
-      });
     }
-    Files.prototype.isAcceptable = function(type) {};
+    Files.prototype.isAcceptable = function(type) {
+      return this.validFiles.test(type);
+    };
     Files.prototype.render = function(evt) {
       var $selector, file, listItem, _i, _len, _ref, _results;
       $selector = $(this.selector);
@@ -21,9 +22,14 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         file = _ref[_i];
-        listItem = $('<li />').text("" + file.name + " " + (this.sizeInMb(file.size)) + "mb");
+        if (!this.isAcceptable(file.type)) {
+          continue;
+        }
+        listItem = $('<li />', {
+          "class": "uploading"
+        }).text("" + file.name + " " + (this.sizeInMb(file.size)) + "mb");
         $selector.append(listItem);
-        _results.push(this.ajax.upload(file));
+        _results.push(this.uploader.send(file, listItem));
       }
       return _results;
     };
@@ -36,5 +42,7 @@
     };
     return Files;
   })();
-  $(new Files('#uploads'));
+  $(function() {
+    return new Files('#notifications');
+  });
 }).call(this);

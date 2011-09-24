@@ -39,14 +39,14 @@
       [:head
        [:title title]
        [:script {:src "/js/jquery-1.6.4.min.js"}]
-       [:script {:src "/js/ajax.js"}]
+       [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/files.js"}]
        [:script {:src "http://twitter.github.com/bootstrap/1.3.0/bootstrap-dropdown.js"}]
        [:script {:src "/js/application.js"}]
        (include-css "http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css")]
        (include-css "/css/jquery.plupload.queue.css")
        (include-css "/css/style.css")
-      [:body
+      [:body {:data-accept "mp3|mp4"}
        [:div.topbar
         [:div.fill
          [:div.container
@@ -55,7 +55,7 @@
           (if (nil? current-user)
             (login-form)
             (logged-in current-user))]]]
+       [:ul#notifications]
        [:div.container
         [:div.content
-         [:div.page-header [:h1 "jukebox2"]]
          content]]])))
