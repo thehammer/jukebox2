@@ -39,9 +39,8 @@
       [:head
        [:title title]
        [:script {:src "/js/jquery-1.6.4.min.js"}]
-       [:script {:src "/js/jquery.plupload.queue.js"}]
-       [:script {:src "/js/plupload.full.js"}]
-       [:script {:src "/js/upload.js"}]
+       [:script {:src "/js/ajax.js"}]
+       [:script {:src "/js/files.js"}]
        [:script {:src "http://twitter.github.com/bootstrap/1.3.0/bootstrap-dropdown.js"}]
        [:script {:src "/js/application.js"}]
        (include-css "http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css")]

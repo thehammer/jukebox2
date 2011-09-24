@@ -22,12 +22,11 @@
             response (users-controller/authenticate request)]
         (should= "bob" (-> response :session :current-user))))
 
-    (it "rerenders the sign-in page if the credentials are incorrect"
+    (it "session is empty if the credentials are incorrect"
       (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
             request {:params {:login "bob" :password "fat-finger"}}
             response (users-controller/authenticate request)]
-        (should= nil (:status response))
-        (should= nil (:headers response)))))
+        (should= nil (-> response :session :current-user)))))
 
   (describe "sign-up"
     (it "saves a valid user"

@@ -31,4 +31,4 @@
          [:h3 "Users"]
          [:ul.unstyled
           [:li (link-to "/users/sign-up" "Sign Up")]]]]
-     [:div [:form [:div#uploader]]]))
+     [:ul#uploads ]))
