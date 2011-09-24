@@ -82,3 +82,5 @@ body {
   #notifications li {
     background: white;
     padding: 20px; }
+    #notifications li.success {
+      background: #DCFFDE; }

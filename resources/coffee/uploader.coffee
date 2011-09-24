@@ -12,6 +12,12 @@ class Uploader
         else
           $element.trigger 'ajax:error', xhr
 
+    if xhr.upload?
+      for event in ["abort", "error", "load", "loadstart", "progress"]
+        xhr.upload.addEventListener(event, (p) ->
+          $element.trigger "upload:#{event}", [xhr, p]
+        , false)
+
     xhr.open 'POST', '/library/upload'
 
     data = new FormData()

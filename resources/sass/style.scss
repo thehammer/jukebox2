@@ -91,5 +91,9 @@ body {
   li {
     background: white;
     padding:20px;
+
+    &.success {
+      background: #DCFFDE;
+    }
   }
 }

@@ -5,7 +5,7 @@
       this.settings = settings;
     }
     Uploader.prototype.send = function(file, $element) {
-      var data, xhr;
+      var data, event, xhr, _i, _len, _ref;
       xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
@@ -16,6 +16,15 @@
           }
         }
       };
+      if (xhr.upload != null) {
+        _ref = ["abort", "error", "load", "loadstart", "progress"];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          event = _ref[_i];
+          xhr.upload.addEventListener(event, function(p) {
+            return $element.trigger("upload:" + event, [xhr, p]);
+          }, false);
+        }
+      }
       xhr.open('POST', '/library/upload');
       data = new FormData();
       data.append("file", file);
