@@ -2,11 +2,13 @@
   var Files;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Files = (function() {
-    function Files(selector) {
-      this.selector = selector;
-      this.render = __bind(this.render, this);
-      this.validFiles = new RegExp($('body').attr('data-accept'), 'gi');
-      this.uploader = new Uploader;
+    function Files() {
+      this.render = __bind(this.render, this);      this.validFiles = new RegExp($('body').attr('data-accept'), 'gi');
+      this.notification = new FileNotification('#notifications', '#file-notification');
+      this.uploader = new Uploader({
+        method: 'POST',
+        url: '/library/upload'
+      });
       document.addEventListener("dragenter", this.stopActions, false);
       document.addEventListener("dragexit", this.stopActions, false);
       document.addEventListener("dragover", this.stopActions, false);
@@ -16,8 +18,7 @@
       return this.validFiles.test(type);
     };
     Files.prototype.render = function(evt) {
-      var $selector, file, listItem, _i, _len, _ref, _results;
-      $selector = $(this.selector);
+      var $element, file, _i, _len, _ref, _results;
       _ref = evt.dataTransfer.files;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -25,11 +26,11 @@
         if (!this.isAcceptable(file.type)) {
           continue;
         }
-        listItem = $('<li />', {
-          "class": "uploading"
-        }).text("" + file.name + " " + (this.sizeInMb(file.size)) + "mb");
-        $selector.append(listItem);
-        _results.push(this.uploader.send(file, listItem));
+        $element = this.notification.render({
+          name: file.name,
+          size: this.sizeInMb(file.size)
+        });
+        _results.push(this.uploader.send(file, $element));
       }
       return _results;
     };
@@ -43,6 +44,6 @@
     return Files;
   })();
   $(function() {
-    return new Files('#notifications');
+    return new Files;
   });
 }).call(this);

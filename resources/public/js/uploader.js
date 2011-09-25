@@ -25,7 +25,7 @@
           }, false);
         }
       }
-      xhr.open('POST', '/library/upload');
+      xhr.open(this.settings.method, this.settings.url);
       data = new FormData();
       data.append("file", file);
       return xhr.send(data);

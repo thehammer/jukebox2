@@ -39,7 +39,9 @@
       [:head
        [:title title]
        [:script {:src "/js/jquery-1.6.4.min.js"}]
+       [:script {:src "/js/underscore-min.js"}]
        [:script {:src "/js/uploader.js"}]
+       [:script {:src "/js/notifications.js"}]
        [:script {:src "/js/files.js"}]
        [:script {:src "http://twitter.github.com/bootstrap/1.3.0/bootstrap-dropdown.js"}]
        [:script {:src "/js/application.js"}]
@@ -58,4 +60,6 @@
        [:ul#notifications]
        [:div.container
         [:div.content
-         content]]])))
+         content]]
+       [:script#file-notification {:type "text/example" }
+        "<li class='uploading'><%= file.name %> <%= file.size %>mb</li>"]])))

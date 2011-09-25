@@ -18,7 +18,7 @@ class Uploader
           $element.trigger "upload:#{event}", [xhr, p]
         , false)
 
-    xhr.open 'POST', '/library/upload'
+    xhr.open @settings.method, @settings.url
 
     data = new FormData()
     data.append "file", file
