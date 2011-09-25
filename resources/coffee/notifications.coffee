@@ -30,7 +30,9 @@ class FileNotification extends Notifications
   error: (e, xhr) ->
     $(this).addClass('error').removeClass('uploading')
 
-  progress: (e, xhr, data) ->
-    $('.progress-bar', this).css({width: "#{data}%"})
+  progress: (e, xhr, progress) ->
+    if progress.lengthComputable
+      percent = (progress.loaded / progress.total) * 100
+      $('.progress-bar', this).css(width, "#{percent}%")
 
 window.FileNotification = FileNotification

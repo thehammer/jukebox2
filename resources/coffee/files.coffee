@@ -1,7 +1,7 @@
 class Files
 
   constructor: ->
-    @validFiles = new RegExp $('body').attr('data-accept'), 'gi'
+    @validFiles = $('body').attr('data-accept')
     @notification = new FileNotification '#notifications', '#file-notification'
     @uploader = new Uploader
       method: 'POST'
@@ -10,10 +10,11 @@ class Files
     document.addEventListener "dragenter", @stopActions, false
     document.addEventListener "dragexit", @stopActions, false
     document.addEventListener "dragover", @stopActions, false
+    document.addEventListener "drop", @stopActions, false
     document.addEventListener "drop", @render, false
 
   isAcceptable: (type) ->
-    @validFiles.test type
+    new RegExp(@validFiles, 'gi').test(type)
 
   render: (evt) =>
     for file in evt.dataTransfer.files
@@ -22,8 +23,6 @@ class Files
         name: file.name
         size: @sizeInMb(file.size)
       @uploader.send file, $element
-
-    @stopActions evt
 
   sizeInMb: (size) ->
     Math.round parseInt(size) / 1048576

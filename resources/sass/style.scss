@@ -91,9 +91,28 @@ body {
   li {
     background: white;
     padding:20px;
+    margin:25px 0;
+    width:300px;
 
     &.success {
       background: #DCFFDE;
+    }
+
+    .progress-wrapper {
+      width:200px;
+      height:3px;
+      background:white;
+      border:1px solid gray;
+      position:relative;
+
+      .progress-bar {
+        position:absolute;
+        top:0;
+        left:0;
+        background:gray;
+        height:3px;
+        width:0%;
+      }
     }
   }
 }

@@ -40,10 +40,12 @@
     FileNotification.prototype.error = function(e, xhr) {
       return $(this).addClass('error').removeClass('uploading');
     };
-    FileNotification.prototype.progress = function(e, xhr, data) {
-      return $('.progress-bar', this).css({
-        width: "" + data + "%"
-      });
+    FileNotification.prototype.progress = function(e, xhr, progress) {
+      var percent;
+      if (progress.lengthComputable) {
+        percent = (progress.loaded / progress.total) * 100;
+        return $('.progress-bar', this).css(width, "" + percent + "%");
+      }
     };
     return FileNotification;
   })();

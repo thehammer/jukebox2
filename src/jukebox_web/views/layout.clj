@@ -62,4 +62,7 @@
         [:div.content
          content]]
        [:script#file-notification {:type "text/example" }
-        "<li class='uploading'><%= file.name %> <%= file.size %>mb</li>"]])))
+        [:li.uploading
+         [:p "<%= file.name %> <%= file.size %>mb"]
+         [:div.progress-wrapper
+          [:div.progress-bar]]]]])))
