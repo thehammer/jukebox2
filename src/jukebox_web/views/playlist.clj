@@ -26,9 +26,4 @@
          [:ul.unstyled
           [:li (link-to "/player/play" "Play")]
           [:li (link-to "/player/pause" "Pause")]
-          (when-not (nil? (-> request :session :current-user)) [:li (link-to "/player/skip" "Skip")])]]
-       [:div.span3
-         [:h3 "Users"]
-         [:ul.unstyled
-          [:li (link-to "/users/sign-up" "Sign Up")]]]]
-     [:ul#uploads ]))
+          (when-not (nil? (-> request :session :current-user)) [:li (link-to "/player/skip" "Skip")])]]]))

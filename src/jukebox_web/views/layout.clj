@@ -23,7 +23,7 @@
                      (submit-button "Sign Out"))]]]
      [:img {:src (str (:avatar current-user) "?s=37")}]]])
 
-(defn- nav-links []
+(defn- nav-links [request]
   [:ul.nav
    [:li.dropdown {:data-dropdown "dropdown"}
     [:a.dropdown-toggle {:href "#"} "Add"]
@@ -31,7 +31,8 @@
      [:li [:a {:href "/playlist/add-one"} "Random"]]
      [:li [:a {:href "/library/browse"} "From Library"]]]]
    [:li [:a {:href "/users"} "Users"]]
-   [:li [:a {:href "/hammertimes"} "Hammertimes"]]])
+   [:li [:a {:href "/hammertimes"} "Hammertimes"]]
+   (when (nil? (-> request :session :current-user)) [:li [:a {:href "/users/sign-up"} [:span.label.success "Sign Up"]]])])
 
 (defn main [request title & content]
   (let [current-user (user/find-by-login (-> request :session :current-user))]
@@ -53,7 +54,7 @@
         [:div.fill
          [:div.container
           [:a.brand {:href "/"} "jukebox2"]
-          (nav-links)
+          (nav-links request)
           (if (nil? current-user)
             (login-form)
             (logged-in current-user))]]]
