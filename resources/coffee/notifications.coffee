@@ -33,6 +33,6 @@ class FileNotification extends Notifications
   progress: (e, xhr, progress) ->
     if progress.lengthComputable
       percent = (progress.loaded / progress.total) * 100
-      $('.progress-bar', this).css(width, "#{percent}%")
+      $('.progress-bar', this).css({width: "#{percent}%"})
 
 window.FileNotification = FileNotification

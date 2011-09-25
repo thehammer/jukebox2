@@ -18,11 +18,13 @@ class Files
 
   render: (evt) =>
     for file in evt.dataTransfer.files
-      continue unless @isAcceptable file.type
       $element = @notification.render
         name: file.name
         size: @sizeInMb(file.size)
-      @uploader.send file, $element
+      if @isAcceptable file.type
+        @uploader.send file, $element
+      else
+        $element.trigger 'ajax:error', ["file type is invalid"]
 
   sizeInMb: (size) ->
     Math.round parseInt(size) / 1048576

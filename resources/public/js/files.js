@@ -24,14 +24,11 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         file = _ref[_i];
-        if (!this.isAcceptable(file.type)) {
-          continue;
-        }
         $element = this.notification.render({
           name: file.name,
           size: this.sizeInMb(file.size)
         });
-        _results.push(this.uploader.send(file, $element));
+        _results.push(this.isAcceptable(file.type) ? this.uploader.send(file, $element) : $element.trigger('ajax:error', ["file type is invalid"]));
       }
       return _results;
     };

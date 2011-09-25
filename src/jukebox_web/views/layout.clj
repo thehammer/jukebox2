@@ -5,7 +5,7 @@
 (defn- login-form []
   [:div.pull-right
    [:ul
-    [:li.dropdown {:data-dropdown "dropdown"}
+    [:li.dropdown.persist {:data-dropdown "dropdown"}
      [:a.dropdown-toggle "would you like to log in?"]
      [:ul.dropdown-menu
       [:form.login {:method :post :action "/users/authenticate"}
@@ -43,7 +43,7 @@
        [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/notifications.js"}]
        [:script {:src "/js/files.js"}]
-       [:script {:src "http://twitter.github.com/bootstrap/1.3.0/bootstrap-dropdown.js"}]
+       [:script {:src "/js/bootstrap-dropdown.js"}]
        [:script {:src "/js/application.js"}]
        (include-css "http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css")]
        (include-css "/css/jquery.plupload.queue.css")
@@ -62,7 +62,7 @@
         [:div.content
          content]]
        [:script#file-notification {:type "text/example" }
-        [:li.uploading
+        [:li.uploading.alert-message.block-message
          [:p "<%= file.name %> <%= file.size %>mb"]
          [:div.progress-wrapper
           [:div.progress-bar]]]]])))

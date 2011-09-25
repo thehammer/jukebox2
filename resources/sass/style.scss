@@ -89,14 +89,9 @@ body {
   list-style:none;
 
   li {
-    background: white;
     padding:20px;
     margin:25px 0;
     width:300px;
-
-    &.success {
-      background: #DCFFDE;
-    }
 
     .progress-wrapper {
       width:200px;
@@ -110,6 +105,8 @@ body {
         top:0;
         left:0;
         background:gray;
+        padding:0;
+        margin:0;
         height:3px;
         width:0%;
       }
