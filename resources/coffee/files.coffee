@@ -23,6 +23,8 @@ class Files
         size: @sizeInMb(file.size)
       @uploader.send file, $element
 
+    @stopActions evt
+
   sizeInMb: (size) ->
     Math.round parseInt(size) / 1048576
 

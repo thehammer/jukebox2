@@ -48,7 +48,7 @@
        (include-css "http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css")]
        (include-css "/css/jquery.plupload.queue.css")
        (include-css "/css/style.css")
-      [:body {:data-accept "mp3|m4a"}
+      [:body {:data-accept "mp3|m4a|mp4"}
        [:div.topbar
         [:div.fill
          [:div.container

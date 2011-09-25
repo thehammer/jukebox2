@@ -18,9 +18,8 @@
       return this.validFiles.test(type);
     };
     Files.prototype.render = function(evt) {
-      var $element, file, _i, _len, _ref, _results;
+      var $element, file, _i, _len, _ref;
       _ref = evt.dataTransfer.files;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         file = _ref[_i];
         if (!this.isAcceptable(file.type)) {
@@ -30,9 +29,9 @@
           name: file.name,
           size: this.sizeInMb(file.size)
         });
-        _results.push(this.uploader.send(file, $element));
+        this.uploader.send(file, $element);
       }
-      return _results;
+      return this.stopActions(evt);
     };
     Files.prototype.sizeInMb = function(size) {
       return Math.round(parseInt(size) / 1048576);
