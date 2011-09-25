@@ -34,6 +34,8 @@
       (should= "is required" (:login errors)))))
 
 (describe "validate"
+  (with-database-connection)
+
   (it "requires a login"
     (let [errors (user/validate {:password "" :avatar "http://foo.com"})]
       (should= "is required" (:login errors))))
@@ -44,7 +46,12 @@
 
   (it "requires a password"
     (let [errors (user/validate {:login "foo" :avatar "http://foo.com"})]
-      (should= "is required" (:password errors)))))
+      (should= "is required" (:password errors))))
+
+  (it "requires unique login"
+    (user/sign-up! (factory/user {}))
+    (let [errors (user/validate (factory/user {}))]
+      (should= "must be unique" (:login errors)))))
 
 (describe "authenticate"
   (with-database-connection)
@@ -80,7 +87,7 @@
 
   (it "returns all the users"
     (user/sign-up! (factory/user {}))
-    (user/sign-up! (factory/user {}))
+    (user/sign-up! (factory/user {:login "kenny"}))
     (should= 2 (count (user/find-all)))))
 
 (describe "toggle-enabled"

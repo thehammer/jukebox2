@@ -15,10 +15,17 @@
 (defn- build-user [user-args]
   (-> user-args merge-defaults hash-password))
 
+(defn find-by-login [login]
+  (first (db/find-by-field *model* "login" login)))
+
+(defn find-all []
+  (db/find-all *model*))
+
 (defn validate [user]
   (conj {}
     (when (blank? (:password user)) [:password "is required"])
     (when (blank? (:avatar user)) [:avatar "is required"])
+    (when-not (empty? (find-by-login (:login user))) [:login "must be unique"])
     (when (blank? (:login user)) [:login "is required"])))
 
 (defn sign-up! [user-args]
@@ -26,12 +33,6 @@
     (when (empty? errors)
       (db/insert *model* (build-user user-args)))
     errors))
-
-(defn find-by-login [login]
-  (first (db/find-by-field *model* "login" login)))
-
-(defn find-all []
-  (db/find-all *model*))
 
 (defn authenticate [login password]
   (let [user (find-by-login login)]
