@@ -14,6 +14,9 @@ body {
   width: 820px;
   /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */ }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: franklin-gothic-urw,sans-serif; }
+
 /* The white background content wrapper */
 .content {
   background-color: #fff;
@@ -98,3 +101,18 @@ body {
         margin: 0;
         height: 3px;
         width: 0%; }
+
+#playlist {
+  width: 400px;
+  list-style-position: inside; }
+  #playlist li {
+    margin: 10px 0;
+    border-bottom: 1px solid lightgrey; }
+    #playlist li .title, #playlist li .artist, #playlist li .album {
+      display: inline;
+      color: gray;
+      padding: 0 3px; }
+    #playlist li .title {
+      font-size: 16px; }
+    #playlist li .artist, #playlist li .album {
+      font-size: 12px; }

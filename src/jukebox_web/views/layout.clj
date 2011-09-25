@@ -39,10 +39,12 @@
     (html5
       [:head
        [:title title]
+       [:script {:src "http://use.typekit.com/ygg5mdb.js"}]
        [:script {:src "/js/jquery-1.6.4.min.js"}]
        [:script {:src "/js/underscore-min.js"}]
        [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/notifications.js"}]
+       [:script {:src "/js/artwork.js"}]
        [:script {:src "/js/files.js"}]
        [:script {:src "/js/bootstrap-dropdown.js"}]
        [:script {:src "/js/application.js"}]

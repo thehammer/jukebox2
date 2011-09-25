@@ -6,20 +6,17 @@
 
 (defn display-song [song]
   (let [tags (extract-tags song)]
-    [:div.song
-      [:span.artist (:artist tags)]
-      " - "
-      [:span.title (:title tags)]
-      " ("
-      [:span.album (:album tags)]
-      ")"]))
+    [:div.song.media-grid
+      [:div.album-cover {:data-artist (:artist tags) :data-album (:album tags)}]
+      [:h1.title (:title tags)]
+      [:p.artist (:artist tags)]
+      [:p.album (:album tags)]]))
 
 (defn index [request current-song queued-songs]
   (layout/main request "Playlist"
-     [:h3 "Current Song"]
-     [:p (display-song current-song)]
-     [:h3 "Queued Songs"]
-     [:ul (map #(vector :li (display-song %)) queued-songs)]
+     (display-song current-song)
+     [:h3 "Playlist"]
+     [:ol#playlist (map #(vector :li (display-song %)) queued-songs)]
      [:div.row
        [:div.span3
          [:h3 "Operations"]
