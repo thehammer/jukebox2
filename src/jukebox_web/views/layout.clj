@@ -38,7 +38,7 @@
   (let [current-user (user/find-by-login (-> request :session :current-user))]
     (html5
       [:head
-       [:title title]
+       [:title (str title " - jukebox2")]
        [:script {:src "http://use.typekit.com/ygg5mdb.js"}]
        [:script {:src "/js/jquery-1.6.4.min.js"}]
        [:script {:src "/js/underscore-min.js"}]
