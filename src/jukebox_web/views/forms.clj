@@ -7,3 +7,9 @@
     (field-type id)
     [:span (id errors)]])
 
+(defn labeled-field-with-value [field-type id label-text value errors]
+  [:div
+    (label id label-text)
+    (field-type id value)
+    [:span (id errors)]])
+
