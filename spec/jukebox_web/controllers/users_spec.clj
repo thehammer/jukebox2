@@ -2,6 +2,7 @@
   (:require [jukebox-web.controllers.users :as users-controller])
   (:require [jukebox-web.models.user :as user])
   (:require [jukebox-web.models.factory :as factory])
+  (:require [clojure.contrib.string :as string])
   (:use [speclj.core]
         [jukebox-web.spec-helper]))
 
@@ -27,6 +28,22 @@
             request {:params {:login "bob" :password "fat-finger"}}
             response (users-controller/authenticate request)]
         (should= nil (-> response :session :current-user)))))
+
+  (describe "edit"
+    (it "renders successfully"
+      (user/sign-up! (factory/user {:login "test-edit"}))
+      (let [request {:params {:login "test-edit"}}
+            response (users-controller/edit request)]
+        (should (string/substring? "Edit test-edit" response)))))
+
+  (describe "update"
+    (it "updates the user and redirects"
+      (user/sign-up! (factory/user {:login "test-update" :avatar "old-avatar.png"}))
+      (let [request {:params {:login "test-update" :avatar "new-avatar.png"}}
+            response (users-controller/update request)]
+        (should= 302 (:status response))
+        (should= {"Location" "/users"} (:headers response))
+        (should= "new-avatar.png" (:avatar (user/find-by-login "test-update"))))))
 
   (describe "sign-up"
     (it "saves a valid user"

@@ -17,12 +17,21 @@
     [:td [:img {:src (:avatar user)}]]
     [:td [:span (:login user)]]
     [:td [:span (:skip-count user)]]
-    [:td (form-to [:post "/users/toggle-enabled"]
-           (hidden-field "login" (:login user))
-           (submit-button (if (:enabled user) "Disable" "Enable")))]])
+    [:td
+     (form-to [:post "/users/toggle-enabled"]
+       (hidden-field "login" (:login user))
+       (submit-button (if (:enabled user) "Disable" "Enable")))
+     [:a {:href (str "/users/" (:login user) "/edit")} "Edit"]]])
 
 (defn index [request users]
   (layout/main request "Users"
     [:table
-      [:tr [:th] [:th "Login"] [:th "Skips"]]
+      [:tr [:th] [:th "Login"] [:th "Skips"] [:th "Actions"]]
       (map show-user users)]))
+
+(defn edit [request user]
+  (layout/main request (str "Edit User: " (:login user))
+    [:h2 (str "Edit " (:login user))
+      (form-to [:post (str "/users/" (:login user) "/update")]
+        (labeled-field text-field :avatar "Avatar" nil)
+        [:div (submit-button "Update")])]))

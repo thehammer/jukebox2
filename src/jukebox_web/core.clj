@@ -26,6 +26,8 @@
   (GET "/users/sign-up" [] users-controller/sign-up-form)
   (POST "/users/sign-up" [] users-controller/sign-up)
   (POST "/users/toggle-enabled" [] users-controller/toggle-enabled)
+  (GET "/users/:login/edit" [] users-controller/edit)
+  (POST "/users/:login/update" [] users-controller/update)
   (GET "/hammertimes" [] hammertimes-controller/index)
   (GET "/hammertime" [] hammertimes-controller/create-form)
   (POST "/hammertime" [] hammertimes-controller/create)

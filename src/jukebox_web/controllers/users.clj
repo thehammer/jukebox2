@@ -8,6 +8,15 @@
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user login}}
       {:status 302 :headers {"Location" "/playlist"}})))
 
+(defn edit [request]
+  (let [user (user/find-by-login (-> request :params :login))]
+    (view/edit request user)))
+
+(defn update [request]
+  (let [user (user/find-by-login (-> request :params :login))]
+    (user/update! user {:avatar (-> request :params :avatar)})
+    {:status 302 :headers {"Location" "/users"}}))
+
 (defn sign-out [request]
   {:status 302 :headers {"Location" "/playlist"} :session {:current-user nil}})
 

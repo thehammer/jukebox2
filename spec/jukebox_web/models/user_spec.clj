@@ -82,6 +82,15 @@
     (user/increment-skip-count! "test")
     (should= 2 (:skip-count (user/find-by-login "test")))))
 
+(describe "update!"
+  (with-database-connection)
+
+  (it "updates the user"
+    (user/sign-up! (factory/user {:login "avatar-test" :avatar "old-avatar.png"}))
+    (let [user (user/find-by-login "avatar-test")]
+      (user/update! user {:avatar "new-avatar.png"})
+      (should= "new-avatar.png" (:avatar (user/find-by-login "avatar-test"))))))
+
 (describe "find-all"
   (with-database-connection)
 

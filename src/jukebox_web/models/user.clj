@@ -48,3 +48,7 @@
 (defn toggle-enabled! [login]
   (let [enabled (:enabled (find-by-login login))]
     (db/update *model* {:enabled (not enabled)} :login login)))
+
+(defn update! [user user-args]
+  (db/update *model* user-args :login (:login user)))
+
