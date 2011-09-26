@@ -28,11 +28,14 @@
   (conj {}
     (when (blank? (:password user)) [:password "is required"])
     (when (blank? (:avatar user)) [:avatar "is required"])
-    (when-not (empty? (find-by-login (:login user))) [:login "must be unique"])
     (when (blank? (:login user)) [:login "is required"])))
 
+(defn validate-for-sign-up [user]
+  (conj (validate user)
+    (when-not (empty? (find-by-login (:login user))) [:login "must be unique"])))
+
 (defn sign-up! [user-args]
-  (let [errors (validate user-args)]
+  (let [errors (validate-for-sign-up user-args)]
     (if (empty? errors)
       [(db/insert *model* (build-user user-args)) errors]
       [nil errors])))
@@ -53,5 +56,8 @@
     (db/update *model* {:enabled (not enabled)} :login login)))
 
 (defn update! [user user-args]
-  (db/update *model* user-args :id (:id user)))
+  (let [errors (validate (conj user user-args))]
+    (if (empty? errors)
+      (db/update *model* user-args :id (:id user)))
+    errors))
 

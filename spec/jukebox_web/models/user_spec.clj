@@ -48,9 +48,9 @@
     (let [errors (user/validate {:login "foo" :avatar "http://foo.com"})]
       (should= "is required" (:password errors))))
 
-  (it "requires unique login"
+  (it "requires unique login on sign up"
     (user/sign-up! (factory/user {}))
-    (let [errors (user/validate (factory/user {}))]
+    (let [errors (user/validate-for-sign-up (factory/user {}))]
       (should= "must be unique" (:login errors)))))
 
 (describe "authenticate"
@@ -89,7 +89,17 @@
     (user/sign-up! (factory/user {:login "avatar-test" :avatar "old-avatar.png"}))
     (let [user (user/find-by-login "avatar-test")]
       (user/update! user {:avatar "new-avatar.png"})
-      (should= "new-avatar.png" (:avatar (user/find-by-login "avatar-test"))))))
+      (should= "new-avatar.png" (:avatar (user/find-by-login "avatar-test")))))
+
+  (it "merges user-args with current attributes when running validations"
+    (user/sign-up! (factory/user {:login "avatar-test" :avatar "old-avatar.png"}))
+    (let [user (user/find-by-login "avatar-test")]
+      (user/update! user {:avatar "new-avatar.png"})
+      (should= "new-avatar.png" (:avatar (user/find-by-login "avatar-test")))))
+
+  (it "returns errors if validations fail"
+    (let [errors (user/update! (factory/user {}) {:avatar ""})]
+      (should= "is required" (:avatar errors)))))
 
 (describe "find-all"
   (with-database-connection)

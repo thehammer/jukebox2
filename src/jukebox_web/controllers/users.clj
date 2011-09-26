@@ -10,12 +10,14 @@
 
 (defn edit [request]
   (let [user (user/find-by-id (-> request :params :id))]
-    (view/edit request user)))
+    (view/edit request user nil)))
 
 (defn update [request]
-  (let [user (user/find-by-id (-> request :params :id))]
-    (user/update! user {:avatar (-> request :params :avatar)})
-    {:status 302 :headers {"Location" "/users"}}))
+  (let [user (user/find-by-id (-> request :params :id))
+        errors (user/update! user {:avatar (-> request :params :avatar)})]
+    (if (empty? errors)
+      {:status 302 :headers {"Location" "/users"}}
+      (view/edit request user errors))))
 
 (defn sign-out [request]
   {:status 302 :headers {"Location" "/playlist"} :session {:current-user nil}})

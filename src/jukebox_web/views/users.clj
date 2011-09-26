@@ -29,9 +29,9 @@
       [:tr [:th "Avatar"] [:th "Login"] [:th "Skips"] [:th "Actions"]]
       (map show-user users)]))
 
-(defn edit [request user]
+(defn edit [request user errors]
   (layout/main request (str "Edit User: " (:login user))
     [:h2 (str "Edit " (:login user))
       (form-to [:post (str "/users/" (:id user) "/update")]
-        (labeled-field-with-value text-field :avatar "Avatar" (:avatar user) nil)
+        (labeled-field-with-value text-field :avatar "Avatar" (or (-> request :params :avatar) (:avatar user)) errors)
         [:div (submit-button "Update")])]))
