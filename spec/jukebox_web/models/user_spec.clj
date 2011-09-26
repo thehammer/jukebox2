@@ -9,13 +9,13 @@
   (with-database-connection)
 
   (it "stores a new user"
-    (let [errors (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
+    (let [[user errors] (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
           hammer (user/find-by-login "hammer")]
       (should (empty? errors))
       (should= "http://gravitar.org/somepic" (:avatar hammer))))
 
   (it "encrypts the password before storing"
-    (let [errors (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
+    (let [[user errors] (user/sign-up! {:login "hammer" :password "dont hurt em" :avatar "http://gravitar.org/somepic"})
           hammer (user/find-by-login "hammer")
           hashed-password (:password hammer)]
       (should (BCrypt/checkpw "dont hurt em" hashed-password))))
@@ -29,7 +29,7 @@
     (should (:enabled (user/find-by-login "test"))))
 
   (it "returns errors if the user is not valid"
-    (let [errors (user/sign-up! {})]
+    (let [[user errors] (user/sign-up! {})]
       (should-not (empty? errors))
       (should= "is required" (:login errors)))))
 

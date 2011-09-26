@@ -31,15 +31,15 @@
 
   (describe "edit"
     (it "renders successfully"
-      (user/sign-up! (factory/user {:login "test-edit"}))
-      (let [request {:params {:login "test-edit"}}
+      (let [[user errors] (user/sign-up! (factory/user {:login "test-edit"}))
+            request {:params {:id (:id user)}}
             response (users-controller/edit request)]
         (should (string/substring? "Edit test-edit" response)))))
 
   (describe "update"
     (it "updates the user and redirects"
-      (user/sign-up! (factory/user {:login "test-update" :avatar "old-avatar.png"}))
-      (let [request {:params {:login "test-update" :avatar "new-avatar.png"}}
+      (let [[user errors] (user/sign-up! (factory/user {:login "test-update" :avatar "old-avatar.png"}))
+            request {:params {:id (:id user) :avatar "new-avatar.png"}}
             response (users-controller/update request)]
         (should= 302 (:status response))
         (should= {"Location" "/users"} (:headers response))

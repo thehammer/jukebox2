@@ -15,6 +15,9 @@
 (defn- build-user [user-args]
   (-> user-args merge-defaults hash-password))
 
+(defn find-by-id [id]
+  (first (db/find-by-field *model* "id" id)))
+
 (defn find-by-login [login]
   (first (db/find-by-field *model* "login" login)))
 
@@ -30,9 +33,9 @@
 
 (defn sign-up! [user-args]
   (let [errors (validate user-args)]
-    (when (empty? errors)
-      (db/insert *model* (build-user user-args)))
-    errors))
+    (if (empty? errors)
+      [(db/insert *model* (build-user user-args)) errors]
+      [nil errors])))
 
 (defn authenticate [login password]
   (let [user (find-by-login login)]
@@ -50,5 +53,5 @@
     (db/update *model* {:enabled (not enabled)} :login login)))
 
 (defn update! [user user-args]
-  (db/update *model* user-args :login (:login user)))
+  (db/update *model* user-args :id (:id user)))
 

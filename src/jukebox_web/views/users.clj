@@ -21,7 +21,7 @@
      (form-to [:post "/users/toggle-enabled"]
        (hidden-field "login" (:login user))
        (submit-button (if (:enabled user) "Disable" "Enable")))
-     [:a {:href (str "/users/" (:login user) "/edit")} "Edit"]]])
+     [:a {:href (str "/users/" (:id user) "/edit")} "Edit"]]])
 
 (defn index [request users]
   (layout/main request "Users"
@@ -32,6 +32,6 @@
 (defn edit [request user]
   (layout/main request (str "Edit User: " (:login user))
     [:h2 (str "Edit " (:login user))
-      (form-to [:post (str "/users/" (:login user) "/update")]
+      (form-to [:post (str "/users/" (:id user) "/update")]
         (labeled-field text-field :avatar "Avatar" nil)
         [:div (submit-button "Update")])]))

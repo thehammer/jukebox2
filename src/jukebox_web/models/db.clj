@@ -14,8 +14,11 @@
 (defn close-db [connection]
   (fleetdb/close connection))
 
-(defn- create-pk [record]
-  (conj record ["id" (str ( UUID/randomUUID))]))
+(defn- add-id [record id]
+  (conj record ["id" id]))
+
+(defn- generate-id []
+  (str (UUID/randomUUID)))
 
 (defn- keys-to-strings [record]
   (reduce #(conj %1 [(as-str (first %2)) (nth %2 1)]) {} record))
@@ -24,7 +27,9 @@
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
 
 (defn insert [model record]
-  (fleetdb/query *db* ["insert" (as-str model) (create-pk (keys-to-strings record))]))
+  (let [id (generate-id)]
+    (fleetdb/query *db* ["insert" (as-str model) (add-id (keys-to-strings record) id)])
+    (conj record {:id id})))
 
 (defn find-by-field [model field value]
   (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) {"where" ["=" (as-str field) value]}])))

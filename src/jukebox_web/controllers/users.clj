@@ -9,11 +9,11 @@
       {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn edit [request]
-  (let [user (user/find-by-login (-> request :params :login))]
+  (let [user (user/find-by-id (-> request :params :id))]
     (view/edit request user)))
 
 (defn update [request]
-  (let [user (user/find-by-login (-> request :params :login))]
+  (let [user (user/find-by-id (-> request :params :id))]
     (user/update! user {:avatar (-> request :params :avatar)})
     {:status 302 :headers {"Location" "/users"}}))
 
@@ -24,7 +24,7 @@
   (view/sign-up request {}))
 
 (defn sign-up [request]
-  (let [errors (user/sign-up! (:params request))]
+  (let [[user errors] (user/sign-up! (:params request))]
     (if (empty? errors)
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
       (view/sign-up request errors))))
