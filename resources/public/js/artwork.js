@@ -23,8 +23,9 @@
       });
     };
     Artwork.prototype.render = function(e, info) {
-      var img, src, wrap;
-      src = $(info).find('image[size=large]').text();
+      var img, size, src, wrap;
+      size = $(this).attr('data-thumbnail');
+      src = $(info).find("image[size=" + size + "]").text();
       wrap = $('<a />', {
         'href': '#'
       });

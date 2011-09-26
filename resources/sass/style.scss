@@ -118,21 +118,48 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #playlist {
-
-  width:400px;
   list-style-position:inside;
 
   li {
     margin:10px 0;
-    border-bottom:1px solid lightgrey;
+    padding:5px 0;
+    border-bottom:1px solid lightgray;
 
     .title, .artist, .album {
-      display:inline;
       color: gray;
-      padding:0 3px;
+      display:inline;
+      padding:3px;
+    }
+    .title {
+      font-size: 14px;
+      text-transform:none;
+      line-height:20px;
     }
 
-    .title { font-size: 16px; }
     .artist, .album { font-size:12px; }
+
   }
+}
+
+div.song {
+
+  a {cursor:default;}
+
+  .meta-data {
+    float:left;
+    padding-left: 20px;
+  }
+
+  .artist, .album {
+    font-size:16px;
+  }
+}
+
+div.row {
+  margin-left:0;
+}
+
+p.random {
+  padding-left:20px;
+  color:gray;
 }

@@ -103,16 +103,33 @@ h1, h2, h3, h4, h5, h6 {
         width: 0%; }
 
 #playlist {
-  width: 400px;
   list-style-position: inside; }
   #playlist li {
     margin: 10px 0;
-    border-bottom: 1px solid lightgrey; }
+    padding: 5px 0;
+    border-bottom: 1px solid lightgray; }
     #playlist li .title, #playlist li .artist, #playlist li .album {
-      display: inline;
       color: gray;
-      padding: 0 3px; }
+      display: inline;
+      padding: 3px; }
     #playlist li .title {
-      font-size: 16px; }
+      font-size: 14px;
+      text-transform: none;
+      line-height: 20px; }
     #playlist li .artist, #playlist li .album {
       font-size: 12px; }
+
+div.song a {
+  cursor: default; }
+div.song .meta-data {
+  float: left;
+  padding-left: 20px; }
+div.song .artist, div.song .album {
+  font-size: 16px; }
+
+div.row {
+  margin-left: 0; }
+
+p.random {
+  padding-left: 20px;
+  color: gray; }
