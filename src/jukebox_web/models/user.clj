@@ -33,6 +33,7 @@
 
 (defn validate-new-user [user]
   (co/validate user
+    :password-confirmation (co/is-confirmed-by :password)
     :login #(if-not (nil? (find-by-login (%2 %1))) "must be unique")))
 
 (defn validate-for-sign-up [user]

@@ -11,21 +11,21 @@
 
   (describe "authenticate"
     (it "redirects to the playlist if credentials are correct"
-      (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
-            request {:params {:login "bob" :password "pass"}}
+      (user/sign-up! (factory/user {:login "bob" :password "pass" :password-confirmation "pass"}))
+      (let [request {:params {:login "bob" :password "pass"}}
             response (users-controller/authenticate request)]
         (should= 302 (:status response))
         (should= {"Location" "/playlist"} (:headers response))))
 
     (it "sets the current user in the session"
-      (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
-            request {:params {:login "bob" :password "pass"}}
+      (user/sign-up! (factory/user {:login "bob" :password "pass" :password-confirmation "pass"}))
+      (let [request {:params {:login "bob" :password "pass"}}
             response (users-controller/authenticate request)]
         (should= "bob" (-> response :session :current-user))))
 
     (it "session is empty if the credentials are incorrect"
-      (let [bob (user/sign-up! (factory/user {:login "bob" :password "pass"}))
-            request {:params {:login "bob" :password "fat-finger"}}
+      (user/sign-up! (factory/user {:login "bob" :password "pass" :password-confirmation "pass"}))
+      (let [request {:params {:login "bob" :password "fat-finger"}}
             response (users-controller/authenticate request)]
         (should= nil (-> response :session :current-user)))))
 
