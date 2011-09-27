@@ -1,5 +1,6 @@
 (ns jukebox-player.core
-  (:use [jukebox-player.playable])
+  (:use [jukebox-player.playable]
+        [clojure.java.io :only (as-file)])
   (:require [jukebox-player.mp4-track :as mp4]
             [jukebox-player.basic-track :as basic])
   (:import [javax.sound.sampled AudioSystem]))

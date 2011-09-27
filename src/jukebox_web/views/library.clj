@@ -4,11 +4,8 @@
   (:use [hiccup core page-helpers]
         [hiccup core form-helpers]
         [jukebox-player.tags]
-        [ring.util.codec :only (url-encode)]
+        [jukebox-web.util.file :only (relative-uri)]
         [clojure.string :only (join split)]))
-
-(defn- relative-uri [file]
-   (url-encode (.getPath file)))
 
 (defn display-file [file]
   (if (library/track? file)
