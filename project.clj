@@ -5,7 +5,7 @@
                  [org.clojure/clojure-contrib "1.2.0"]
                  [org.jaudiotagger/jaudiotagger "2.0.1"]
                  [fleetdb "0.3.1"]
-                 [corroborate "0.0.1-SNAPSHOT"]
+                 [corroborate "0.1.0"]
                  [compojure "0.6.5"]
                  [org.mindrot/jbcrypt "0.3m"]]
   :dev-dependencies [[lein-ring "0.4.5"]
