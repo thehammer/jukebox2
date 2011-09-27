@@ -2,6 +2,7 @@
   (:use compojure.core)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
+            [ring.middleware.flash :as flash]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
@@ -51,5 +52,7 @@
       response)))
 
 (def app
-  (-> (handler/site main-routes)
-      (with-connection)))
+  (-> (handler/site
+       (flash/wrap-flash main-routes))
+       (with-connection)))
+

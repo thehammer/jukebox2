@@ -63,7 +63,9 @@
        [:ul#notifications]
        [:div.container
         [:div.content
-         content]]
+         (str
+           (if (-> request :flash :success) (html [:div {:class "alert-message success"} (-> request :flash :success)]))
+           (html content))]]
        [:script#file-notification {:type "text/example" }
         [:li.uploading.alert-message.block-message
          [:p "<%= file.name %> <%= file.size %>mb"]

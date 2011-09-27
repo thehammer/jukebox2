@@ -23,7 +23,7 @@
 
 (defn delete [request]
   (hammertime/delete-by-id! (-> request :params :id))
-  {:status 302 :headers {"Location" "/hammertimes"}})
+  {:status 302 :headers {"Location" "/hammertimes"} :flash {:success "Hammertime successfully deleted"}})
 
 (defn browse-root [request]
   (view/browse request "Hammertimes" (lib/list-directory)))
