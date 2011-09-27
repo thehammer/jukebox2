@@ -9,8 +9,9 @@
                  [compojure "0.6.5"]
                  [org.mindrot/jbcrypt "0.3m"]]
   :dev-dependencies [[lein-ring "0.4.5"]
+                     [ring/ring-jetty-async-adapter "0.3.3-SNAPSHOT"]
                      [lein-javac "1.2.1-SNAPSHOT"]
                      [speclj "1.2.0"]]
   :java-source-path [["src/jukebox_player"]]
-  :ring {:handler jukebox-web.core/app}
+  :ring {:handler jukebox-web.core/boot}
   :test-path "spec/")

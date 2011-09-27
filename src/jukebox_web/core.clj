@@ -12,6 +12,25 @@
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.users :as users-controller]))
 
+(defn- websocket-handler [req]
+  (println "receiving websocket request")
+  (let [name (:name (:params req))]
+    {:async :websocket
+     :reactor
+       (fn [send]
+         (fn [{:keys [type data]}]
+           (case type
+             :connect
+                (println "connect!")
+             :message
+               (do
+                 (println (format "message! (%s) %s" name data))
+                 (when (= "quit" data)
+                   (send {:type :message :data "goodbye"})
+                   (send {:type :disconnect})))
+             :disconnect
+               (println "disconnect!"))))}))
+
 (defroutes main-routes
   (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
   (GET "/playlist" [] playlist-controller/index)
@@ -39,6 +58,7 @@
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
+  (GET "/websocket" [] websocket-handler)
   (route/resources "/")
   (route/not-found "Page not found"))
 
@@ -55,4 +75,7 @@
   (-> (handler/site
        (flash/wrap-flash main-routes))
        (with-connection)))
+
+def boot
+(run-jetty-async app {:port 3000}))
 
