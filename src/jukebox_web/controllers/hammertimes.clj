@@ -19,3 +19,8 @@
   (let [{:keys [file start end]} (hammertime/find-by-name (-> request :params :name))]
     (player/hammertime! file start end))
     {:status 302 :headers {"Location" "/hammertimes"}})
+
+(defn delete [request]
+  (hammertime/delete-by-id! (-> request :params :id))
+  {:status 302 :headers {"Location" "/hammertimes"}})
+

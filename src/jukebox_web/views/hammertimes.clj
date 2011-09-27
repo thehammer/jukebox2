@@ -18,7 +18,9 @@
     [:td
       (form-to [:post "/hammertimes/play"]
         (hidden-field :name (:name hammertime))
-        (submit-button "Play"))]])
+        [:input {:type "submit" :value "Play" :class "btn primary"}])
+      (form-to [:post (str "/hammertimes/" (:id hammertime) "/delete")]
+        [:input {:type "submit" :value "Delete" :class "btn danger"}])]])
 
 (defn index [request hammertimes]
   (layout/main request "Hamertimes"

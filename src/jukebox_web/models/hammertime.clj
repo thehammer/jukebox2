@@ -7,9 +7,9 @@
 
 (defn validate [hammertime]
   (co/validate hammertime
-    :name (co/is-required) 
-    :file (co/is-required) 
-    :start (co/is-required) 
+    :name (co/is-required)
+    :file (co/is-required)
+    :start (co/is-required)
     :end (co/is-required)))
 
 (defn create! [hammertime]
@@ -17,6 +17,9 @@
     (when (empty? errors)
       (db/insert *model* hammertime))
     errors))
+
+(defn delete-by-id! [id]
+  (db/delete *model* id))
 
 (defn find-by-name [name]
   (first (db/find-by-field *model* :name name)))

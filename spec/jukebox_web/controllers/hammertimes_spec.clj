@@ -25,3 +25,14 @@
       (should= 302 (:status response))
       (should= {"Location" "/playlist"} (:headers response)))))
 
+(describe "delete"
+  (with-database-connection)
+    (it "deletes the hammertime and redirects"
+      (hammertime/create! {:name "test"})
+      (let [hammertime (hammertime/find-by-name "test")
+            request {:params {:id (:id hammertime)}}
+            response (hammertimes-controller/delete request)]
+        (should= 302 (:status response))
+        (should= {"Location" "/hammertimes"} (:headers response))
+        (should (nil? (hammertime/find-by-name "test"))))))
+

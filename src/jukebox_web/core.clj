@@ -32,6 +32,7 @@
   (GET "/hammertime" [] hammertimes-controller/create-form)
   (POST "/hammertime" [] hammertimes-controller/create)
   (POST "/hammertimes/play" [] hammertimes-controller/play)
+  (POST "/hammertimes/:id/delete" [] hammertimes-controller/delete)
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
