@@ -1,5 +1,7 @@
 (ns jukebox-web.views.playlist
-  (:require [jukebox-web.views.layout :as layout])
+  (:require
+    [jukebox-web.views.layout :as layout]
+    [jukebox-player.core :as player])
   (:use [hiccup core page-helpers]
         [hiccup core form-helpers]
         [jukebox-player.tags]))
@@ -13,9 +15,9 @@
         [:p.artist (:artist tags)]
         [:p.album (:album tags)]
         [:p.controls
-         [:a.btn {:href "/player/play" :data-remote "true"} "Play"]
-         [:a.btn {:href "/player/pause" :data-remote "true"} "Pause"]
-         (when-not (nil? (-> request :session :current-user)) [:a.btn {:href "/player/skip" :data-remote "true"} "Skip"])]]]))
+         (if (player/paused?) [:a.btn {:href "/player/play" :data-remote "true"} "Play"])
+         (if (player/playing?) [:a.btn {:href "/player/pause" :data-remote "true"} "Pause"])
+         (if (player/playing?) (when-not (nil? (-> request :session :current-user)) [:a.btn {:href "/player/skip" :data-remote "true"} "Skip"]))]]]))
 
 (defn playlist [song]
   (let [tags (extract-tags song)]

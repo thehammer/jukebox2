@@ -6,7 +6,7 @@
   [:div.pull-right
    [:ul
     [:li.dropdown.persist {:data-dropdown "dropdown"}
-     [:a.dropdown-toggle "would you like to log in?"]
+     [:a.dropdown-toggle "who are you?"]
      [:ul.dropdown-menu
       [:form.login {:method :post :action "/users/authenticate"}
        [:input.input-small {:type "text" :placeholder "login" :name "login"}]
@@ -17,7 +17,7 @@
   [:div.pull-right.logged-in
     [:ul
      [:li.dropdown {:data-dropdown "dropdown"}
-      [:a.dropdown-toggle "this is you " (:login current-user) " " ]
+      [:a.dropdown-toggle (:login current-user) ]
       [:ul.dropdown-menu
        [:li (form-to [:post "/users/sign-out"]
                      (submit-button "Sign Out"))]]]
