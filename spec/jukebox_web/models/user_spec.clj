@@ -31,27 +31,27 @@
   (it "returns errors if the user is not valid"
     (let [[user errors] (user/sign-up! {})]
       (should-not (empty? errors))
-      (should= "is required" (:login errors)))))
+      (should= ["is required"] (:login errors)))))
 
 (describe "validate"
   (with-database-connection)
 
   (it "requires a login"
     (let [errors (user/validate {:password "" :avatar "http://foo.com"})]
-      (should= "is required" (:login errors))))
+      (should= ["is required"] (:login errors))))
 
   (it "requires an avatar"
     (let [errors (user/validate {:login "foo" :password ""})]
-      (should= "is required" (:avatar errors))))
+      (should= ["is required"] (:avatar errors))))
 
   (it "requires a password"
     (let [errors (user/validate {:login "foo" :avatar "http://foo.com"})]
-      (should= "is required" (:password errors))))
+      (should= ["is required"] (:password errors))))
 
   (it "requires unique login on sign up"
     (user/sign-up! (factory/user {}))
     (let [errors (user/validate-for-sign-up (factory/user {}))]
-      (should= "must be unique" (:login errors)))))
+      (should= ["must be unique"] (:login errors)))))
 
 (describe "authenticate"
   (with-database-connection)
@@ -99,7 +99,7 @@
 
   (it "returns errors if validations fail"
     (let [errors (user/update! (factory/user {}) {:avatar ""})]
-      (should= "is required" (:avatar errors)))))
+      (should= ["is required"] (:avatar errors)))))
 
 (describe "find-all"
   (with-database-connection)

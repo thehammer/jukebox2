@@ -1,5 +1,6 @@
 (ns jukebox-web.models.user
-  (:require [jukebox-web.models.db :as db]
+  (:require [corroborate.core :as co]
+            [jukebox-web.models.db :as db]
             [jukebox-web.util.crypt :as crypt])
   (:use [clojure.contrib.string :only (blank?)]))
 
@@ -25,14 +26,19 @@
   (db/find-all *model*))
 
 (defn validate [user]
-  (conj {}
-    (when (blank? (:password user)) [:password "is required"])
-    (when (blank? (:avatar user)) [:avatar "is required"])
-    (when (blank? (:login user)) [:login "is required"])))
+  (co/validate user
+    :password (co/is-required)
+    :avatar (co/is-required)
+    :login (co/is-required)))
+
+(defn validate-new-user [user]
+  (co/validate user
+    :login #(if-not (nil? (find-by-login (%2 %1))) "must be unique")))
 
 (defn validate-for-sign-up [user]
-  (conj (validate user)
-    (when-not (empty? (find-by-login (:login user))) [:login "must be unique"])))
+  (co/validate-staged user
+    validate
+    validate-new-user))
 
 (defn sign-up! [user-args]
   (let [errors (validate-for-sign-up user-args)]

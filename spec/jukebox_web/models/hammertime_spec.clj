@@ -16,19 +16,19 @@
 (describe "validate"
   (it "requires a name"
     (let [errors (validate (factory/hammertime {:name nil}))]
-      (should= "is required" (:name errors))))
+      (should= ["is required"] (:name errors))))
 
   (it "requires a path"
     (let [errors (validate (factory/hammertime {:file nil}))]
-      (should= "is required" (:file errors))))
+      (should= ["is required"] (:file errors))))
 
   (it "requires a start time"
     (let [errors (validate (factory/hammertime {:start nil}))]
-      (should= "is required" (:start errors))))
+      (should= ["is required"] (:start errors))))
 
   (it "requires a end time"
     (let [errors (validate (factory/hammertime {:end nil}))]
-      (should= "is required" (:end errors)))))
+      (should= ["is required"] (:end errors)))))
 
 (describe "find-all"
   (with-database-connection)

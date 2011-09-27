@@ -1,15 +1,16 @@
 (ns jukebox-web.models.hammertime
   (:use [clojure.contrib.string :only (blank?)])
-  (:require [jukebox-web.models.db :as db]))
+  (:require [jukebox-web.models.db :as db]
+            [corroborate.core :as co]))
 
 (def *model* "hammertimes")
 
 (defn validate [hammertime]
-  (conj {}
-    (when (blank? (:name hammertime)) [:name "is required"])
-    (when (blank? (:file hammertime)) [:file "is required"])
-    (when (nil? (:start hammertime)) [:start "is required"])
-    (when (nil? (:end hammertime)) [:end "is required"])))
+  (co/validate hammertime
+    :name (co/is-required) 
+    :file (co/is-required) 
+    :start (co/is-required) 
+    :end (co/is-required)))
 
 (defn create! [hammertime]
   (let [errors (validate hammertime)]
