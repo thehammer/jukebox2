@@ -1,5 +1,6 @@
 (ns jukebox-web.core
-  (:use compojure.core)
+  (:use compojure.core
+        ring.adapter.jetty-async)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
@@ -76,6 +77,6 @@
        (flash/wrap-flash main-routes))
        (with-connection)))
 
-def boot
+(def boot
 (run-jetty-async app {:port 3000}))
 
