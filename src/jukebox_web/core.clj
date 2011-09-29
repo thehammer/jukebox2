@@ -1,6 +1,8 @@
 (ns jukebox-web.core
   (:use compojure.core
-        ring.adapter.jetty-async)
+        clojure.contrib.command-line
+        aleph.http)
+
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
@@ -11,26 +13,8 @@
             [jukebox-web.controllers.library :as library-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
-            [jukebox-web.controllers.users :as users-controller]))
-
-(defn- websocket-handler [req]
-  (println "receiving websocket request")
-  (let [name (:name (:params req))]
-    {:async :websocket
-     :reactor
-       (fn [send]
-         (fn [{:keys [type data]}]
-           (case type
-             :connect
-                (println "connect!")
-             :message
-               (do
-                 (println (format "message! (%s) %s" name data))
-                 (when (= "quit" data)
-                   (send {:type :message :data "goodbye"})
-                   (send {:type :disconnect})))
-             :disconnect
-               (println "disconnect!"))))}))
+            [jukebox-web.controllers.users :as users-controller]
+            [jukebox-web.controllers.sockets :as sockets-controller]))
 
 (defroutes main-routes
   (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
@@ -59,7 +43,7 @@
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
-  (GET "/websocket" [] websocket-handler)
+  (GET "/websocket" [] (wrap-aleph-handler sockets-controller/chat-handler))
   (route/resources "/")
   (route/not-found "Page not found"))
 
@@ -71,12 +55,15 @@
           response (binding [db/*db* connection] (handler request))]
       (db/close-db connection)
       response)))
-
 (def app
-  (-> (handler/site
-       (flash/wrap-flash main-routes))
-       (with-connection)))
+  (-> main-routes
+      flash/wrap-flash
+      with-connection))
 
-(def boot
-(run-jetty-async app {:port 3000}))
+(defn start [port]
+  (start-http-server (wrap-ring-handler app) {:port (read-string port) :websocket true}))
 
+(defn -main [& args]
+  (with-command-line args "Jukebox Web Server"
+      [[port p "The port on which to run this server" 8080]]
+          (start port)))

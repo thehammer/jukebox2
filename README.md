@@ -1,6 +1,8 @@
 # jukebox-web
 
-FIXME: write description
+## Spinning up a server
+
+`lein run -p/--port 3000`
 
 ## Usage
 
