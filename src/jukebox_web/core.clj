@@ -57,6 +57,7 @@
       response)))
 (def app
   (-> main-routes
+      handler/site
       flash/wrap-flash
       with-connection))
 
