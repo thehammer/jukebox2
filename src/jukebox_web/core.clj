@@ -1,5 +1,6 @@
 (ns jukebox-web.core
   (:use compojure.core
+        ring.adapter.jetty
         clojure.contrib.command-line
         aleph.http)
 
@@ -43,8 +44,11 @@
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
-  (GET "/websocket" [] (wrap-aleph-handler sockets-controller/chat-handler))
   (route/resources "/")
+  (route/not-found "Page not found"))
+
+(defroutes sockets
+  (GET "/websocket" [] (wrap-aleph-handler sockets-controller/chat-handler))
   (route/not-found "Page not found"))
 
 (player/start (playlist/playlist-seq))
@@ -55,16 +59,20 @@
           response (binding [db/*db* connection] (handler request))]
       (db/close-db connection)
       response)))
+
 (def app
-  (-> main-routes
-      handler/site
+  (-> (handler/site main-routes)
       flash/wrap-flash
       with-connection))
 
-(defn start [port]
-  (start-http-server (wrap-ring-handler app) {:port (read-string port) :websocket true}))
+(defn start-app [port]
+  (run-jetty app {:port (read-string port)}))
+
+(defn start-sockets []
+  (start-http-server (wrap-ring-handler sockets) {:port 3001 :websocket true}))
 
 (defn -main [& args]
   (with-command-line args "Jukebox Web Server"
-      [[port p "The port on which to run this server" 8080]]
-          (start port)))
+      [[port p "The port on which to run this server" 3000]]
+          (pcalls start-sockets)
+          (start-app port)))
