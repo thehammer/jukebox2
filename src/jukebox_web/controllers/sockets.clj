@@ -5,6 +5,6 @@
 
 (defn chat-handler [ch handshake]
   (receive ch
-           (fn [req]
-             (siphon (map* #(str req ": " %) ch) broadcast-channel)
+           (fn [name]
+             (siphon (map* #(str name ": " %) ch) broadcast-channel)
              (siphon broadcast-channel ch))))
