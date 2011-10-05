@@ -46,7 +46,7 @@
   (describe "playlist-seq"
     (it "returns a random track if there are no tracks queued up"
       (should (empty? (playlist/queued-songs)))
-      (should-not (nil? (first (playlist/playlist-seq)))))
+      (should-not-be-nil (first (playlist/playlist-seq))))
 
     (it "returns the first queued track"
       (playlist/add-random-song!)
@@ -54,6 +54,6 @@
         (should= expected (first (playlist/playlist-seq)))))
 
     (it "will return random tracks indefinitely"
-      (should-not (nil? (first (drop 10 (playlist/playlist-seq))))))))
+      (should-not-be-nil (first (drop 10 (playlist/playlist-seq)))))))
 
 (run-specs)

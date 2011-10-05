@@ -10,7 +10,7 @@
 
   (it "stores the hammertime"
     (create! {:name "test" :file "foo.mp3" :start 4 :end 10})
-    (should-not (nil? (find-by-name "test")))))
+    (should-not-be-nil (find-by-name "test"))))
 
 (describe "delete-by-id!"
   (with-database-connection)
@@ -19,7 +19,7 @@
     (create! {:name "test" :file "foo.mp3" :start 4 :end 10})
     (let [hammertime (find-by-name "test")]
       (delete-by-id! (:id hammertime))
-      (should (nil? (find-by-name "test"))))))
+      (should-be-nil (find-by-name "test")))))
 
 (describe "validate"
   (it "requires a name"

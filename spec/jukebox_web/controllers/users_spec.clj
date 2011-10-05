@@ -27,7 +27,7 @@
       (user/sign-up! (factory/user {:login "bob" :password "pass" :password-confirmation "pass"}))
       (let [request {:params {:login "bob" :password "fat-finger"}}
             response (users-controller/authenticate request)]
-        (should= nil (-> response :session :current-user)))))
+        (should-be-nil (-> response :session :current-user)))))
 
   (describe "edit"
     (it "renders successfully"
@@ -49,7 +49,7 @@
     (it "saves a valid user"
       (let [request {:params (factory/user {:login "test"})}
             response (users-controller/sign-up request)]
-        (should-not (nil? (user/find-by-login "test")))))
+        (should-not-be-nil (user/find-by-login "test"))))
 
     (it "redirects valid requests to the playlist"
       (let [request {:params (factory/user {:login "test"})}
@@ -65,8 +65,8 @@
     (it "rerenders the sign-up page if the user is invalid"
       (let [request {:params (factory/user {:login ""})}
             response (users-controller/sign-up request)]
-        (should= nil (:status response))
-        (should= nil (:headers response)))))
+        (should-be-nil (:status response))
+        (should-be-nil (:headers response)))))
 
   (describe "sign-out"
     (before
@@ -81,7 +81,7 @@
 
     (it "removes the current user from the session"
       (let [response (users-controller/sign-out {})]
-        (should= nil (-> response :session :current-user)))))
+        (should-be-nil (-> response :session :current-user)))))
 
   (describe "toggle-enabled"
     (it "redirects back to users index"
