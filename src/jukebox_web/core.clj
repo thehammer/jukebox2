@@ -58,6 +58,6 @@
        (flash/wrap-flash main-routes))
        (with-connection)))
 
-(defn -main [& args]
-  (adapter/run-jetty app {:port 3000}))
+(defn -main [port & args]
+  (adapter/run-jetty app {:port (read-string port)}))
 
