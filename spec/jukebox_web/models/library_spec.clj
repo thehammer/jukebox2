@@ -15,4 +15,13 @@
 
     (it "does not include dotfiles in the list"
       (let [files (map #(.getPath %) (library/list-directory))]
-        (should-not (includes? files ".gitkeep"))))))
+        (should-not (includes? files ".gitkeep")))))
+
+  (describe "all-tracks"
+    (it "only returns files matching .mp3"
+      (let [tracks (library/all-tracks)]
+        (should-not (includes? (map #(.getName %) tracks) "jukebox2.flac"))))  
+
+    (it "does not return dotfiles"
+      (let [tracks (library/all-tracks)]
+        (should-not (includes? (map #(.getName %) tracks) ".gitkeep"))))))

@@ -55,6 +55,5 @@
 (defn all-tracks []
   (let [contents (file-seq (io/file *music-library*))]
     (->> contents
-      (filter #(.isFile %))
-      (filter #(not (= \. (first (.getName %)))))
+      (filter #(.endsWith (.getName %) ".mp3"))
       (map #(relativize *music-library* %)))))
