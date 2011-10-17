@@ -6,6 +6,9 @@
 (defn index [request]
   (view/index request (playlist/current-song) (playlist/queued-songs)))
 
+(defn current-track [request]
+  (view/current-track request (playlist/current-song) (playlist/queued-songs)))
+
 (defn add-one [request]
   (playlist/add-random-song!)
   {:status 302 :headers {"Location" "/playlist"}})

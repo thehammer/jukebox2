@@ -31,13 +31,19 @@
      [:h6.title (:title tags)]
      [:p.artist (:artist tags)]]))
 
+(defn current-track [request current-song queued-songs]
+  (html
+    (display-song current-song request) 
+    [:h3 "Playing Music From"] 
+    (display-enabled-users) 
+    [:div.row
+      [:h3 "Playlist"]
+      (if-not (empty? queued-songs)
+        [:ol#playlist.span6.clearfix (map #(vector :li (playlist %)) queued-songs)]
+        [:p.random "Choosing random tracks"])]))
+
 (defn index [request current-song queued-songs]
   (layout/main request "Playlist"
-     (display-song current-song request)
-     [:h3 "Playing Music From"]
-     (display-enabled-users)
-     [:div.row
-       [:h3 "Playlist"]
-       (if-not (empty? queued-songs)
-         [:ol#playlist.span6.clearfix (map #(vector :li (playlist %)) queued-songs)]
-         [:p.random "Choosing random tracks"])]))
+     [:script {:src "/js/playlist-refresh.js"}]
+     [:div#current_track
+       (current-track request current-song queued-songs)]))
