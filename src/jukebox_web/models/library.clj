@@ -42,6 +42,11 @@
         child-uri (.toURI (io/file child))]
     (io/file (.getPath (.relativize parent-uri child-uri)))))
 
+(defn parent-directory [path]
+  (if (s/blank? path)
+    nil
+    (.getName (relativize *music-library* (.getParent (io/file *music-library* path))))))
+
 (defn list-directory
   ([] (list-directory ""))
   ([path]

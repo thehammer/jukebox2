@@ -18,6 +18,16 @@
       (let [files (map #(.getPath %) (library/list-directory))]
         (should-not (includes? files ".gitkeep")))))
 
+  (describe "parent-directory"
+    (it "returns nil when path is the music library"
+      (should= nil (library/parent-directory ""))) 
+
+    (it "returns the root when its the user"
+      (should= "" (library/parent-directory "user"))) 
+
+    (it "returns the user when in the artist directory"
+      (should= "user" (library/parent-directory "user/artist"))))
+
   (describe "all-tracks"
     (it "only returns files matching .mp3"
       (let [tracks (library/all-tracks)]
