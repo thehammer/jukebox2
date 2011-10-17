@@ -1,16 +1,19 @@
 class Artwork
 
   constructor: ->
-    @covers = $('.album-cover')
-    @covers.bind 'ajax:success', @render
+    @album = undefined
+    @artist = undefined
+    $('#current_track').delegate('.album-cover', 'ajax:success', @render)
     @load()
+    $('#current_track').bind('track.updated', @load)
 
   load: ->
-    @covers.each ->
+    $covers = $('.album-cover')
+    $covers.each ->
       $cover = $(this)
-      album = $cover.attr('data-album')
-      artist = $cover.attr('data-artist')
-      $.get('http://ws.audioscrobbler.com/2.0/', {"method": "album.getInfo", "api_key": "809bf298f1f11c57fbb680b1befdf476", "album": album, "artist": artist}, (data) ->
+      @album = $cover.attr('data-album')
+      @artist = $cover.attr('data-artist')
+      $.get('http://ws.audioscrobbler.com/2.0/', {"method": "album.getInfo", "api_key": "809bf298f1f11c57fbb680b1befdf476", "album": @album, "artist": @artist}, (data) ->
         $cover.trigger 'ajax:success', [data]
       )
 
