@@ -1,0 +1,3 @@
+#!/bin/bash
+
+LEIN_ROOT=yep nohup lein run 80 &
