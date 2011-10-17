@@ -8,7 +8,7 @@
     (form-to [:post "/users/sign-up"]
       (labeled-field text-field :login "Login" errors)
       (labeled-field password-field :password "Password" errors)
-      (labeled-field password-field :password_confirmation "Password Confirmation" errors)
+      (labeled-field password-field :password-confirmation "Password Confirmation" errors)
       (labeled-field text-field :avatar "Avatar" errors)
       [:div (submit-button "Sign Up")])))
 
