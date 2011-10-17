@@ -33,7 +33,9 @@
     (rename-with-tags user file-with-ext)))
 
 (defn- filter-dotfiles [files]
-  (remove #(.startsWith (.getName %) ".") files))
+  (->> files
+    (filter #(or (.isDirectory %) (.endsWith (.getName %) ".mp3")))
+    (remove #(.startsWith (.getName %) "."))))
 
 (defn- relativize [parent child]
   (let [parent-uri (.toURI (io/file parent))
