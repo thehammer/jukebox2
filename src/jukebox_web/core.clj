@@ -44,19 +44,11 @@
   (route/resources "/")
   (route/not-found "Page not found"))
 
+(db/connect! "data/jukebox.fdb")
+
 (player/start (playlist/playlist-seq))
 
-(defn with-connection [handler]
-  (fn [request]
-    (let [connection (db/open-db "data/jukebox.fdb")
-          response (binding [db/*db* connection] (handler request))]
-      (db/close-db connection)
-      response)))
-
-(def app
-  (-> (handler/site
-       (flash/wrap-flash main-routes))
-       (with-connection)))
+(def app (handler/site (flash/wrap-flash main-routes)))
 
 (defn -main [port & args]
   (adapter/run-jetty app {:port (read-string port)}))

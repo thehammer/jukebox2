@@ -4,15 +4,15 @@
   (:require [fleetdb.embedded :as fleetdb])
   (:use [clojure.contrib.string :only [as-str]]))
 
-(def *db* :no-database-connection)
+(def *db*)
 
-(defn open-db [file]
+(defn- open-db [file]
   (if (.exists (File. file))
     (fleetdb/load-persistent file)
     (fleetdb/init-persistent file)))
 
-(defn close-db [connection]
-  (fleetdb/close connection))
+(defn connect! [file]
+  (defonce *db* (open-db file)))
 
 (defn- add-id [record id]
   (conj record ["id" id]))
