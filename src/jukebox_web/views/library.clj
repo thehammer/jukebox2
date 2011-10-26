@@ -16,6 +16,6 @@
   (let [parent-path (library/parent-directory path)]
   (layout/main request "browse library"
      [:h3 "files in " path]
-     [:ul 
+     [:ul
        (if-not (nil? parent-path) [:li (link-to (str "/library/browse/" parent-path) "..")])
        (map #(vector :li (display-file %)) files)])))

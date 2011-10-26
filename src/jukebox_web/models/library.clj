@@ -3,8 +3,8 @@
            [java.util UUID])
   (:require [clojure.java.io :as io]
             [clojure.string :as s])
-  (:use [jukebox-player.tags]))
-
+  (:use [jukebox-player.tags]
+        [ring.util.codec :only (url-encode)]))
 
 (def *music-library* "music")
 
@@ -45,7 +45,7 @@
 (defn parent-directory [path]
   (if (s/blank? path)
     nil
-    (.getName (relativize *music-library* (.getParent (io/file *music-library* path))))))
+    (url-encode (.getName (relativize *music-library* (.getParent (io/file *music-library* path)))))))
 
 (defn list-directory
   ([] (list-directory ""))

@@ -26,7 +26,10 @@
       (should= "" (library/parent-directory "user")))
 
     (it "returns the user when in the artist directory"
-      (should= "user" (library/parent-directory "user/artist"))))
+      (should= "user" (library/parent-directory "user/artist")))
+
+    (it "returns url encoded values"
+      (should= "daft+punk" (library/parent-directory "daft punk/discovery"))))
 
   (describe "all-tracks"
     (it "only returns files matching .mp3"
