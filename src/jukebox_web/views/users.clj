@@ -1,5 +1,6 @@
 (ns jukebox-web.views.users
-  (:require [jukebox-web.views.layout :as layout])
+  (:require [jukebox-web.views.layout :as layout]
+            [jukebox-web.models.user :as user])
   (:use [hiccup core page-helpers form-helpers]
         [jukebox-web.views.forms]))
 
@@ -16,6 +17,7 @@
   [:tr
     [:td [:img {:src (:avatar user)}]]
     [:td [:span (:login user)]]
+    [:td [:span (user/count-songs user)]]
     [:td [:span (:skip-count user)]]
     [:td
      (form-to [:post "/users/toggle-enabled"]
@@ -26,7 +28,7 @@
 (defn index [request users]
   (layout/main request "Users"
     [:table
-      [:tr [:th "Avatar"] [:th "Login"] [:th "Skips"] [:th "Actions"]]
+      [:tr [:th "Avatar"] [:th "Login"] [:th "Songs"] [:th "Skips"] [:th "Actions"]]
       (map show-user users)]))
 
 (defn edit [request user errors]

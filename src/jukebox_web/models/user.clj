@@ -1,6 +1,7 @@
 (ns jukebox-web.models.user
   (:require [corroborate.core :as co]
             [jukebox-web.models.db :as db]
+            [jukebox-web.models.library :as library]
             [jukebox-web.util.crypt :as crypt])
   (:use [clojure.contrib.string :only (blank?)]))
 
@@ -68,3 +69,5 @@
       (db/update *model* user-args :id (:id user)))
     errors))
 
+(defn count-songs [user]
+  (count (library/all-tracks (:login user))))

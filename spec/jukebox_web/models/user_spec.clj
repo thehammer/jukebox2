@@ -128,4 +128,15 @@
     (user/toggle-enabled! "test")
     (should-not (:enabled (user/find-by-login "test")))))
 
+(describe "count-songs"
+  (with-database-connection)
+
+  (it "returns 0 for a new user"
+    (let [[user errors] (user/sign-up! (factory/user {:login "newuser" :enabled false}))]
+      (should= 0 (user/count-songs user))))
+
+  (it "returns 3 for a user with 3 songs"
+    (let [[user errors] (user/sign-up! (factory/user {:login "user" :enabled false}))]
+      (should= 3 (user/count-songs user)))))
+
 (run-specs)

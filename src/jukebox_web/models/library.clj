@@ -59,8 +59,10 @@
 (defn track? [relative-path]
   (.isFile (file-on-disk relative-path)))
 
-(defn all-tracks []
-  (let [contents (file-seq (io/file *music-library*))]
-    (->> contents
-      (filter #(.endsWith (.getName %) ".mp3"))
-      (map #(relativize *music-library* %)))))
+(defn all-tracks
+  ([] (all-tracks ""))
+  ([path]
+   (let [contents (file-seq (io/file *music-library* path))]
+     (->> contents
+       (filter #(.endsWith (.getName %) ".mp3"))
+       (map #(relativize *music-library* %))))))

@@ -31,8 +31,13 @@
   (describe "all-tracks"
     (it "only returns files matching .mp3"
       (let [tracks (library/all-tracks)]
-        (should-not (includes? (map #(.getName %) tracks) "jukebox2.flac"))))  
+        (should-not (includes? (map #(.getName %) tracks) "jukebox2.flac"))))
 
     (it "does not return dotfiles"
       (let [tracks (library/all-tracks)]
-        (should-not (includes? (map #(.getName %) tracks) ".gitkeep"))))))
+        (should-not (includes? (map #(.getName %) tracks) ".gitkeep"))))
+
+    (it "allows scoping by subdirectory"
+      (let [tracks (library/all-tracks "user")]
+        (should (includes? (map #(.getName %) tracks) "track.mp3"))
+        (should-not (includes? (map #(.getName %) tracks) "jukebox.mp3"))))))
