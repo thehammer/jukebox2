@@ -2,8 +2,7 @@
   (:import [java.io File]
            [java.util UUID])
   (:require [clojure.java.io :as io]
-            [clojure.string :as s]
-            [jukebox-web.models.user :as user])
+            [clojure.string :as s])
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (relative-uri)]))
 
