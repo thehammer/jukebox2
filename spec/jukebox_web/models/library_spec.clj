@@ -46,4 +46,11 @@
     (it "allows scoping by subdirectory"
       (let [tracks (library/all-tracks "user")]
         (should (includes? (map #(.getName %) tracks) "track.mp3"))
-        (should-not (includes? (map #(.getName %) tracks) "jukebox.mp3"))))))
+        (should-not (includes? (map #(.getName %) tracks) "jukebox.mp3")))))
+
+  (describe "owner"
+    (it "returns nil for a path without a user"
+      (should-be-nil (library/owner (java.io.File. "music/jukebox.mp3"))))
+
+    (it "returns the login for a path with a user"
+      (should= "user" (library/owner (java.io.File. "music/user/artist/album/track.jukeboxmp3"))))))

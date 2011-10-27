@@ -133,3 +133,11 @@ div.row {
 p.random {
   padding-left: 20px;
   color: gray; }
+
+div#current_track img {
+  margin: 3px; }
+div#current_track img.current {
+  margin: 0px;
+  border-style: solid;
+  border-width: 3px;
+  border-color: orange; }

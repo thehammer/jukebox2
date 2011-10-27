@@ -2,7 +2,8 @@
   (:import [java.io File]
            [java.util UUID])
   (:require [clojure.java.io :as io]
-            [clojure.string :as s])
+            [clojure.string :as s]
+            [jukebox-web.models.user :as user])
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (relative-uri)]))
 
@@ -66,3 +67,9 @@
      (->> contents
        (filter #(.endsWith (.getName %) ".mp3"))
        (map #(relativize *music-library* %))))))
+
+(defn owner [song]
+  (let [path (.getPath song)
+        filename-parts (clojure.string/split path #"/")]
+    (when (> (count filename-parts) 2)
+      (second filename-parts))))
