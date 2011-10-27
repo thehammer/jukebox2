@@ -1,6 +1,7 @@
 (defproject
   jukebox "1.0.0-SNAPSHOT"
   :description "Jukebox"
+  :repositories {"local" ~(str (.toURI (java.io.File. "maven_repository")))}
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [org.jaudiotagger/jaudiotagger "2.0.1"]
@@ -9,7 +10,14 @@
                  [compojure "0.6.5"]
                  [ring-json-params "0.1.3"]
                  [clj-json "0.4.3"]
-                 [org.mindrot/jbcrypt "0.3m"]]
+                 [org.mindrot/jbcrypt "0.3m"]
+                 [jaad "0.8.3"]
+                 [jl "1.0.1"]
+                 [jogg "0.0.7"]
+                 [jorbis "0.0.15"]
+                 [mp3spi "1.9.5"]
+                 [tritonus_share "0.3.6"]
+                 [vorbisspi "1.0.3"]]
   :dev-dependencies [[lein-ring "0.4.5"]
                      [lein-javac "1.2.1-SNAPSHOT"]
                      [speclj "1.5.2"]
