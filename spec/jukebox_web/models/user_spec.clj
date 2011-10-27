@@ -129,6 +129,7 @@
     (should-not (:enabled (user/find-by-login "test")))))
 
 (describe "count-songs"
+  (with-test-music-library)
   (with-database-connection)
 
   (it "returns 0 for a new user"

@@ -1,9 +1,12 @@
 (ns jukebox-web.models.library-spec
   (:require [jukebox-web.models.library :as library])
   (:use [speclj.core]
-        [clojure.contrib.seq :only [includes?]]))
+        [clojure.contrib.seq :only [includes?]]
+        [jukebox-web.spec-helper]))
 
 (describe "library"
+  (with-test-music-library)
+
   (describe "list-directory"
     (it "returns a seq with the files contained in the root path with no arguments"
       (let [files (map #(.getPath %) (library/list-directory))]

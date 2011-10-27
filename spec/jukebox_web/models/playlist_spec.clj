@@ -1,9 +1,12 @@
 (ns jukebox-web.models.playlist-spec
   (:require [jukebox-web.models.playlist :as playlist]
             [jukebox-web.models.library :as library])
-  (:use [speclj.core]))
+  (:use [speclj.core]
+        [jukebox-web.spec-helper]))
 
 (describe "playlist"
+  (with-test-music-library)
+
   (before
     (playlist/reset-state!))
 
