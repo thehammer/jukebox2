@@ -33,7 +33,26 @@
         (playlist/add-random-song!)
         (let [first-value (first (playlist/queued-songs))]
           (playlist/add-random-song!)
-          (should= first-value (first (playlist/queued-songs))))))
+          (should= first-value (first (playlist/queued-songs)))))
+
+    (it "adds a random song that has not been recently played"
+      (loop [count 0]
+        (playlist/reset-state!)
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-random-song!)
+        (should-not= (first (playlist/queued-songs)) (last (playlist/queued-songs)))
+        (if (< count 10) (recur (inc count)))))
+
+    (it "will only track a portion of the library songs as recently played"
+      (playlist/reset-state!)
+      (playlist/add-song! "user/artist/album/track.mp3")
+      (playlist/add-song! "user/artist/album/track2.mp3")
+      (playlist/add-song! "user/artist/album2/track.mp3")
+      (playlist/add-song! "jukebox2.mp3")
+      (playlist/add-song! "jukebox2.ogg")
+      (playlist/add-random-song!)
+      (playlist/add-random-song!)
+      (should= 7 (count (playlist/queued-songs)))))
 
   (describe "next-track"
     (it "returns the next track in the queue, retaining order"
@@ -58,5 +77,3 @@
 
     (it "will return random tracks indefinitely"
       (should-not-be-nil (first (drop 10 (playlist/playlist-seq)))))))
-
-(run-specs)
