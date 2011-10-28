@@ -17,6 +17,13 @@
       this.root.append(this.view);
       return this.view;
     };
+    Notifications.prototype.remove = function() {
+      var $el;
+      $el = $(this);
+      return setTimeout(function() {
+        return $el.fadeOut();
+      }, 1000);
+    };
     return Notifications;
   })();
   FileNotification = (function() {
@@ -27,6 +34,7 @@
       this.root.delegate('li', 'ajax:success', this.success);
       this.root.delegate('li', 'ajax:error', this.error);
       this.root.delegate('li', 'upload:progress', this.progress);
+      this.root.delegate('li', 'notification:remove', this.remove);
     }
     FileNotification.prototype.render = function(data) {
       this.view = $(this.template({
@@ -35,10 +43,10 @@
       return FileNotification.__super__.render.apply(this, arguments);
     };
     FileNotification.prototype.success = function(e, xhr, data) {
-      return $(this).addClass('success').removeClass('uploading');
+      return $(this).addClass('success').removeClass('uploading').trigger('notification:remove');
     };
     FileNotification.prototype.error = function(e, xhr) {
-      return $(this).addClass('error').removeClass('uploading');
+      return $(this).addClass('error').removeClass('uploading').trigger('notification:remove');
     };
     FileNotification.prototype.progress = function(e, xhr, progress) {
       var percent;
