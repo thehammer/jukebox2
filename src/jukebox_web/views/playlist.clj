@@ -27,6 +27,7 @@
         [:h1.title (:title tags)]
         [:p.artist (:artist tags)]
         [:p.album (:album tags)]
+        [:p.duration (:duration tags)]
         [:p.controls
          (if (player/paused?) [:a.btn {:href "/player/play" :data-remote "true"} "Play"])
          (if (player/playing?) [:a.btn {:href "/player/pause" :data-remote "true"} "Pause"])
