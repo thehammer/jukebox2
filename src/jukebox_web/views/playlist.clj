@@ -52,5 +52,6 @@
 (defn index [request current-song queued-songs]
   (layout/main request "Playlist"
      [:script {:src "/js/playlist-refresh.js"}]
+     [:input#current_track_etag {:type "hidden"}]
      [:div#current_track
        (current-track request current-song queued-songs)]))
