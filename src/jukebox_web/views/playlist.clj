@@ -12,7 +12,7 @@
   (let [current-song-owner (library/owner current-song)
         link (:avatar user)
         img-tag (if (= (:login user) current-song-owner) :img.current :img)]
-      (vector img-tag {:src (str link "?s=32")})))
+      (vector img-tag {:src (str link "?s=32") :title (:login user)})))
 
 (defn- display-enabled-users [current-song]
   (map
