@@ -148,6 +148,10 @@ div.song {
   .meta-data {
     float:left;
     padding-left: 20px;
+
+    .title {
+      width: 600px;
+    }
   }
 
   .artist, .album {

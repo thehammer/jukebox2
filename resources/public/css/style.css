@@ -124,6 +124,8 @@ div.song a {
 div.song .meta-data {
   float: left;
   padding-left: 20px; }
+  div.song .meta-data .title {
+    width: 600px; }
 div.song .artist, div.song .album {
   font-size: 16px; }
 

@@ -20,6 +20,8 @@ class Artwork
   render: (e, info) ->
     size = $(this).attr('data-thumbnail')
     src = $(info).find("image[size=#{size}]").text()
+    if src is ''
+      src = '/img/no_art_lrg.png'
     wrap = $('<a />', {'href': '#'})
     img = $('<img>', {'class': 'thumbnail', 'src': src})
     wrap.append(img)

@@ -30,6 +30,9 @@
       var img, size, src, wrap;
       size = $(this).attr('data-thumbnail');
       src = $(info).find("image[size=" + size + "]").text();
+      if (src === '') {
+        src = '/img/no_art_lrg.png';
+      }
       wrap = $('<a />', {
         'href': '#'
       });
