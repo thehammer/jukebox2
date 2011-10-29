@@ -40,16 +40,15 @@
       [:head
        [:title (str title " - jukebox2")]
        [:script {:src "http://use.typekit.com/ygg5mdb.js"}]
-       [:script {:src "/js/jquery-1.6.4.min.js"}]
-       [:script {:src "/js/underscore-min.js"}]
+       [:script {:src "/js/v/jquery-1.6.4.min.js"}]
+       [:script {:src "/js/v/underscore-min.js"}]
        [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/notifications.js"}]
        [:script {:src "/js/artwork.js"}]
        [:script {:src "/js/files.js"}]
-       [:script {:src "/js/bootstrap-dropdown.js"}]
+       [:script {:src "/js/v/bootstrap-dropdown.js"}]
        [:script {:src "/js/application.js"}]
-       (include-css "http://twitter.github.com/bootstrap/1.3.0/bootstrap.min.css")]
-       (include-css "/css/jquery.plupload.queue.css")
+       (include-css "/css/v/bootstrap-1.3.0.min.css")]
        (include-css "/css/style.css")
       [:body {:data-accept "mp3|m4a|mp4|mpeg"}
        [:div.topbar
