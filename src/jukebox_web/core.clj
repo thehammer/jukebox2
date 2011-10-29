@@ -1,9 +1,11 @@
 (ns jukebox-web.core
-  (:use compojure.core)
+  (:use compojure.core
+        clojure.contrib.command-line)
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
             [ring.adapter.jetty :as adapter]
+            [clj-json.core :as json]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
@@ -12,6 +14,11 @@
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.users :as users-controller]))
+
+(defn json-response [data & [status]]
+  {:status (or status 200)
+   :headers {"Content-Type" "application/json"}
+   :body (json/generate-string data)})
 
 (defroutes main-routes
   (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
@@ -50,6 +57,8 @@
 
 (def app (handler/site (flash/wrap-flash main-routes)))
 
-(defn -main [port & args]
-  (adapter/run-jetty app {:port (read-string port)}))
+(defn -main [& args]
+  (with-command-line args "Jukebox Web Server"
+    [[port p "The port on which to run this server" "3000"]]
+    (adapter/run-jetty app {:port (read-string port)})))
 
