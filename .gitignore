@@ -3,3 +3,5 @@
 /data
 /.sass-cache
 .DS_Store
+.lein-failures
+/tags
