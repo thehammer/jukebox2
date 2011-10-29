@@ -5,7 +5,6 @@
     [jukebox-web.models.library :as library]
     [jukebox-web.models.user :as user])
   (:use [hiccup core page-helpers]
-        [hiccup core form-helpers]
         [jukebox-player.tags]))
 
 (defn- build-avatar [current-song user]
@@ -27,14 +26,12 @@
         [:h1.title (:title tags)]
         [:p.artist (:artist tags)]
         [:p.album (:album tags)]
-        [:p.progress
-          [:span.current (:current tags)]
-          [:span " / "]
-          [:span.duration (:duration tags)]]
+        [:p.progress {:data-current "0" :data-duration (str (:duration tags))} 
+          [:span.remaining]]
         [:p.controls
-         (if (player/paused?) [:a.btn {:href "/player/play" :data-remote "true"} "Play"])
-         (if (player/playing?) [:a.btn {:href "/player/pause" :data-remote "true"} "Pause"])
-         (if (player/playing?) (when-not (nil? (-> request :session :current-user)) [:a.btn {:href "/player/skip" :data-remote "true"} "Skip"]))]]]))
+         (if (player/paused?) [:a.btn.play {:href "/player/play" :data-remote "true"} "Play"])
+         (if (player/playing?) [:a.btn.pause {:href "/player/pause" :data-remote "true"} "Pause"])
+         (if (player/playing?) (when-not (nil? (-> request :session :current-user)) [:a.btn.skip {:href "/player/skip" :data-remote "true"} "Skip"]))]]]))
 
 (defn playlist [song]
   (let [tags (extract-tags song)]
@@ -57,5 +54,6 @@
   (layout/main request "Playlist"
      [:script {:src "/js/playlist-refresh.js"}]
      [:input#current_track_etag {:type "hidden"}]
+     [:input#first_load_progress {:type "hidden" :value (str (int (player/current-time))) }]
      [:div#current_track
        (current-track request current-song queued-songs)]))
