@@ -2,6 +2,9 @@ function onRefreshSuccess(html, status, xhr) {
   $('#current_track_etag').val(xhr.getResponseHeader("E-Tag"));
   if (status == "success") {
     $('#current_track').html(html).trigger('track.updated');
+    var title  = $('#current_track h1.title').text(),
+        artist = $('#current_track p.artist').text();
+    $('title').text(title + ' - ' + artist + ' - jukebox2');
   }
   $('#current_track .progress').data('current', xhr.getResponseHeader("X-Progress"));
   updateProgress();
@@ -24,9 +27,12 @@ function tickProgress() {
     var progress = $('#current_track .progress');
     var current = parseInt(progress.data('current'));
     var duration = parseInt(progress.data('duration'));
-    if (current < duration) { 
-      progress.data('current', current + 1); 
+    if (current < duration) {
+      progress.data('current', current + 1);
       updateProgress();
+    }
+    else {
+      refreshPlaylist();
     }
   }
 }
