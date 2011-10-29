@@ -23,8 +23,11 @@ function tickProgress() {
   if (isPlaying()) {
     var progress = $('#current_track .progress');
     var current = parseInt(progress.data('current'));
-    progress.data('current', current + 1); 
-    updateProgress();
+    var duration = parseInt(progress.data('duration'));
+    if (current < duration) { 
+      progress.data('current', current + 1); 
+      updateProgress();
+    }
   }
 }
 
