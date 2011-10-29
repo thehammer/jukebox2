@@ -12,7 +12,7 @@
        (labeled-field text-field :name "Name" errors)
        (labeled-field text-field :start "Start" errors)
        (labeled-field text-field :end "End" errors)
-       (submit-button "Create"))))
+       (primary-submit-button "Create"))))
 
 (defn- show-hammertime [hammertime]
   [:tr

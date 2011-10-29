@@ -11,7 +11,7 @@
       (labeled-field password-field :password "Password" errors)
       (labeled-field password-field :password-confirmation "Password Confirmation" errors)
       (labeled-field text-field :avatar "Avatar" errors)
-      [:div (submit-button "Sign Up")])))
+      [:div (primary-submit-button "Sign Up")])))
 
 (defn- show-user [user]
   [:tr
@@ -22,7 +22,9 @@
     [:td
      (form-to [:post "/users/toggle-enabled"]
        (hidden-field "login" (:login user))
-       (submit-button (if (:enabled user) "Disable" "Enable")))
+       (if (:enabled user)
+         (danger-submit-button "Disable")
+         (success-submit-button "Enable")))
      [:a {:href (str "/users/" (:id user) "/edit") :class "btn"} "Edit"]]])
 
 (defn index [request users]
@@ -36,4 +38,4 @@
     [:h2 (str "Edit " (:login user))
       (form-to [:post (str "/users/" (:id user) "/update")]
         (labeled-field text-field :avatar "Avatar" (or (-> request :params :avatar) (:avatar user)) errors)
-        [:div (submit-button "Update")])]))
+        [:div (primary-submit-button "Update")])]))
