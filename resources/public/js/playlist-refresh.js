@@ -43,6 +43,7 @@ function updateProgress() {
 $(function() {
   $('#current_track .progress').data('current', $('#first_load_progress').val());
   updateProgress();
+  setTimeout(refreshPlaylist, 500);
   setInterval(refreshPlaylist, 10000);
   setInterval(tickProgress, 1000);
 });
