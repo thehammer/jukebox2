@@ -8,6 +8,7 @@
 (def *buffer-size* 4096)
 (def player-state (atom :pause))
 (def skipping-state (atom false))
+(def microseconds (ref 0))
 
 (defn skip!  [] (reset! skipping-state true))
 
@@ -17,6 +18,7 @@
 (defn playing? [] (= @player-state :play))
 (defn paused? [] (= @player-state :pause))
 (defn skip-requested? [] @skipping-state)
+(defn current-time [] (/ @microseconds 1000000.0))
 
 (defmacro with-skip-reset [& body]
   `(do (reset! skipping-state false) ~@body))
@@ -60,6 +62,7 @@
         (playing?)
           (when-not (= bytes-read -1)
             (.write speaker buffer 0 bytes-read)
+            (dosync (ref-set microseconds (.getMicrosecondPosition speaker)))
             (recur (.read audio-stream buffer)))
         (paused?) (do (Thread/sleep 100) (recur bytes-read))))
      (doto speaker (.close))))
