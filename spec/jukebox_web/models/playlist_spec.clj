@@ -24,6 +24,12 @@
           (should= first-value (first (playlist/queued-songs))))))
 
   (describe "add-random-song!"
+    (it "noops with no music in the library"
+        (binding [library/*music-library* "spec/music/empty-dir"]
+          (should (empty? (playlist/queued-songs)))
+          (playlist/add-random-song!)
+          (should= 0 (count (playlist/queued-songs)))))
+
     (it "adds a random song to the queued songs"
         (should (empty? (playlist/queued-songs)))
         (playlist/add-random-song!)

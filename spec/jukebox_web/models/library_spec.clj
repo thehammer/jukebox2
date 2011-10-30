@@ -55,5 +55,8 @@
     (it "returns nil for a path without a user"
       (should-be-nil (library/owner (java.io.File. "music/jukebox.mp3"))))
 
+    (it "returns nil for a nil argument"
+      (should-be-nil (library/owner nil)))
+
     (it "returns the login for a path with a user"
       (should= "user" (library/owner (java.io.File. "music/user/artist/album/track.jukeboxmp3"))))))

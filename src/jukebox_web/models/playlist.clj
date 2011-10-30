@@ -8,8 +8,9 @@
 (def *recent-songs-factor* 0.25)
 
 (defn- random-song []
-  (let [music-file (rand-nth (library/all-tracks))]
-    (.getPath music-file)))
+  (if-not (empty? (library/all-tracks))
+    (let [music-file (rand-nth (library/all-tracks))]
+      (.getPath music-file))))
 
 (defn current-song []
   @current-song-atom)
@@ -27,10 +28,11 @@
     (swap! recent-songs-atom pop)))
 
 (defn add-random-song! []
-  (loop [song (random-song)]
-    (if (.contains @recent-songs-atom song)
-      (recur (random-song))
-      (add-song! song))))
+  (if (library/has-tracks?)
+    (loop [song (random-song)]
+      (if (.contains @recent-songs-atom song)
+        (recur (random-song))
+        (add-song! song)))))
 
 (defn reset-state! []
   (reset! current-song-atom nil)

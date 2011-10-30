@@ -7,11 +7,17 @@
 (.setLevel (Logger/getLogger "org.jaudiotagger") Level/WARNING)
 
 (defn extract-tags [file]
-  (let [audio-file (AudioFileIO/read (io/as-file file))
-        tags (.getTag audio-file)
-        header (.getAudioHeader audio-file)]
+  (if file
+    (let [audio-file (AudioFileIO/read (io/as-file file))
+          tags (.getTag audio-file)
+          header (.getAudioHeader audio-file)]
+      (conj {}
+        [:artist (.getFirst tags FieldKey/ARTIST)]
+        [:album (.getFirst tags FieldKey/ALBUM)]
+        [:title (.getFirst tags FieldKey/TITLE)]
+        [:duration (.getTrackLength header)]))
     (conj {}
-      [:artist (.getFirst tags FieldKey/ARTIST)]
-      [:album (.getFirst tags FieldKey/ALBUM)]
-      [:title (.getFirst tags FieldKey/TITLE)]
-      [:duration (.getTrackLength header)])))
+      [:artist "No Artist"]
+      [:album "No Album"]
+      [:title "No Title"]
+      [:duration 0])))

@@ -132,7 +132,7 @@ div.song .artist, div.song .album {
 div.row {
   margin-left: 0; }
 
-p.random {
+p.random, p.empty {
   padding-left: 20px;
   color: gray; }
 

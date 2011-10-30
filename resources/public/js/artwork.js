@@ -23,6 +23,8 @@
           "artist": this.artist
         }, function(data) {
           return $cover.trigger('ajax:success', [data]);
+        }).error(function(data) {
+          return $cover.trigger('ajax:success', [null]);
         });
       });
     };

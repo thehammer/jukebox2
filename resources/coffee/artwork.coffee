@@ -15,6 +15,8 @@ class Artwork
       @artist = $cover.attr('data-artist')
       $.get('http://ws.audioscrobbler.com/2.0/', {"method": "album.getInfo", "api_key": "809bf298f1f11c57fbb680b1befdf476", "album": @album, "artist": @artist}, (data) ->
         $cover.trigger 'ajax:success', [data]
+      ).error((data) ->
+        $cover.trigger 'ajax:success', [null]
       )
 
   render: (e, info) ->

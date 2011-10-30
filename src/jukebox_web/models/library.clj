@@ -67,8 +67,12 @@
        (filter #(.endsWith (.getName %) ".mp3"))
        (map #(relativize *music-library* %))))))
 
+(defn has-tracks? []
+  (not (empty? (all-tracks))))
+
 (defn owner [song]
-  (let [path (.getPath song)
-        filename-parts (clojure.string/split path #"/")]
-    (when (> (count filename-parts) 2)
-      (second filename-parts))))
+  (if song
+    (let [path (.getPath song)
+          filename-parts (clojure.string/split path #"/")]
+      (when (> (count filename-parts) 2)
+        (second filename-parts)))))
