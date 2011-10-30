@@ -22,7 +22,7 @@
       [:ul.dropdown-menu
        [:li (form-to [:post "/users/sign-out"]
                      (danger-submit-button "Sign Out"))]]]
-     [:img {:src (str (:avatar current-user) "?s=37")}]]])
+     [:img {:src (user/avatar-url current-user {:s "37"})}]]])
 
 (defn- nav-links [request]
   [:ul.nav
