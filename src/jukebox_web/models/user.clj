@@ -2,7 +2,8 @@
   (:require [corroborate.core :as co]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.library :as library]
-            [jukebox-web.util.crypt :as crypt])
+            [jukebox-web.util.crypt :as crypt]
+            [jukebox-web.util.url :as url])
   (:use [clojure.contrib.string :only (blank?)]))
 
 (def *model* :user)
@@ -29,7 +30,6 @@
 (defn validate [user]
   (co/validate user
     :password (co/is-required)
-    :avatar (co/is-required)
     :login (co/is-required)))
 
 (defn validate-new-user [user]
@@ -53,6 +53,19 @@
     (if user
       (crypt/matches? password (:password user))
       false)))
+
+(defn base-avatar-url [user]
+  (if (empty? (:avatar user))
+    "http://www.gravatar.com/avatar/no-avatar"
+    (:avatar user)))
+
+(defn avatar-url
+  ([user] (avatar-url user {}))
+  ([user params]
+    (let [default-params {:s 35 :d "mm"}
+          query-params (merge default-params params)
+          base-url (base-avatar-url user)]
+      (str base-url "?" (url/map-to-query-string query-params)))))
 
 (defn increment-skip-count! [login]
   (let [user (find-by-login login)

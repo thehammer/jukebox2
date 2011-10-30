@@ -39,9 +39,9 @@
     (let [errors (user/validate {:password "" :avatar "http://foo.com"})]
       (should= ["is required"] (:login errors))))
 
-  (it "requires an avatar"
+  (it "does not require an avatar, as a default will be used"
     (let [errors (user/validate {:login "foo" :password ""})]
-      (should= ["is required"] (:avatar errors))))
+      (should= nil (:avatar errors))))
 
   (it "requires a password"
     (let [errors (user/validate {:login "foo" :avatar "http://foo.com"})]
@@ -104,8 +104,8 @@
       (should= "new-avatar.png" (:avatar (user/find-by-login "avatar-test")))))
 
   (it "returns errors if validations fail"
-    (let [errors (user/update! (factory/user {}) {:avatar ""})]
-      (should= ["is required"] (:avatar errors)))))
+    (let [errors (user/update! (factory/user {}) {:login ""})]
+      (should= ["is required"] (:login errors)))))
 
 (describe "find-all"
   (with-database-connection)
@@ -139,5 +139,24 @@
   (it "returns 3 for a user with 3 songs"
     (let [[user errors] (user/sign-up! (factory/user {:login "user" :enabled false}))]
       (should= 3 (user/count-songs user)))))
+
+(describe "base-avatar-url"
+  (it "returns the default url user without an avatar"
+    (let [user (factory/user {:avatar ""})]
+      (should= "http://www.gravatar.com/avatar/no-avatar" (user/base-avatar-url user))))
+
+  (it "returns the stored avatar if the user has one"
+    (let [user (factory/user {:avatar "http://www.gravatar.com/me.png"})]
+      (should= "http://www.gravatar.com/me.png" (user/base-avatar-url user)))))
+
+(describe "avatar-url"
+  (it "returns the default url with default query params when called with one arg"
+    (let [user (factory/user {:avatar ""})]
+      (should= "http://www.gravatar.com/avatar/no-avatar?s=35&d=mm" (user/avatar-url user))))
+
+  (it "allows size to be specified via the params argument"
+    (let [user (factory/user {:avatar "http://www.gravatar.com/me.png"})
+          url (user/avatar-url user {:s 1234})]
+      (should= "http://www.gravatar.com/me.png?s=1234&d=mm" url))))
 
 (run-specs)

@@ -9,9 +9,9 @@
 
 (defn- build-avatar [current-song user]
   (let [current-song-owner (library/owner current-song)
-        link (:avatar user)
+        link (user/avatar-url user {:s 32})
         img-tag (if (= (:login user) current-song-owner) :img.current :img)]
-      (vector img-tag {:src (str link "?s=32") :title (:login user)})))
+      (vector img-tag {:src link :title (:login user)})))
 
 (defn- display-enabled-users [current-song]
   (map

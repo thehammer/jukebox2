@@ -15,7 +15,7 @@
 
 (defn- show-user [user]
   [:tr
-    [:td [:img {:src (:avatar user)}]]
+    [:td [:img {:src (user/avatar-url user {:s 100})}]]
     [:td [:span (:login user)]]
     [:td [:span (user/count-songs user)]]
     [:td [:span (:skip-count user)]]
