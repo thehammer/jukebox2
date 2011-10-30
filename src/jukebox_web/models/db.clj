@@ -23,7 +23,7 @@
 (defn- keys-to-strings [record]
   (reduce #(conj %1 [(as-str (first %2)) (nth %2 1)]) {} record))
 
-(defn- keys-to-keywords [record]
+(defn keys-to-keywords [record]
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
 
 (defn delete [model id]

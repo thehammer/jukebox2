@@ -4,7 +4,6 @@
         [jukebox-web.models.hammertime]
         [jukebox-web.spec-helper]))
 
-
 (describe "hammertime"
   (with-test-music-library)
   (with-database-connection)
@@ -40,6 +39,29 @@
 
   (describe "find-all"
     (it "returns all the hammertimes from the database"
-      (create! (factory/hammertime {}))
-      (create! (factory/hammertime {}))
-      (should= 2 (count (find-all))))))
+      (create! (factory/hammertime))
+      (create! (factory/hammertime))
+      (should= 2 (count (find-all)))))
+
+  (describe "find-by-id"
+    (it "returns nil when no results"
+      (should-be-nil (find-by-id "random")))
+
+    (it "returns a hammertime by id"
+      (let [hammertime (factory/hammertime {:name "some_name"})
+            _ (create! hammertime)
+            id (:id (find-by-name "some_name"))]
+        (should= (assoc hammertime :id id) (find-by-id id)))))
+
+  (describe "update!"
+    (it "updates the user"
+      (create! (factory/hammertime {:name "test" :start 1}))
+      (let [hammertime (find-by-name "test")]
+        (update! hammertime {:start 5})
+        (should= 5 (:start (find-by-name "test")))))
+
+    (it "returns errors if validations fail"
+      (create! (factory/hammertime {:name "test"}))
+      (let [hammertime (find-by-name "test")
+            errors (update! hammertime {:start nil})]
+        (should= ["is required"] (:start errors))))))

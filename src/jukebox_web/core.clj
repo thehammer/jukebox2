@@ -37,6 +37,8 @@
   (GET ["/hammertimes/new/:file" :file #".*"] [] hammertimes-controller/create-form)
   (POST "/hammertimes/play" [] hammertimes-controller/play)
   (POST "/hammertimes/:id/delete" [] hammertimes-controller/delete)
+  (GET "/hammertimes/:id/edit" [] hammertimes-controller/edit)
+  (POST "/hammertimes/:id/update" [] hammertimes-controller/update)
   (GET "/hammertimes/browse" [] hammertimes-controller/browse-root)
   (GET ["/hammertimes/browse/:path", :path #".*"] [] hammertimes-controller/browse)
   (POST "/library/upload" [] library-controller/upload)

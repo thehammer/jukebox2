@@ -25,6 +25,9 @@
   (hammertime/delete-by-id! (-> request :params :id))
   {:status 302 :headers {"Location" "/hammertimes"} :flash {:success "Hammertime successfully deleted"}})
 
+(defn edit [request]
+  (view/edit request (hammertime/find-by-id (-> request :params :id)) nil))
+
 (defn browse-root [request]
   (view/browse request "Hammertimes" (lib/list-directory)))
 
@@ -32,3 +35,10 @@
   (let [path (-> request :params :path)
         files (lib/list-directory path)]
     (view/browse request path files)))
+
+(defn update [request]
+  (let [hammertime (hammertime/find-by-id (-> request :params :id))
+        errors (hammertime/update! hammertime (:params request))]
+    (if (empty? errors)
+      {:status 302 :headers {"Location" "/hammertimes"}}
+      (view/edit request hammertime errors))))
