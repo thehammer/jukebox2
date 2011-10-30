@@ -22,7 +22,6 @@
   (let [tags (extract-tags song)]
     [:div.song.media-grid
       [:div.album-cover {:data-thumbnail "large" :data-artist (:artist tags) :data-album (:album tags)}]
-     ;(println ((:headers request) "accept"))
       [:div.meta-data
         [:h1.title (:title tags)]
         [:p.artist (:artist tags)]
