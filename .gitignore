@@ -5,3 +5,4 @@
 .DS_Store
 .lein-failures
 /tags
+/checkouts
