@@ -1,13 +1,3 @@
-# jukebox-web
+# jukebox2
 
-FIXME: write description
-
-## Usage
-
-FIXME: write
-
-## License
-
-Copyright (C) 2011 FIXME
-
-Distributed under the Eclipse Public License, the same as Clojure.
+Jukebox2 is a communal music player for team environments. Users can upload their own music, and jukebox2 will cycle through it and play a mix. 
