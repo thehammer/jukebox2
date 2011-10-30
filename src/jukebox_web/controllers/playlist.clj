@@ -1,6 +1,8 @@
 (ns jukebox-web.controllers.playlist
-  (:use [jukebox-web.util.encoding :only [sha256]])
+  (:use [jukebox-web.util.encoding :only [sha256]]
+        [jukebox-player.tags])
   (:require [jukebox-player.core :as player]
+            [jukebox-web.util.json :as json]
             [jukebox-web.views.playlist :as view]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.models.user :as user]))
@@ -9,13 +11,16 @@
   (view/index request (playlist/current-song) (playlist/queued-songs)))
 
 (defn current-track [request]
-  (let [html (view/current-track request (playlist/current-song) (playlist/queued-songs))
+  (let [song (playlist/current-song)
+        html (view/current-track request song (playlist/queued-songs))
         etag (sha256 html)
         previous-etag ((:headers request) "if-none-match")
-        progress (str (int (player/current-time)))]
-    (if (= etag previous-etag)
-      {:status 304 :headers {"E-Tag" etag "X-Progress" progress} :body ""}
-      {:status 200 :headers {"E-Tag" etag "X-Progress" progress} :body html})))
+        progress (int (player/current-time))]
+    (if (json/request? ((:headers request) "accept"))
+      (json/response (merge (extract-tags song) {:progress progress}))
+      (if (= etag previous-etag)
+        {:status 304 :headers {"E-Tag" etag "X-Progress" (str progress)} :body ""}
+        {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html}))))
 
 (defn add-one [request]
   (playlist/add-random-song!)

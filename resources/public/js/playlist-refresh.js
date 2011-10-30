@@ -14,7 +14,8 @@ function refreshPlaylist() {
   $.ajax({
     url: '/playlist/current-track',
     success: onRefreshSuccess,
-    headers: { "If-None-Match": $("#current_track_etag").val() }
+    headers: { "If-None-Match": $("#current_track_etag").val() },
+    dataType: "html"
   });
 }
 

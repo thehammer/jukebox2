@@ -5,7 +5,6 @@
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
             [ring.adapter.jetty :as adapter]
-            [clj-json.core :as json]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
@@ -14,11 +13,6 @@
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.users :as users-controller]))
-
-(defn json-response [data & [status]]
-  {:status (or status 200)
-   :headers {"Content-Type" "application/json"}
-   :body (json/generate-string data)})
 
 (defroutes main-routes
   (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
