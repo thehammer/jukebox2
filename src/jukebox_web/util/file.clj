@@ -1,5 +1,17 @@
 (ns jukebox-web.util.file
-  (:use [ring.util.codec :only (url-encode)]))
+  (:import [java.io File]) 
+  (:use [clojure.java.io :only (as-file)]
+        [ring.util.codec :only (url-encode)]))
 
 (defn relative-uri [file]
    (url-encode (.getPath file)))
+
+(defn file-path [& parts]
+  (clojure.string/join File/separator parts))
+
+(defn mkdir-p [path]
+  (.mkdirs (as-file path)))
+
+(defn mv [from to]
+  (.renameTo (as-file from) (as-file to)))
+

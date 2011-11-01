@@ -1,13 +1,19 @@
 (ns jukebox-web.models.playlist-spec
   (:require [jukebox-web.models.playlist :as playlist]
-            [jukebox-web.models.library :as library])
+            [jukebox-web.models.library :as library]
+            [jukebox-web.models.user :as user]
+            [jukebox-web.models.factory :as factory])
   (:use [speclj.core]
         [jukebox-web.spec-helper]))
 
 (describe "playlist"
   (with-test-music-library)
+  (with-database-connection)
 
   (before
+    (user/sign-up! (factory/user {:login "user"}))
+    (user/sign-up! (factory/user {:login "user2"}))
+    (user/toggle-enabled! "user2") 
     (playlist/reset-state!))
 
   (describe "add-song!"
@@ -34,6 +40,13 @@
         (let [first-value (first (playlist/queued-songs))]
           (playlist/add-random-song!)
           (should= first-value (first (playlist/queued-songs)))))
+
+    (it "only selects songs from enabled users"
+      (user/toggle-enabled! "user")
+      (user/toggle-enabled! "user2")
+      (playlist/add-random-song!) 
+      (let [next-song (first (playlist/queued-songs))]
+        (should= "user2" (library/owner next-song))))
 
     (it "adds a random song that has not been recently played"
       (loop [count 0]

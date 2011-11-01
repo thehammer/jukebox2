@@ -115,18 +115,35 @@
     (user/sign-up! (factory/user {:login "kenny"}))
     (should= 2 (count (user/find-all)))))
 
+(describe "find-enabled"
+  (with-database-connection)
+
+  (it "returns enabled users"
+    (user/sign-up! (factory/user {:login "kyle"}))
+    (user/sign-up! (factory/user {:login "kenny"}))
+    (user/toggle-enabled! "kyle")
+    (let [enabled-users (map #(:login %) (user/find-enabled))]
+      (should (some #{"kenny"} enabled-users))
+      (should-not (some #{"kyle"} enabled-users)))))
+
+(describe "enabled?"
+  (with-database-connection)
+
+  (it "is false when the user does not exist"
+    (should-not (user/enabled? "missing"))))
+
 (describe "toggle-enabled"
   (with-database-connection)
 
   (it "enables a disabled user"
     (user/sign-up! (factory/user {:login "test" :enabled false}))
     (user/toggle-enabled! "test")
-    (should (:enabled (user/find-by-login "test"))))
+    (should (user/enabled? "test")))
 
   (it "disables an enabled user"
     (user/sign-up! (factory/user {:login "test" :enabled true}))
     (user/toggle-enabled! "test")
-    (should-not (:enabled (user/find-by-login "test")))))
+    (should-not (user/enabled? "test"))))
 
 (describe "count-songs"
   (with-test-music-library)

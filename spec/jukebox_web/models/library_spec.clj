@@ -1,5 +1,6 @@
 (ns jukebox-web.models.library-spec
-  (:require [jukebox-web.models.library :as library])
+  (:require [clojure.java.io :as io]
+            [jukebox-web.models.library :as library])
   (:use [speclj.core]
         [clojure.contrib.seq :only [includes?]]
         [jukebox-web.spec-helper]))
@@ -51,9 +52,16 @@
         (should (includes? (map #(.getName %) tracks) "track.mp3"))
         (should-not (includes? (map #(.getName %) tracks) "jukebox.mp3")))))
 
+  (describe "random-song"
+    (it "returns a random song from the given path"
+      (let [selections (take 10 (map library/random-song (repeat "user")))]
+        (should-not (includes? (map #(.getName %) selections) "jukebox.mp3")))))
+
   (describe "owner"
     (it "returns nil for a path without a user"
-      (should-be-nil (library/owner (java.io.File. "music/jukebox.mp3"))))
+      (let [track (io/file library/*music-library* "jukebox2.mp3")]
+        (should-be-nil (library/owner track))))
 
     (it "returns the login for a path with a user"
-      (should= "user" (library/owner (java.io.File. "music/user/artist/album/track.jukeboxmp3"))))))
+      (let [track (io/file library/*music-library* "user/artist/album/jukebox2.mp3")]
+        (should= "user" (library/owner track))))))

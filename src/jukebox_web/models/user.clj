@@ -27,6 +27,12 @@
 (defn find-all []
   (db/find-all *model*))
 
+(defn find-random []
+  (rand-nth (db/find-all *model*)))
+
+(defn find-enabled []
+  (filter #(:enabled %) (find-all)))
+
 (defn validate [user]
   (co/validate user
     :password (co/is-required)
@@ -84,3 +90,7 @@
 
 (defn count-songs [user]
   (count (library/all-tracks (:login user))))
+
+(defn enabled? [login]
+  (let [user (find-by-login login)]
+     (:enabled user)))

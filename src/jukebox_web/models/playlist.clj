@@ -1,5 +1,6 @@
 (ns jukebox-web.models.playlist
-  (:require [jukebox-web.models.library :as library]))
+  (:require [jukebox-web.models.library :as library]
+            [jukebox-web.models.user :as user]))
 
 (def current-song-atom (atom nil))
 (def queued-songs-atom (atom []))
@@ -8,8 +9,7 @@
 (def *recent-songs-factor* 0.25)
 
 (defn- random-song []
-  (let [music-file (rand-nth (library/all-tracks))]
-    (.getPath music-file)))
+  (.getPath (library/random-song (:login (rand-nth (user/find-enabled))))))
 
 (defn current-song []
   @current-song-atom)
@@ -27,9 +27,9 @@
     (swap! recent-songs-atom pop)))
 
 (defn add-random-song! []
-  (loop [song (random-song)]
-    (if (.contains @recent-songs-atom song)
-      (recur (random-song))
+  (loop [song (random-song) attempts 0]
+    (if (or (nil? song) (.contains @recent-songs-atom song))
+      (recur (random-song) (inc attempts))
       (add-song! song))))
 
 (defn reset-state! []

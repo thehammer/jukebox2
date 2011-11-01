@@ -4,18 +4,9 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as s])
   (:use [jukebox-player.tags]
-        [jukebox-web.util.file :only (relative-uri)]))
+        [jukebox-web.util.file :only (relative-uri file-path mkdir-p mv)]))
 
 (def *music-library* "music")
-
-(defn- file-path [& parts]
-  (s/join File/separator parts))
-
-(defn- mkdir-p [path]
-  (.mkdirs (io/as-file path)))
-
-(defn- mv [from to]
-  (.renameTo (io/as-file from) (io/as-file to)))
 
 (defn extension [filename]
   (last (s/split (str filename) #"\.")))
@@ -68,7 +59,11 @@
        (map #(relativize *music-library* %))))))
 
 (defn owner [song]
-  (let [path (.getPath song)
+  (let [path (.getPath (relativize *music-library* song)) 
         filename-parts (clojure.string/split path #"/")]
-    (when (> (count filename-parts) 2)
-      (second filename-parts))))
+    (when (> (count filename-parts) 1)
+      (first filename-parts))))
+
+(defn random-song [path]
+  (let [tracks (all-tracks path)]
+    (if-not (empty? tracks) (rand-nth tracks) nil)))
