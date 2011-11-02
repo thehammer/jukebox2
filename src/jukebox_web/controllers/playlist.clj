@@ -8,7 +8,9 @@
             [jukebox-web.models.user :as user]))
 
 (defn index [request]
-  (view/index request (playlist/current-song) (playlist/queued-songs)))
+    (if (json/request? ((:headers request) "accept"))
+      (json/response {})
+  (view/index request (playlist/current-song) (playlist/queued-songs))))
 
 (defn current-track [request]
   (let [song (playlist/current-song)

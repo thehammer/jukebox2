@@ -3,7 +3,8 @@
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Files = (function() {
     function Files() {
-      this.render = __bind(this.render, this);      this.validFiles = $('body').attr('data-accept');
+      this.render = __bind(this.render, this);      this.loggedIn = $('.logged-in').length;
+      this.validFiles = $('body').attr('data-accept');
       this.notification = new FileNotification('#notifications', '#file-notification');
       this.uploader = new Uploader({
         method: 'POST',
@@ -13,7 +14,9 @@
       document.addEventListener("dragexit", this.stopActions, false);
       document.addEventListener("dragover", this.stopActions, false);
       document.addEventListener("drop", this.stopActions, false);
-      document.addEventListener("drop", this.render, false);
+      if (this.loggedIn) {
+        document.addEventListener("drop", this.render, false);
+      }
     }
     Files.prototype.isAcceptable = function(type) {
       return new RegExp(this.validFiles, 'gi').test(type);

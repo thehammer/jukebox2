@@ -1,6 +1,7 @@
 class Files
 
   constructor: ->
+    @loggedIn = $('.logged-in').length
     @validFiles = $('body').attr('data-accept')
     @notification = new FileNotification '#notifications', '#file-notification'
     @uploader = new Uploader
@@ -11,7 +12,9 @@ class Files
     document.addEventListener "dragexit", @stopActions, false
     document.addEventListener "dragover", @stopActions, false
     document.addEventListener "drop", @stopActions, false
-    document.addEventListener "drop", @render, false
+
+    if @loggedIn
+      document.addEventListener "drop", @render, false
 
   isAcceptable: (type) ->
     new RegExp(@validFiles, 'gi').test(type)
