@@ -5,6 +5,7 @@
             [jukebox-web.util.json :as json]
             [jukebox-web.views.playlist :as view]
             [jukebox-web.models.playlist :as playlist]
+            [jukebox-web.models.library :as library]
             [jukebox-web.models.user :as user]))
 
 
@@ -26,7 +27,7 @@
         loggedin (not (nil? (-> request :session :current-user)))
         progress (int (player/current-time))]
     (if (json/request? ((:headers request) "accept"))
-      (json/response (merge (extract-tags song) {:progress progress :playing (player/playing?) :canSkip loggedin}))
+      (json/response (merge (extract-tags song) {:owner (library/owner song) :progress progress :playing (player/playing?) :canSkip loggedin}))
       {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html})))
 
 (defn add-one [request]
