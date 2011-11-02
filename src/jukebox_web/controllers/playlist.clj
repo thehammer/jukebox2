@@ -14,13 +14,11 @@
   (let [song (playlist/current-song)
         html (view/current-track request song (playlist/queued-songs))
         etag (sha256 html)
-        previous-etag ((:headers request) "if-none-match")
+        loggedin (not (nil? (-> request :session :current-user)))
         progress (int (player/current-time))]
     (if (json/request? ((:headers request) "accept"))
-      (json/response (merge (extract-tags song) {:progress progress}))
-      (if (= etag previous-etag)
-        {:status 304 :headers {"E-Tag" etag "X-Progress" (str progress)} :body ""}
-        {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html}))))
+      (json/response (merge (extract-tags song) {:progress progress :playing (player/playing?) :canSkip loggedin}))
+      {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html})))
 
 (defn add-one [request]
   (playlist/add-random-song!)

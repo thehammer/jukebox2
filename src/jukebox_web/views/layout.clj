@@ -35,6 +35,25 @@
    [:li [:a {:href "/hammertimes"} "Hammertimes"]]
    (when (nil? (-> request :session :current-user)) [:li [:a {:href "/users/sign-up"} [:span.label.success "Sign Up"]]])])
 
+(defn- current-track-template [request]
+  [:script#track-template {:type "text/example" }
+   [:h1.title "{{ track.title }}"]
+   [:p.artist "{{ track.artist }}"]
+   [:p.album "{{ track.album }}"]])
+
+(defn- player-controls-template [request]
+  [:script#player-template {:type "text/example" }
+   [:p.progress {:data-current "0" :data-duration "{{ track.duration }}"}
+    [:span.remaining]]
+   [:p.controls
+    "<% if (track.playing) { %>"
+    [:a.btn.play {:href "/player/pause" :data-remote "true"} "Pause"]
+    "<% if (track.canSkip) { %>"
+    [:a.btn.skip {:href "/player/skip" :data-remote "true"} "Skip"]
+    "<% } } else { %>"
+    [:a.btn.pause {:href "/player/play" :data-remote "true"} "Play"]
+    "<% } %>"]])
+
 (defn main [request title & content]
   (let [current-user (user/find-by-login (-> request :session :current-user))]
     (html5
@@ -43,12 +62,14 @@
        [:script {:src "http://use.typekit.com/ygg5mdb.js"}]
        [:script {:src "/js/v/jquery-1.6.4.min.js"}]
        [:script {:src "/js/v/underscore-min.js"}]
+       [:script {:src "/js/jukebox.js"}]
+       [:script {:src "/js/progress.js"}]
        [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/notifications.js"}]
        [:script {:src "/js/artwork.js"}]
+       [:script {:src "/js/player.js"}]
        [:script {:src "/js/files.js"}]
        [:script {:src "/js/v/bootstrap-dropdown.js"}]
-       [:script {:src "/js/application.js"}]
        (include-css "/css/v/bootstrap-1.3.0.min.css")]
        (include-css "/css/style.css")
       [:body {:data-accept "mp3|m4a|mp4|mpeg"}
@@ -66,8 +87,10 @@
          (str
            (if (-> request :flash :success) (html [:div {:class "alert-message success"} (-> request :flash :success)]))
            (html content))]]
+       (current-track-template request)
+       (player-controls-template request)
        [:script#file-notification {:type "text/example" }
         [:li.uploading.alert-message.block-message
-         [:p "<%= file.name %> <%= file.size %>mb"]
+         [:p "{{ file.name }} {{ file.size }}mb"]
          [:div.progress-wrapper
           [:div.progress-bar]]]]])))

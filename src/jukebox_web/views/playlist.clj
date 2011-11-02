@@ -22,11 +22,12 @@
   (let [tags (extract-tags song)]
     [:div.song.media-grid
       [:div.album-cover {:data-thumbnail "large" :data-artist (:artist tags) :data-album (:album tags)}]
-      [:div.meta-data
+      [:div#track.meta-data
         [:h1.title (:title tags)]
         [:p.artist (:artist tags)]
-        [:p.album (:album tags)]
-        [:p.progress {:data-current "0" :data-duration (str (:duration tags))}
+        [:p.album (:album tags)]]
+     [:div#player-controls.meta-data
+        [:p.progress {:data-current (str (int (player/current-time))) :data-duration (str (:duration tags))}
           [:span.remaining]]
         [:p.controls
          (if (player/paused?) [:a.btn.play {:href "/player/play" :data-remote "true"} "Play"])
@@ -53,8 +54,5 @@
 (defn index [request current-song queued-songs]
   (let [tags (extract-tags current-song)]
     (layout/main request (str (:title tags) " - " (:artist tags))
-       [:script {:src "/js/playlist-refresh.js"}]
-       [:input#current_track_etag {:type "hidden"}]
-       [:input#first_load_progress {:type "hidden" :value (str (int (player/current-time))) }]
        [:div#current_track
          (current-track request current-song queued-songs)])))

@@ -4,7 +4,8 @@
     function Artwork() {
       this.album = void 0;
       this.artist = void 0;
-      $('#current_track').delegate('.album-cover', 'ajax:success', this.render);
+      this.rendered = false;
+      $('#current_track').delegate('.album-cover', 'artwork.render', this.render);
       this.load();
       $('#current_track').bind('track.updated', this.load);
     }
@@ -22,7 +23,7 @@
           "album": this.album,
           "artist": this.artist
         }, function(data) {
-          return $cover.trigger('ajax:success', [data]);
+          return $cover.trigger('artwork.render', [data]);
         });
       });
     };
@@ -33,15 +34,20 @@
       if (src === '') {
         src = '/img/no_art_lrg.png';
       }
-      wrap = $('<a />', {
-        'href': '#'
-      });
-      img = $('<img>', {
-        'class': 'thumbnail',
-        'src': src
-      });
-      wrap.append(img);
-      return $(this).append(wrap);
+      if (this.rendered) {
+        $('.thumbnail').attr('src', src);
+      } else {
+        wrap = $('<a />', {
+          'href': '#'
+        });
+        img = $('<img>', {
+          'class': 'thumbnail',
+          'src': src
+        });
+        wrap.append(img);
+        $(this).append(wrap);
+      }
+      return this.rendered = true;
     };
     return Artwork;
   })();

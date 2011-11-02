@@ -3,7 +3,9 @@ class Artwork
   constructor: ->
     @album = undefined
     @artist = undefined
-    $('#current_track').delegate('.album-cover', 'ajax:success', @render)
+    @rendered = false
+
+    $('#current_track').delegate('.album-cover', 'artwork.render', @render)
     @load()
     $('#current_track').bind('track.updated', @load)
 
@@ -14,7 +16,7 @@ class Artwork
       @album = $cover.attr('data-album')
       @artist = $cover.attr('data-artist')
       $.get('http://ws.audioscrobbler.com/2.0/', {"method": "album.getInfo", "api_key": "809bf298f1f11c57fbb680b1befdf476", "album": @album, "artist": @artist}, (data) ->
-        $cover.trigger 'ajax:success', [data]
+        $cover.trigger 'artwork.render', [data]
       )
 
   render: (e, info) ->
@@ -22,9 +24,14 @@ class Artwork
     src = $(info).find("image[size=#{size}]").text()
     if src is ''
       src = '/img/no_art_lrg.png'
-    wrap = $('<a />', {'href': '#'})
-    img = $('<img>', {'class': 'thumbnail', 'src': src})
-    wrap.append(img)
-    $(this).append(wrap)
+    if @rendered
+      $('.thumbnail').attr('src', src)
+    else
+      wrap = $('<a />', {'href': '#'})
+      img = $('<img>', {'class': 'thumbnail', 'src': src})
+      wrap.append(img)
+      $(this).append(wrap)
+
+    @rendered = true
 
 $ -> new Artwork
