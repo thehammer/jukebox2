@@ -6,9 +6,12 @@
       self = this;
       this.template = _.template($('#playlist-template').html());
       this.url = '/playlist';
+      $('body').delegate('.controls', 'ajax:success', function() {
+        return self.load();
+      });
       this.playlistTimer = setInterval(function() {
         return self.load();
-      }, 10000);
+      }, 5000);
     }
     Playlist.prototype.load = function() {
       var self;

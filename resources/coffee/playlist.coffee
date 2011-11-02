@@ -5,9 +5,13 @@ class Playlist
     @template = _.template $('#playlist-template').html()
     @url = '/playlist'
 
+    $('body').delegate('.controls', 'ajax:success', ->
+      self.load()
+    )
+
     @playlistTimer = setInterval( ->
       self.load()
-    , 10000)
+    , 5000)
 
   load: ->
     self = this
