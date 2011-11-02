@@ -41,6 +41,15 @@
    [:p.artist "{{ track.artist }}"]
    [:p.album "{{ track.album }}"]])
 
+(defn- playlist-template [request]
+  [:script#playlist-template {:type "text/example" }
+   "<% _.each(tracks, function(track) { %>"
+   [:li
+     [:div.meta-data
+       [:h6.title "{{ track.title }}"]
+       [:p.artist "{{ track.artist }}"]]]
+    "<% }); %>"])
+
 (defn- player-controls-template [request]
   [:script#player-template {:type "text/example" }
    [:p.progress {:data-current "0" :data-duration "{{ track.duration }}"}
@@ -68,6 +77,7 @@
        [:script {:src "/js/notifications.js"}]
        [:script {:src "/js/artwork.js"}]
        [:script {:src "/js/player.js"}]
+       [:script {:src "/js/playlist.js"}]
        [:script {:src "/js/files.js"}]
        [:script {:src "/js/v/bootstrap-dropdown.js"}]
        (include-css "/css/v/bootstrap-1.3.0.min.css")]
@@ -89,6 +99,7 @@
            (html content))]]
        (current-track-template request)
        (player-controls-template request)
+       (playlist-template request)
        [:script#file-notification {:type "text/example" }
         [:li.uploading.alert-message.block-message
          [:p "{{ file.name }} {{ file.size }}mb"]

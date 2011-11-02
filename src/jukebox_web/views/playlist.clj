@@ -47,9 +47,10 @@
     (display-enabled-users current-song)
     [:div.row
       [:h3 "Playlist"]
+      [:ol#playlist.span12.clearfix
       (if-not (empty? queued-songs)
-        [:ol#playlist.span12.clearfix (map #(vector :li (playlist %)) queued-songs)]
-        [:p.random "Choosing random tracks"])]))
+        (map #(vector :li (playlist %)) queued-songs)
+        [:li.random "Choosing random tracks"])]]))
 
 (defn index [request current-song queued-songs]
   (let [tags (extract-tags current-song)]

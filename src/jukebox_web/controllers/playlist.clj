@@ -7,9 +7,16 @@
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.models.user :as user]))
 
+
+(defn- build-playlist []
+  (let [songs (playlist/queued-songs)]
+    (if-not (empty? songs)
+      (map #(extract-tags %) songs)
+      {})))
+
 (defn index [request]
     (if (json/request? ((:headers request) "accept"))
-      (json/response {})
+      (json/response (build-playlist))
   (view/index request (playlist/current-song) (playlist/queued-songs))))
 
 (defn current-track [request]
