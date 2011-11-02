@@ -14,9 +14,7 @@
       (vector img-tag {:src link :title (:login user)})))
 
 (defn- display-enabled-users [current-song]
-  (map
-    (partial build-avatar current-song)
-    (filter #(:enabled %) (user/find-all))))
+  (map (partial build-avatar current-song) (user/find-enabled)))
 
 (defn- display-song [song request]
   (let [tags (extract-tags song)]
