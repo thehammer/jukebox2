@@ -11,12 +11,12 @@
   (describe "skip"
     (it "increments skip-count for the current user"
       (let [bob (user/sign-up! (factory/user {:login "bob"}))
-            request {:session {:current-user "bob"}}
+            request {:session {:current-user "bob"} :headers {"accept" "text/html"}}
             response (player-controller/skip request)]
         (should= 302 (:status response))
         (should= 1 (:skip-count (user/find-by-login "bob")))))
 
     (it "does nothing unless you're logged in"
-      (let [request {:session {}}
+      (let [request {:session {} :headers {"accept" "text/html"}}
             response (player-controller/skip request)]
         (should= 302 (:status response))))))
