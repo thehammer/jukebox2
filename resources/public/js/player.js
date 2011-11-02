@@ -40,8 +40,6 @@
         $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album);
         $('#track').html(track);
         $('title').text("" + data.title + " - " + data.artist + " - jukebox2");
-        $('.current').removeClass('current');
-        $("img[title=" + data.owner + "]").addClass('current');
         return $('#current_track').trigger('track.updated');
       }
     };
