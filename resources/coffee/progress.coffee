@@ -26,11 +26,14 @@ class Progress
     @render()
 
   render: ->
-    return if @progress >= @duration
-    remaining = @duration - @progress
-    minutes = Math.floor remaining / 60
-    seconds = remaining % 60
-    seconds = "0#{seconds}" if seconds < 10
-    $('#player-controls .remaining').text("#{minutes}:#{seconds}")
+    if @progress < @duration
+      remaining = @duration - @progress
+      minutes = Math.floor remaining / 60
+      seconds = remaining % 60
+      seconds = "0#{seconds}" if seconds < 10
+      $('#player-controls .remaining').text("#{minutes}:#{seconds}")
+    else
+      $('#track').trigger('track.refresh')
+
 
 $ -> new Progress
