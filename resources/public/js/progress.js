@@ -28,16 +28,17 @@
     };
     Progress.prototype.render = function() {
       var minutes, remaining, seconds;
-      if (this.progress >= this.duration) {
-        return;
+      if (this.progress < this.duration) {
+        remaining = this.duration - this.progress;
+        minutes = Math.floor(remaining / 60);
+        seconds = remaining % 60;
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        return $('#player-controls .remaining').text("" + minutes + ":" + seconds);
+      } else {
+        return $('#track').trigger('track.refresh');
       }
-      remaining = this.duration - this.progress;
-      minutes = Math.floor(remaining / 60);
-      seconds = remaining % 60;
-      if (seconds < 10) {
-        seconds = "0" + seconds;
-      }
-      return $('#player-controls .remaining').text("" + minutes + ":" + seconds);
     };
     return Progress;
   })();
