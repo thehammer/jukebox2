@@ -25,6 +25,12 @@
       (let [request {:params (factory/hammertime {})}
             response (hammertimes-controller/create request)]
         (should= 302 (:status response))
+        (should= {"Location" "/playlist"} (:headers response))))
+
+    (it "reschedules all hammertimes"
+      (let [request {:params (factory/hammertime {:schedule "1 2 3 4 5"})}
+            response (hammertimes-controller/create request)]
+        (should= 302 (:status response))
         (should= {"Location" "/playlist"} (:headers response)))))
 
   (describe "delete"

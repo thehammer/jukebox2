@@ -8,8 +8,8 @@
 
 (def *model* "hammertimes")
 
-(def *scheduled-tasks* (atom []))
-(def *scheduler* (Scheduler.))
+(def *scheduled-tasks* (ref []))
+(def *scheduler* (ref (Scheduler.)))
 
 (defn validate [hammertime]
   (co/validate hammertime
@@ -48,10 +48,15 @@
     (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end))))
 
 (defn- schedule [hammertime]
-  (let [id (.schedule *scheduler* (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime)))]
-    (swap! *scheduled-tasks* conj id)))
+  (let [id (.schedule @*scheduler* (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime)))]
+    (alter *scheduled-tasks* conj id)))
 
 (defn schedule-all! []
-  (doseq [hammertime (find-all)]
-    (schedule hammertime))
-  (.start *scheduler*))
+  (dosync
+    (when (.isStarted @*scheduler*)
+      (.stop @*scheduler*))
+    (ref-set *scheduler* (Scheduler.))
+    (ref-set *scheduled-tasks* [])
+    (doseq [hammertime (find-all)]
+      (schedule hammertime))
+    (.start @*scheduler*)))

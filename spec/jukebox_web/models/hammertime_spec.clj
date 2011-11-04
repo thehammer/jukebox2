@@ -71,11 +71,15 @@
         (should= ["is required"] (:start errors)))))
 
   (describe "schedule-all!"
+    (it "scheduled nothing if there are no hammertimes"
+      (should= 0 (count @hammertime/*scheduled-tasks*))
+      (hammertime/schedule-all!)
+      (should= 0 (count @hammertime/*scheduled-tasks*))
+      (should= [] (scheduled-cron-patterns)))
+
     (it "schedules all tasks"
       (hammertime/create! (factory/hammertime {:schedule "1 2 * * *"}))
       (hammertime/create! (factory/hammertime {:schedule "3 4 * * *"}))
-      (should= 0 (count @hammertime/*scheduled-tasks*))
       (hammertime/schedule-all!)
       (should= 2 (count @hammertime/*scheduled-tasks*))
-      (let [patterns (map #(str (.getSchedulingPattern hammertime/*scheduler* %)) @hammertime/*scheduled-tasks*)]
-        (should= ["3 4 * * *" "1 2 * * *"] patterns)))))
+      (should= ["3 4 * * *" "1 2 * * *"] (scheduled-cron-patterns)))))
