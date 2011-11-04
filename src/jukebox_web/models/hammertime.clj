@@ -1,7 +1,9 @@
 (ns jukebox-web.models.hammertime
   (:use [clojure.contrib.string :only (blank?)])
-  (:require [jukebox-web.models.db :as db]
-            [corroborate.core :as co]))
+  (:require [jukebox-player.core :as player]
+            [jukebox-web.models.db :as db]
+            [corroborate.core :as co]
+            [jukebox-web.models.library :as library]))
 
 (def *model* "hammertimes")
 
@@ -36,3 +38,7 @@
     (if (empty? errors)
       (db/update *model* hammertime-args :id (:id hammertime)))
     errors))
+
+(defn play! [hammertime]
+  (let [{:keys [file start end]} hammertime]
+    (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end))))
