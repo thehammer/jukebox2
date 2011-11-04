@@ -3,9 +3,13 @@
   (:require [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [corroborate.core :as co]
-            [jukebox-web.models.library :as library]))
+            [jukebox-web.models.library :as library])
+  (:import [it.sauronsoftware.cron4j Scheduler]))
 
 (def *model* "hammertimes")
+
+(def *scheduled-tasks* (atom []))
+(def *scheduler* (Scheduler.))
 
 (defn validate [hammertime]
   (co/validate hammertime
@@ -42,3 +46,12 @@
 (defn play! [hammertime]
   (let [{:keys [file start end]} hammertime]
     (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end))))
+
+(defn- schedule [hammertime]
+  (let [id (.schedule *scheduler* (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime)))]
+    (swap! *scheduled-tasks* conj id)))
+
+(defn schedule-all! []
+  (doseq [hammertime (find-all)]
+    (schedule hammertime))
+  (.start *scheduler*))
