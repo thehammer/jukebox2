@@ -9,9 +9,13 @@ class Playlist
       self.load()
     )
 
+    $('#random').bind('ajax:success', (e, data) ->
+      self.render(data)
+    )
+
     @playlistTimer = setInterval( ->
       self.load()
-    , 5000)
+    , 6000)
 
   load: ->
     self = this

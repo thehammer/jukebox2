@@ -29,7 +29,7 @@
    [:li.dropdown {:data-dropdown "dropdown"}
     [:a.dropdown-toggle {:href "#"} "Add"]
     [:ul.dropdown-menu
-     [:li [:a {:href "/playlist/add-one"} "Random"]]
+     [:li [:a#random {:href "/playlist/add-one" :data-remote "true"} "Random"]]
      [:li [:a {:href "/library/browse"} "From Library"]]]]
    [:li [:a {:href "/users"} "Users"]]
    [:li [:a {:href "/hammertimes"} "Hammertimes"]]
@@ -72,6 +72,7 @@
        [:script {:src "/js/v/jquery-1.6.4.min.js"}]
        [:script {:src "/js/v/underscore-min.js"}]
        [:script {:src "/js/jukebox.js"}]
+       [:script {:src "/js/keyboard_shortcuts.js"}]
        [:script {:src "/js/progress.js"}]
        [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/notifications.js"}]

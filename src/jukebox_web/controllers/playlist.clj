@@ -32,7 +32,9 @@
 
 (defn add-one [request]
   (playlist/add-random-song!)
-  {:status 302 :headers {"Location" "/playlist"}})
+  (if (json/request? ((:headers request) "accept"))
+    (json/response (build-playlist))
+    {:status 302 :headers {"Location" "/playlist"}}))
 
 (defn add [request]
   (let [song (-> request :params :song)]

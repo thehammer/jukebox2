@@ -9,9 +9,12 @@
       $('body').delegate('.controls', 'ajax:success', function() {
         return self.load();
       });
+      $('#random').bind('ajax:success', function(e, data) {
+        return self.render(data);
+      });
       this.playlistTimer = setInterval(function() {
         return self.load();
-      }, 5000);
+      }, 6000);
     }
     Playlist.prototype.load = function() {
       var self;
