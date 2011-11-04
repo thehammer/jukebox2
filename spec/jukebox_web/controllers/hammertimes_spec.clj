@@ -27,11 +27,12 @@
         (should= 302 (:status response))
         (should= {"Location" "/playlist"} (:headers response))))
 
-    (it "reschedules all hammertimes"
+    (it "reschedules hammertimes"
       (let [request {:params (factory/hammertime {:schedule "1 2 3 4 5"})}
             response (hammertimes-controller/create request)]
         (should= 302 (:status response))
-        (should= {"Location" "/playlist"} (:headers response)))))
+        (should= {"Location" "/playlist"} (:headers response))
+        (should= ["1 2 3 4 5"] (scheduled-cron-patterns)))))
 
   (describe "delete"
     (it "deletes the hammertime and redirects"
@@ -59,4 +60,12 @@
             response (hammertimes-controller/update request)]
         (should= 302 (:status response))
         (should= {"Location" "/hammertimes"} (:headers response))
-        (should= 5 (:start (hammertime/find-by-name "test")))))))
+        (should= 5 (:start (hammertime/find-by-name "test")))))
+
+    (it "reschedules hammertimes"
+      (hammertime/create! (factory/hammertime {:name "test" :schedule "1 2 3 4 5"}))
+      (let [hammertime (hammertime/find-by-name "test")
+            request {:params {:id (:id hammertime) :schedule "5 4 3 2 1"}}
+            response (hammertimes-controller/update request)]
+        (should= 302 (:status response))
+        (should= ["5 4 3 2 1"] (scheduled-cron-patterns))))))

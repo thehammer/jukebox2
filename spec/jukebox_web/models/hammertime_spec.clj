@@ -72,7 +72,6 @@
 
   (describe "schedule-all!"
     (it "scheduled nothing if there are no hammertimes"
-      (should= 0 (count @hammertime/*scheduled-tasks*))
       (hammertime/schedule-all!)
       (should= 0 (count @hammertime/*scheduled-tasks*))
       (should= [] (scheduled-cron-patterns)))

@@ -12,7 +12,9 @@
 (defn create [request]
   (let [errors (hammertime/create! (:params request))]
     (if (empty? errors)
-      {:status 302 :headers {"Location" "/playlist"}}
+      (do
+        (hammertime/schedule-all!)
+        {:status 302 :headers {"Location" "/playlist"}})
       (view/create request errors))))
 
 (defn play [request]
@@ -38,5 +40,7 @@
   (let [hammertime (hammertime/find-by-id (-> request :params :id))
         errors (hammertime/update! hammertime (:params request))]
     (if (empty? errors)
-      {:status 302 :headers {"Location" "/hammertimes"}}
+      (do
+        (hammertime/schedule-all!)
+        {:status 302 :headers {"Location" "/hammertimes"}})
       (view/edit request hammertime errors))))
