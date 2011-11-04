@@ -5,13 +5,17 @@
         [jukebox-web.util.file :only (relative-uri)]
         [jukebox-web.views.forms]))
 
+(defn- form-fields [hammertime errors]
+  [:div
+   (labeled-field text-field :file "File" (:file hammertime) errors)
+   (labeled-field text-field :name "Name" (:name hammertime) errors)
+   (labeled-field text-field :start "Start" (:start hammertime) errors)
+   (labeled-field text-field :end "End" (:end hammertime) errors)])
+
 (defn create [request errors]
   (layout/main request "Create Hammertime"
      (form-to [:post "/hammertimes"]
-       (hidden-field :file (-> request :params :file))
-       (labeled-field text-field :name "Name" errors)
-       (labeled-field text-field :start "Start" errors)
-       (labeled-field text-field :end "End" errors)
+       (form-fields {:file (-> request :params :file)} errors)
        (primary-submit-button "Create"))))
 
 (defn- show-hammertime [hammertime]
@@ -38,10 +42,7 @@
 (defn edit [request hammertime errors]
   (layout/main request "Edit Hammertime"
      (form-to [:post (str "/hammertimes/" (:id hammertime) "/update")]
-       (labeled-field text-field :file "File" (:file hammertime) errors)
-       (labeled-field text-field :name "Name" (:name hammertime) errors)
-       (labeled-field text-field :start "Start" (:start hammertime) errors)
-       (labeled-field text-field :end "End" (:end hammertime) errors)
+       (form-fields hammertime errors)
        (primary-submit-button "Update"))))
 
 (defn display-file [file]
