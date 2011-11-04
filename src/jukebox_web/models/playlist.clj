@@ -8,11 +8,16 @@
 
 (def *recent-songs-factor* 0.25)
 
+(defn- random-song-for-enabled-user []
+  (let [users (user/find-enabled)]
+    (if (not (empty? users))
+      (library/random-song (:login (rand-nth users)))
+      (library/random-song))))
+
 (defn- random-song []
-  (let [song (library/random-song (:login (rand-nth (user/find-enabled))))]
+  (let [song (random-song-for-enabled-user)]
     (if-not (nil? song)
-      (.getPath song)
-      (random-song))))
+      (.getPath song))))
 
 (defn current-song []
   @current-song-atom)

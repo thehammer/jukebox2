@@ -53,6 +53,9 @@
         (should-not (includes? (map #(.getName %) tracks) "jukebox.mp3")))))
 
   (describe "random-song"
+    (it "returns a random song with no prefix when no argument is provided"
+      (should-not-be-nil (library/random-song)))
+
     (it "returns a random song from the given path"
       (let [selections (take 10 (map library/random-song (repeat "user")))]
         (should-not (includes? (map #(.getName %) selections) "jukebox.mp3")))))

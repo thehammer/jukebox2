@@ -59,11 +59,13 @@
        (map #(relativize *music-library* %))))))
 
 (defn owner [song]
-  (let [path (.getPath (relativize *music-library* song)) 
+  (let [path (.getPath (relativize *music-library* song))
         filename-parts (clojure.string/split path #"/")]
     (when (> (count filename-parts) 1)
       (first filename-parts))))
 
-(defn random-song [path]
-  (let [tracks (all-tracks path)]
-    (if-not (empty? tracks) (rand-nth tracks) nil)))
+(defn random-song
+  ([] (random-song ""))
+  ([path]
+    (let [tracks (all-tracks path)]
+      (if-not (empty? tracks) (rand-nth tracks) nil))))
