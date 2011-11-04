@@ -1,6 +1,5 @@
 (ns jukebox-web.spec-helper
   (:require [fleetdb.embedded :as fleetdb]
-            [jukebox-web.core :as core]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.library :as library])
   (:use [speclj.core]))
