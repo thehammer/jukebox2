@@ -10,12 +10,12 @@
 
   (describe "create!"
     (it "stores the hammertime"
-      (create! {:name "test" :file "foo.mp3" :start 4 :end 10})
+      (create! (factory/hammertime {:name "test"}))
       (should-not-be-nil (find-by-name "test"))))
 
   (describe "delete-by-id!"
     (it "deletes the hammertime"
-      (create! {:name "test" :file "foo.mp3" :start 4 :end 10})
+      (create! (factory/hammertime {:name "test"}))
       (let [hammertime (find-by-name "test")]
         (delete-by-id! (:id hammertime))
         (should-be-nil (find-by-name "test")))))
@@ -35,7 +35,11 @@
 
     (it "requires a end time"
       (let [errors (validate (factory/hammertime {:end nil}))]
-        (should= ["is required"] (:end errors)))))
+        (should= ["is required"] (:end errors))))
+
+    (it "requires a schedule"
+      (let [errors (validate (factory/hammertime {:schedule nil}))]
+        (should= ["is required"] (:schedule errors)))))
 
   (describe "find-all"
     (it "returns all the hammertimes from the database"

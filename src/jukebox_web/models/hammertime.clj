@@ -10,7 +10,8 @@
     :name (co/is-required)
     :file (co/is-required)
     :start (co/is-required)
-    :end (co/is-required)))
+    :end (co/is-required)
+    :schedule (co/is-required)))
 
 (defn create! [hammertime]
   (let [errors (validate hammertime)]
