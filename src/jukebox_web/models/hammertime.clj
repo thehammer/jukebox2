@@ -1,16 +1,23 @@
 (ns jukebox-web.models.hammertime
   (:use [clojure.contrib.string :only (blank?)])
-  (:require [jukebox-web.models.db :as db]
-            [corroborate.core :as co]))
+  (:require [jukebox-player.core :as player]
+            [jukebox-web.models.db :as db]
+            [corroborate.core :as co]
+            [jukebox-web.models.library :as library])
+  (:import [it.sauronsoftware.cron4j Scheduler]))
 
 (def *model* "hammertimes")
+
+(def *scheduled-tasks* (ref []))
+(def *scheduler* (ref (Scheduler.)))
 
 (defn validate [hammertime]
   (co/validate hammertime
     :name (co/is-required)
     :file (co/is-required)
     :start (co/is-required)
-    :end (co/is-required)))
+    :end (co/is-required)
+    :schedule (co/is-required)))
 
 (defn create! [hammertime]
   (let [errors (validate hammertime)]
@@ -35,3 +42,21 @@
     (if (empty? errors)
       (db/update *model* hammertime-args :id (:id hammertime)))
     errors))
+
+(defn play! [hammertime]
+  (let [{:keys [file start end]} hammertime]
+    (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end))))
+
+(defn- schedule [hammertime]
+  (let [id (.schedule @*scheduler* (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime)))]
+    (alter *scheduled-tasks* conj id)))
+
+(defn schedule-all! []
+  (dosync
+    (when (.isStarted @*scheduler*)
+      (.stop @*scheduler*))
+    (ref-set *scheduler* (Scheduler.))
+    (ref-set *scheduled-tasks* [])
+    (doseq [hammertime (find-all)]
+      (schedule hammertime))
+    (.start @*scheduler*)))

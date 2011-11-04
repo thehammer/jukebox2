@@ -5,6 +5,7 @@
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
                  [org.jaudiotagger/jaudiotagger "2.0.1"]
+                 [org.clojars.ghoseb/cron4j "2.2.1"]
                  [fleetdb "0.3.1"]
                  [corroborate "0.1.0"]
                  [compojure "0.6.5"]

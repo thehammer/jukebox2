@@ -8,5 +8,5 @@
 (defn hammertime
   ([] (hammertime {}))
   ([overrides]
-   (let [defaults {:name "butts" :file "holdon.mp3" :start 1 :end 5}]
+   (let [defaults {:name "butts" :file "holdon.mp3" :start 1 :end 5 :schedule "* * * * *"}]
      (merge defaults overrides))))

@@ -1,6 +1,5 @@
 (ns jukebox-web.controllers.hammertimes
-  (:require [jukebox-player.core :as player]
-            [jukebox-web.views.hammertimes :as view]
+  (:require [jukebox-web.views.hammertimes :as view]
             [jukebox-web.models.hammertime :as hammertime]
             [jukebox-web.models.library :as lib]))
 
@@ -13,13 +12,14 @@
 (defn create [request]
   (let [errors (hammertime/create! (:params request))]
     (if (empty? errors)
-      {:status 302 :headers {"Location" "/playlist"}}
+      (do
+        (hammertime/schedule-all!)
+        {:status 302 :headers {"Location" "/playlist"}})
       (view/create request errors))))
 
 (defn play [request]
-  (let [{:keys [file start end]} (hammertime/find-by-name (-> request :params :name))]
-    (player/hammertime! (lib/file-on-disk file) (read-string start) (read-string end)))
-    {:status 302 :headers {"Location" "/hammertimes"}})
+  (hammertime/play! (hammertime/find-by-name (-> request :params :name)))
+  {:status 302 :headers {"Location" "/hammertimes"}})
 
 (defn delete [request]
   (hammertime/delete-by-id! (-> request :params :id))
@@ -40,5 +40,7 @@
   (let [hammertime (hammertime/find-by-id (-> request :params :id))
         errors (hammertime/update! hammertime (:params request))]
     (if (empty? errors)
-      {:status 302 :headers {"Location" "/hammertimes"}}
+      (do
+        (hammertime/schedule-all!)
+        {:status 302 :headers {"Location" "/hammertimes"}})
       (view/edit request hammertime errors))))

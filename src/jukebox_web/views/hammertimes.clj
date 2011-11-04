@@ -10,13 +10,16 @@
    (labeled-field text-field :file "File" (:file hammertime) errors)
    (labeled-field text-field :name "Name" (:name hammertime) errors)
    (labeled-field text-field :start "Start" (:start hammertime) errors)
-   (labeled-field text-field :end "End" (:end hammertime) errors)])
+   (labeled-field text-field :end "End" (:end hammertime) errors)
+   (labeled-field text-field :schedule "Schedule" (:schedule hammertime) errors)
+   ])
 
 (defn create [request errors]
-  (layout/main request "Create Hammertime"
-     (form-to [:post "/hammertimes"]
-       (form-fields {:file (-> request :params :file)} errors)
-       (primary-submit-button "Create"))))
+  (let [hammertime {:file (-> request :params :file) :schedule "* * * * *"}]
+    (layout/main request "Create Hammertime"
+       (form-to [:post "/hammertimes"]
+         (form-fields hammertime errors)
+         (primary-submit-button "Create")))))
 
 (defn- show-hammertime [hammertime]
   [:tr

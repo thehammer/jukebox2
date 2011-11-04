@@ -7,6 +7,7 @@
             [ring.adapter.jetty :as adapter]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
+            [jukebox-web.models.hammertime :as hammertime]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.controllers.hammertimes :as hammertimes-controller]
             [jukebox-web.controllers.library :as library-controller]
@@ -50,6 +51,7 @@
 (db/connect! "data/jukebox.fdb")
 
 (player/start (playlist/playlist-seq))
+(hammertime/schedule-all!)
 
 (def app (handler/site (flash/wrap-flash main-routes)))
 
