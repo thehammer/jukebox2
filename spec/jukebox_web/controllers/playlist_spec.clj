@@ -13,4 +13,3 @@
           request {:params {:song song}}
           response (playlist-controller/add request)]
       (should= (library/file-on-disk song) (first (playlist/queued-songs))))))
-

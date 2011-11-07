@@ -4,6 +4,7 @@
   (:require [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
+            [ring.middleware.cors :as cors]
             [ring.adapter.jetty :as adapter]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
@@ -53,7 +54,10 @@
 (player/start (playlist/playlist-seq))
 (hammertime/schedule-all!)
 
-(def app (handler/site (flash/wrap-flash main-routes)))
+(def app
+  (-> (handler/site main-routes)
+    (cors/wrap-cors :access-control-allow-origin #".*")
+    flash/wrap-flash))
 
 (defn -main [& args]
   (with-command-line args "Jukebox Web Server"

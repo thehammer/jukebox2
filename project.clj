@@ -10,6 +10,7 @@
                  [corroborate "0.1.0"]
                  [compojure "0.6.5"]
                  [ring-json-params "0.1.3"]
+                 [ring-cors "0.0.2-SNAPSHOT"]
                  [clj-json "0.4.3"]
                  [org.mindrot/jbcrypt "0.3m"]
                  [jaad "0.8.3"]
