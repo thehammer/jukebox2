@@ -11,13 +11,12 @@
 (def *scheduled-tasks* (ref []))
 (def *scheduler* (ref (Scheduler.)))
 
-(defn validate [hammertime]
-  (co/validate hammertime
-    :name (co/is-required)
-    :file (co/is-required)
-    :start (co/is-required)
-    :end (co/is-required)
-    :schedule (co/is-required)))
+(co/defvalidator validate
+  :name (co/is-required)
+  :file (co/is-required)
+  :start (co/is-required)
+  :end (co/is-required)
+  :schedule (co/is-required))
 
 (defn create! [hammertime]
   (let [errors (validate hammertime)]

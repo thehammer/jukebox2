@@ -7,7 +7,7 @@
                  [org.jaudiotagger/jaudiotagger "2.0.1"]
                  [org.clojars.ghoseb/cron4j "2.2.1"]
                  [fleetdb "0.3.1"]
-                 [corroborate "0.1.0"]
+                 [corroborate "0.2.0"]
                  [compojure "0.6.5"]
                  [ring-json-params "0.1.3"]
                  [ring-cors "0.0.2-SNAPSHOT"]

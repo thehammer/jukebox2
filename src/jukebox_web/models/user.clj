@@ -33,15 +33,13 @@
 (defn find-enabled []
   (filter #(:enabled %) (find-all)))
 
-(defn validate [user]
-  (co/validate user
-    :password (co/is-required)
-    :login (co/is-required)))
+(co/defvalidator validate
+  :password (co/is-required)
+  :login (co/is-required))
 
-(defn validate-new-user [user]
-  (co/validate user
-    :password-confirmation (co/is-confirmed-by :password)
-    :login #(if-not (nil? (find-by-login (%2 %1))) "must be unique")))
+(co/defvalidator validate-new-user
+  :password-confirmation (co/is-confirmed-by :password)
+  :login #(if-not (nil? (find-by-login (%2 %1))) "must be unique"))
 
 (defn validate-for-sign-up [user]
   (co/validate-staged user
