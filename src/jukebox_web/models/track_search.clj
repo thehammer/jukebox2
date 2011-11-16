@@ -11,10 +11,20 @@
 (defn clean [file]
   (not (nil? file)))
 
+(defn tracks [file]
+  (if (.isDirectory file)
+    (map tracks (.listFiles file))
+    (.toString file)))
+
+(defn matches? [file]
+  (.matches (.getName file) (str "(?i).*" @matcher ".*")))
+
 (defn select [file]
-  (when (.matches (.getName file) (str "(?i).*" @matcher ".*"))
-    (if (.isDirectory file)
-      (map select (.listFiles file))
+  (if (.isDirectory file)
+    (if (matches? file)
+      (tracks file)
+      (map select (.listFiles file)))
+    (if (matches? file)
       (.toString file))))
 
 (defn execute [text]
