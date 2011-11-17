@@ -1,7 +1,7 @@
 (ns jukebox-web.controllers.hammertimes
   (:require [jukebox-web.views.hammertimes :as view]
             [jukebox-web.models.hammertime :as hammertime]
-            [jukebox-web.models.library :as lib]))
+            [jukebox-web.models.library :as library]))
 
 (defn index [request]
   (view/index request (hammertime/find-all)))
@@ -29,11 +29,11 @@
   (view/edit request (hammertime/find-by-id (-> request :params :id)) nil))
 
 (defn browse-root [request]
-  (view/browse request "Hammertimes" (lib/list-directory)))
+  (view/browse request "Hammertimes" (library/list-directory)))
 
 (defn browse [request]
   (let [path (-> request :params :path)
-        files (lib/list-directory path)]
+        files (library/list-directory path)]
     (view/browse request path files)))
 
 (defn update [request]
