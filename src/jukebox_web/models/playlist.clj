@@ -47,6 +47,7 @@
 
 (defn- move-to-next-track! []
   (reset! current-song-atom (first @queued-songs-atom))
+  (library/increment-play-count! @current-song-atom)
   (swap! queued-songs-atom (comp vec rest)))
 
 (defn next-track [_]

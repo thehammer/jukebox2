@@ -2,7 +2,8 @@
   (:import [java.io File]
            [java.util UUID])
   (:require [clojure.java.io :as io]
-            [clojure.string :as s])
+            [clojure.string :as s]
+            [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (relative-uri file-path mkdir-p mv)]))
 
@@ -69,3 +70,13 @@
   ([path]
     (let [tracks (all-tracks path)]
       (if-not (empty? tracks) (rand-nth tracks) nil))))
+
+(defn play-count [track]
+  (let [play-count-row (first (db/find-by-field :play-counts "track" (str track)))]
+    (or (:count play-count-row) 0)))
+
+(defn increment-play-count! [track]
+  (let [track-name (str track)
+        current-play-count (play-count track)]
+    (when (= 0 (db/update :play-counts {:track track-name :count (inc current-play-count)} "track" track-name))
+      (db/insert :play-counts {:track track-name :count 1}))))

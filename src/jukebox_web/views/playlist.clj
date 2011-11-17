@@ -23,7 +23,8 @@
       [:div#track.meta-data
         [:h1.title (:title tags)]
         [:p.artist (:artist tags)]
-        [:p.album (:album tags)]]
+        [:p.album (:album tags)]
+        [:p.play-count "Play count: " (library/play-count song)]]
      [:div#player-controls.meta-data
         [:p.progress {:data-current (str (int (player/current-time))) :data-duration (str (:duration tags))}
           [:span.remaining]]

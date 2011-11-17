@@ -67,4 +67,17 @@
 
     (it "returns the login for a path with a user"
       (let [track (io/file library/*music-library* "user/artist/album/jukebox2.mp3")]
-        (should= "user" (library/owner track))))))
+        (should= "user" (library/owner track)))))
+
+  (describe "play-count"
+    (with-database-connection)
+
+    (it "returns 0 for a new track"
+      (should= 0 (library/play-count (library/random-song))))
+
+    (it "increments with increment-play-count!"
+      (let [track (library/random-song)]
+        (library/increment-play-count! track)
+        (should= 1 (library/play-count track))
+        (library/increment-play-count! track)
+        (should= 2 (library/play-count track))))))

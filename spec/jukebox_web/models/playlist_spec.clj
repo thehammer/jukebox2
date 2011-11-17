@@ -87,7 +87,16 @@
           (playlist/add-song! "track-d")
           (should= (library/file-on-disk "track-a") next-track)
           (should= (library/file-on-disk "track-b") (first (playlist/queued-songs)))
-          (should= (map library/file-on-disk ["track-c" "track-d"]) (rest (playlist/queued-songs))))))
+          (should= (map library/file-on-disk ["track-c" "track-d"]) (rest (playlist/queued-songs)))))
+
+      (it "increments play-count when moving to next track"
+        (playlist/add-song! "track-a")
+        (playlist/add-song! "track-b")
+        (let [next-track (playlist/next-track "")]
+          (should= 1 (library/play-count (library/file-on-disk "track-a")))
+          (should= 0 (library/play-count (library/file-on-disk "track-b")))
+          (playlist/next-track "")
+          (should= 1 (library/play-count (library/file-on-disk "track-b"))))))
 
     (describe "playlist-seq"
       (it "returns a random track if there are no tracks queued up"
