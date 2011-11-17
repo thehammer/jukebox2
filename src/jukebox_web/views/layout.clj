@@ -39,7 +39,8 @@
   [:script#track-template {:type "text/example" }
    [:h1.title "{{ track.title }}"]
    [:p.artist "{{ track.artist }}"]
-   [:p.album "{{ track.album }}"]])
+   [:p.album "{{ track.album }}"]
+   [:p.play-count "Play count: {{ track.playCount }}"]])
 
 (defn- playlist-template [request]
   [:script#playlist-template {:type "text/example" }

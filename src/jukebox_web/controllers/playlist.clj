@@ -27,7 +27,7 @@
         loggedin (not (nil? (-> request :session :current-user)))
         progress (int (player/current-time))]
     (if (json/request? ((:headers request) "accept"))
-      (json/response (merge (extract-tags song) {:owner (library/owner song) :progress progress :playing (player/playing?) :canSkip loggedin}))
+      (json/response (merge (extract-tags song) {:owner (library/owner song) :progress progress :playing (player/playing?) :canSkip loggedin :playCount (library/play-count song)}))
       {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html})))
 
 (defn add-one [request]
