@@ -91,9 +91,9 @@
       (dotimes [_ 2] (library/increment-play-count! "two"))
       (let [most-played (library/most-played)]
         (should= 3 (count most-played))
-        (should= {:track "three" :count 3} (dissoc (nth most-played 0) :id))
-        (should= {:track "two" :count 2} (dissoc (nth most-played 1) :id))
-        (should= {:track "one" :count 1} (dissoc (nth most-played 2) :id))))
+        (should= {:track "three" :count 3} (nth most-played 0))
+        (should= {:track "two" :count 2} (nth most-played 1))
+        (should= {:track "one" :count 1} (nth most-played 2))))
 
     (it "limits the number of tracks to 20"
       (dotimes [n 21] (library/increment-play-count! n))

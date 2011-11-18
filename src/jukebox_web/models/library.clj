@@ -77,7 +77,8 @@
     (or (:count play-count-row) 0)))
 
 (defn most-played []
-  (db/find-all :play-counts {"order" ["count" "desc"] "limit" 20}))
+  (let [play-counts (db/find-all *play-counts-model* {"order" ["count" "desc"] "limit" 20})]
+    (map #(dissoc % :id) play-counts)))
 
 (defn increment-play-count! [track]
   (let [track-name (str track)
