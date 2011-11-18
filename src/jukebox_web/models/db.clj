@@ -26,6 +26,9 @@
 (defn keys-to-keywords [record]
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
 
+(defn compact! []
+  (fleetdb/compact *db*))
+
 (defn delete [model id]
   (fleetdb/query *db* ["delete" (as-str model) {"where" ["=" "id" id]}]))
 

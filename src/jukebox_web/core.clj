@@ -7,6 +7,7 @@
             [ring.middleware.cors :as cors]
             [ring.adapter.jetty :as adapter]
             [jukebox-player.core :as player]
+            [jukebox-web.models.cron :as cron]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.hammertime :as hammertime]
             [jukebox-web.models.playlist :as playlist]
@@ -53,6 +54,7 @@
 
 (player/start (playlist/playlist-seq))
 (hammertime/schedule-all!)
+(cron/schedule! "0 * * * *" db/compact!)
 
 (def app
   (-> (handler/site main-routes)
