@@ -1,8 +1,9 @@
 (ns jukebox-web.controllers.player-spec
-  (:require [jukebox-web.controllers.hammertimes :as hammertimes-controller])
-  (:require [jukebox-web.models.hammertime :as hammertime])
-  (:require [jukebox-web.models.factory :as factory])
-  (:require [clojure.contrib.string :as string])
+  (:require [jukebox-web.controllers.hammertimes :as hammertimes-controller]
+            [jukebox-web.models.cron :as cron]
+            [jukebox-web.models.hammertime :as hammertime]
+            [jukebox-web.models.factory :as factory]
+            [clojure.contrib.string :as string])
   (:use [speclj.core]
         [jukebox-web.spec-helper]))
 
@@ -32,7 +33,7 @@
             response (hammertimes-controller/create request)]
         (should= 302 (:status response))
         (should= {"Location" "/playlist"} (:headers response))
-        (should= ["1 2 3 4 5"] (scheduled-cron-patterns)))))
+        (should= ["1 2 3 4 5"] (cron/scheduled-patterns)))))
 
   (describe "delete"
     (it "deletes the hammertime and redirects"
@@ -68,4 +69,4 @@
             request {:params {:id (:id hammertime) :schedule "5 4 3 2 1"}}
             response (hammertimes-controller/update request)]
         (should= 302 (:status response))
-        (should= ["5 4 3 2 1"] (scheduled-cron-patterns))))))
+        (should= ["5 4 3 2 1"] (cron/scheduled-patterns))))))

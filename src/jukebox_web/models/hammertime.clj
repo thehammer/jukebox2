@@ -1,9 +1,9 @@
 (ns jukebox-web.models.hammertime
-  (:use [clojure.contrib.string :only (blank?)])
   (:require [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [corroborate.core :as co]
-            [jukebox-web.models.library :as library])
+            [jukebox-web.models.library :as library]
+            [jukebox-web.models.cron :as cron])
   (:import [it.sauronsoftware.cron4j Scheduler]))
 
 (def *model* "hammertimes")
@@ -47,15 +47,9 @@
     (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end))))
 
 (defn- schedule [hammertime]
-  (let [id (.schedule @*scheduler* (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime)))]
-    (alter *scheduled-tasks* conj id)))
+  (cron/schedule! (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime))))
 
 (defn schedule-all! []
-  (dosync
-    (when (.isStarted @*scheduler*)
-      (.stop @*scheduler*))
-    (ref-set *scheduler* (Scheduler.))
-    (ref-set *scheduled-tasks* [])
-    (doseq [hammertime (find-all)]
-      (schedule hammertime))
-    (.start @*scheduler*)))
+  (cron/clear!)
+  (doseq [hammertime (find-all)]
+    (schedule hammertime)))

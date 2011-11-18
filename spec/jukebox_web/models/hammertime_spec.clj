@@ -1,6 +1,7 @@
 (ns jukebox-web.models.hammertime-spec
   (:require [jukebox-web.models.factory :as factory]
-            [jukebox-web.models.hammertime :as hammertime])
+            [jukebox-web.models.hammertime :as hammertime]
+            [jukebox-web.models.cron :as cron])
   (:use [speclj.core]
         [jukebox-web.spec-helper]))
 
@@ -73,12 +74,12 @@
   (describe "schedule-all!"
     (it "scheduled nothing if there are no hammertimes"
       (hammertime/schedule-all!)
-      (should= 0 (count @hammertime/*scheduled-tasks*))
-      (should= [] (scheduled-cron-patterns)))
+      (should= 0 (count @cron/*scheduled-tasks*))
+      (should= [] (cron/scheduled-patterns)))
 
     (it "schedules all tasks"
       (hammertime/create! (factory/hammertime {:schedule "1 2 * * *"}))
       (hammertime/create! (factory/hammertime {:schedule "3 4 * * *"}))
       (hammertime/schedule-all!)
-      (should= 2 (count @hammertime/*scheduled-tasks*))
-      (should= ["3 4 * * *" "1 2 * * *"] (scheduled-cron-patterns)))))
+      (should= 2 (count @cron/*scheduled-tasks*))
+      (should= ["3 4 * * *" "1 2 * * *"] (cron/scheduled-patterns)))))

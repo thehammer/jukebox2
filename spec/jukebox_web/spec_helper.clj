@@ -17,9 +17,5 @@
     (binding [library/*music-library* "spec/music"]
       (spec))))
 
-(defn scheduled-cron-patterns []
-  (let [pattern #(str (.getSchedulingPattern @hammertime/*scheduler* %))]
-    (map pattern @hammertime/*scheduled-tasks*)))
-
 (defn filename [file]
   (last (clojure.string/split file #"/")))
