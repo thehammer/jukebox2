@@ -8,6 +8,7 @@
         [jukebox-web.util.file :only (relative-uri file-path mkdir-p mv)]))
 
 (def *music-library* "music")
+(def *play-counts-model* "play-counts")
 
 (defn extension [filename]
   (last (s/split (str filename) #"\.")))
@@ -72,11 +73,14 @@
       (if-not (empty? tracks) (rand-nth tracks) nil))))
 
 (defn play-count [track]
-  (let [play-count-row (first (db/find-by-field :play-counts "track" (str track)))]
+  (let [play-count-row (first (db/find-by-field *play-counts-model* "track" (str track)))]
     (or (:count play-count-row) 0)))
+
+(defn most-played []
+  (db/find-all :play-counts {"order" ["count" "desc"] "limit" 20}))
 
 (defn increment-play-count! [track]
   (let [track-name (str track)
         current-play-count (play-count track)]
-    (when (= 0 (db/update :play-counts {:track track-name :count (inc current-play-count)} "track" track-name))
-      (db/insert :play-counts {:track track-name :count 1}))))
+    (when (= 0 (db/update *play-counts-model* {:track track-name :count (inc current-play-count)} "track" track-name))
+      (db/insert *play-counts-model* {:track track-name :count 1}))))

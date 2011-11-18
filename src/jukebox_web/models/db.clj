@@ -37,11 +37,14 @@
     (fleetdb/query *db* ["insert" (as-str model) (add-id (keys-to-strings record) id)])
     (conj record {:id id})))
 
-(defn find-by-field [model field value]
-  (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) {"where" ["=" (as-str field) value]}])))
+(defn find-all
+  ([model]
+   (find-all model nil))
+  ([model conditions]
+   (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) conditions]))))
 
-(defn find-all [model]
-  (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model)])))
+(defn find-by-field [model field value]
+  (map keys-to-keywords (find-all model {"where" ["=" (as-str field) value]})))
 
 (defn update [model updates field value]
   (fleetdb/query *db* ["update" (as-str model) (keys-to-strings updates) {"where" ["=" (as-str field) value]}]))

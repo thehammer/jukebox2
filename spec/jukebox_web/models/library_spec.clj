@@ -80,4 +80,21 @@
         (library/increment-play-count! track)
         (should= 1 (library/play-count track))
         (library/increment-play-count! track)
-        (should= 2 (library/play-count track))))))
+        (should= 2 (library/play-count track)))))
+
+  (describe "most-played"
+    (with-database-connection)
+
+    (it "returns the most-played songs in descending order"
+      (dotimes [_ 3] (library/increment-play-count! "three"))
+      (dotimes [_ 1] (library/increment-play-count! "one"))
+      (dotimes [_ 2] (library/increment-play-count! "two"))
+      (let [most-played (library/most-played)]
+        (should= 3 (count most-played))
+        (should= {:track "three" :count 3} (dissoc (nth most-played 0) :id))
+        (should= {:track "two" :count 2} (dissoc (nth most-played 1) :id))
+        (should= {:track "one" :count 1} (dissoc (nth most-played 2) :id))))
+
+    (it "limits the number of tracks to 20"
+      (dotimes [n 21] (library/increment-play-count! n))
+      (should= 20 (count (library/most-played))))))

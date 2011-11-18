@@ -1,4 +1,4 @@
-(ns jukebox-web.controllers.player-spec
+(ns jukebox-web.controllers.hammertimes-spec
   (:require [jukebox-web.controllers.hammertimes :as hammertimes-controller]
             [jukebox-web.models.cron :as cron]
             [jukebox-web.models.hammertime :as hammertime]
