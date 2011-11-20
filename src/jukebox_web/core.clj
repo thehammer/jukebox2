@@ -15,6 +15,7 @@
             [jukebox-web.controllers.library :as library-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
+            [jukebox-web.controllers.stats :as stats-controller]
             [jukebox-web.controllers.users :as users-controller]))
 
 (defroutes main-routes
@@ -48,6 +49,8 @@
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
+  (GET "/stats" [] stats-controller/index)
+  (GET "/stats/song-counts" [] stats-controller/song-counts)
   (route/resources "/")
   (route/not-found "Page not found"))
 
