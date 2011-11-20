@@ -14,7 +14,8 @@
   (describe "index"
     (it "renders successfully"
       (let [response (stats-controller/index nil)]
-        (should (string/substring? "Stats" response)))))
+        (should (string/substring? "Stats" response))
+        (should (string/substring? "Most Played Tracks" response)))))
 
   (describe "song-counts"
     (it "returns an array of users and song counts"

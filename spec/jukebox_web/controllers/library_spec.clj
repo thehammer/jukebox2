@@ -7,7 +7,7 @@
 (describe "library"
   (with-database-connection)
 
-  (describe "most-played"
+  (describe "browse"
     (it "renders successfully"
-      (let [response (library-controller/most-played nil)]
-        (should (string/substring? "Most Played Tracks" response))))))
+      (let [response (library-controller/browse-root nil)]
+        (should (string/substring? "Files in Music Library" response))))))

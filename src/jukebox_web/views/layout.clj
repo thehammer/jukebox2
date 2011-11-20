@@ -31,7 +31,6 @@
     [:ul.dropdown-menu
      [:li [:a#random {:href "/playlist/add-one" :data-remote "true"} "Random"]]
      [:li [:a {:href "/library/browse"} "From Library"]]]]
-   [:li [:a {:href "/library/most-played"} "Most Played"]]
    [:li [:a {:href "/stats"} "Stats"]]
    [:li [:a {:href "/users"} "Users"]]
    [:li [:a {:href "/hammertimes"} "Hammertimes"]]

@@ -16,6 +16,3 @@
   (let [path (-> request :params :path)
         files (library/list-directory path)]
     (view/browse request path files)))
-
-(defn most-played [request]
-  (view/most-played request (library/most-played)))
