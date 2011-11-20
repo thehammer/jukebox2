@@ -19,7 +19,7 @@
     [:h3 "files in " path " (play count)"]
     [:ul
       (if-not (nil? parent-path) [:li (link-to (str "/library/browse/" parent-path) "..")])
-      (map #(vector :li (display-file %)) files)])))
+      (map #(vector :li (display-file %)) (sort files))])))
 
 (defn- nice-track-name [track]
   (string/replace track #"^music/" ""))
