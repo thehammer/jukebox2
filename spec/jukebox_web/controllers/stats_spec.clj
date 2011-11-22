@@ -21,5 +21,6 @@
     (it "returns an array of users and song counts"
       (user/sign-up! (factory/user {:login "user"}))
       (user/sign-up! (factory/user {:login "user2"}))
+      (user/sign-up! (factory/user {:login "user3"}))
       (let [response (stats-controller/song-counts nil)]
-        (should= [["user2" 1] ["user" 3]] (json/parse-string (:body response)))))))
+        (should= [["user" 3] ["user2" 1] ["user3" 0]] (json/parse-string (:body response)))))))

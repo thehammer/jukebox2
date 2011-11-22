@@ -8,5 +8,7 @@
   (view/index request (user/find-all) (library/most-played)))
 
 (defn song-counts [request]
-  (let [users (user/find-all)]
-    (json/response (map #(vector (:login %) (user/count-songs %)) users))))
+  (let [users (user/find-all)
+        users-with-counts (map #(vector (:login %) (user/count-songs %)) users)
+        sorted-users-with-counts (reverse (sort-by last users-with-counts))]
+    (json/response sorted-users-with-counts)))
