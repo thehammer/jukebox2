@@ -97,4 +97,18 @@
 
     (it "limits the number of tracks to 20"
       (dotimes [n 21] (library/increment-play-count! n))
-      (should= 20 (count (library/most-played))))))
+      (should= 20 (count (library/most-played)))))
+
+  (describe "artist"
+    (it "returns nil for a path without an artist"
+      (let [track (io/file library/*music-library* "jukebox2.mp3")]
+        (should-be-nil (library/artist track))))
+
+    (it "returns the artist for a path with an artist"
+      (let [track (io/file library/*music-library* "user/artist/album/jukebox2.mp3")]
+        (should= "artist" (library/artist track)))))
+
+  (describe "most-popular-artists"
+    (it "returns an array with the artist and number of tracks in descending order"
+      (should= [["artist" 3] ["artist2" 1]] (library/most-popular-artists)))))
+

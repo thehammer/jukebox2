@@ -5,7 +5,7 @@
             [jukebox-web.util.json :as json]))
 
 (defn index [request]
-  (view/index request (user/find-all) (library/most-played)))
+  (view/index request (user/find-all) (library/most-played) (library/most-popular-artists)))
 
 (defn song-counts [request]
   (let [users (user/find-all)

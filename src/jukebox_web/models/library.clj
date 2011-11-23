@@ -2,7 +2,7 @@
   (:import [java.io File]
            [java.util UUID])
   (:require [clojure.java.io :as io]
-            [clojure.string :as s]
+            [clojure.string :as string]
             [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (relative-uri file-path mkdir-p mv)]))
@@ -11,7 +11,7 @@
 (def *play-counts-model* "play-counts")
 
 (defn extension [filename]
-  (last (s/split (str filename) #"\.")))
+  (last (string/split (str filename) #"\.")))
 
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)
@@ -36,7 +36,7 @@
     (io/file (.getPath (.relativize parent-uri child-uri)))))
 
 (defn parent-directory [path]
-  (if (s/blank? path)
+  (if (string/blank? path)
     nil
     (relative-uri (relativize *music-library* (.getParent (io/file *music-library* path))))))
 
@@ -62,7 +62,7 @@
 
 (defn owner [song]
   (let [path (.getPath (relativize *music-library* song))
-        filename-parts (clojure.string/split path #"/")]
+        filename-parts (string/split path #"/")]
     (when (> (count filename-parts) 1)
       (first filename-parts))))
 
@@ -79,6 +79,17 @@
 (defn most-played []
   (let [play-counts (db/find-all *play-counts-model* {"order" ["count" "desc"] "limit" 20})]
     (map #(dissoc % :id) play-counts)))
+
+(defn artist [track]
+  (let [relative-file-name (string/replace (.getPath track) (str *music-library* "/") "")
+        filename-parts (string/split relative-file-name #"/")]
+    (when (> (count filename-parts) 2)
+      (second filename-parts))))
+
+(defn most-popular-artists []
+  (let [artists (remove nil? (map artist (all-tracks)))
+        artists-with-counts (frequencies artists)]
+    (take 20 (reverse (sort-by last (into [] artists-with-counts))))))
 
 (defn increment-play-count! [track]
   (let [track-name (str track)
