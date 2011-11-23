@@ -8,6 +8,10 @@
 
 (def matcher (ref ""))
 
+(defn- audio [file]
+  (.endsWith file "mp3"))
+
+
 (defn tracks [file]
   (if (.isDirectory file)
     (keep tracks (.listFiles file))
@@ -28,4 +32,4 @@
   (let [library (io/file library/*music-library*)]
     (dosync (ref-set matcher text))
     (when (.exists library)
-      (flatten (keep matches (.listFiles library))))))
+      (filter audio (flatten (keep matches (.listFiles library)))))))

@@ -16,6 +16,7 @@
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
             [jukebox-web.controllers.stats :as stats-controller]
+            [jukebox-web.controllers.track-search :as track-search-controller]
             [jukebox-web.controllers.users :as users-controller]))
 
 (defroutes main-routes
@@ -47,6 +48,7 @@
   (GET ["/hammertimes/browse/:path", :path #".*"] [] hammertimes-controller/browse)
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
+  (GET "/library/search" [] track-search-controller/index)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
   (GET "/stats" [] stats-controller/index)
   (GET "/stats/song-counts" [] stats-controller/song-counts)
