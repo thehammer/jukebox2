@@ -15,24 +15,7 @@
       $('#query').bind('focus', function(e) {
         return $('#track-search-results').show();
       });
-      $('#query').bind('keyup', function(e) {
-        var $form, self, value;
-        self = $(this);
-        $form = self.parent('form');
-        value = self.val();
-        if (!(value.length > 2)) {
-          return true;
-        }
-        return $.ajax({
-          method: 'GET',
-          url: $form.attr('action'),
-          data: $form.serialize(),
-          dataType: 'json',
-          success: function(data, status, xhr) {
-            return self.trigger('ajax:success', [data, status, xhr]);
-          }
-        });
-      });
+      $('#query').bind('keyup', this.load);
     }
     TrackSearch.prototype.render = function(e, tracks) {
       var html, self;
@@ -43,6 +26,24 @@
       });
       this.el.html(html);
       return this.el.show();
+    };
+    TrackSearch.prototype.load = function(e) {
+      var $form, self, value;
+      self = $(this);
+      $form = self.parent('form');
+      value = self.val();
+      if (!(value.length > 2)) {
+        return true;
+      }
+      return $.ajax({
+        method: 'GET',
+        url: $form.attr('action'),
+        data: $form.serialize(),
+        dataType: 'json',
+        success: function(data, status, xhr) {
+          return self.trigger('ajax:success', [data, status, xhr]);
+        }
+      });
     };
     return TrackSearch;
   })();

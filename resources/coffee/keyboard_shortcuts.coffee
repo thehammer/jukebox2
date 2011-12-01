@@ -2,7 +2,7 @@ class KeyboardShortcuts
 
   constructor: ->
     $('input, textarea').bind('keyup', (e) ->
-      e.stopPropagation()
+      e.stopPropagation() unless e.keyCode is 27
       return true
     )
     $('body').bind('keyup', (e) ->
@@ -16,6 +16,8 @@ class KeyboardShortcuts
           $('#random').trigger('click')
         when 83
           $('#query').focus()
+        when 27
+          $(e.srcElement).blur()
     )
 
 

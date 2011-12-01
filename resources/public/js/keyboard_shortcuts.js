@@ -3,7 +3,9 @@
   KeyboardShortcuts = (function() {
     function KeyboardShortcuts() {
       $('input, textarea').bind('keyup', function(e) {
-        e.stopPropagation();
+        if (e.keyCode !== 27) {
+          e.stopPropagation();
+        }
         return true;
       });
       $('body').bind('keyup', function(e) {
@@ -17,6 +19,8 @@
             return $('#random').trigger('click');
           case 83:
             return $('#query').focus();
+          case 27:
+            return $(e.srcElement).blur();
         }
       });
     }

@@ -10,6 +10,6 @@
 (defn display-search [request]
   [:div#track-search-container
     [:form#search {:action "/library/search" :method "get" :data-remote "true" }
-     [:input#query {:type "text" :name "q" :placeholder "Search for Artist, Album or Song"}]
+     [:input#query {:type "text" :autocomplete "off" :name "q" :placeholder "Search for Artist, Album or Song"}]
      [:ul#track-search-results]]
     (results request)])
