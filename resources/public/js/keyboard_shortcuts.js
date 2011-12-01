@@ -15,6 +15,8 @@
             return $('a.btn.skip').trigger('click');
           case 82:
             return $('#random').trigger('click');
+          case 83:
+            return $('#query').focus();
         }
       });
     }

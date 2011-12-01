@@ -14,6 +14,8 @@ class KeyboardShortcuts
           $('a.btn.skip').trigger('click')
         when 82
           $('#random').trigger('click')
+        when 83
+          $('#query').focus()
     )
 
 
