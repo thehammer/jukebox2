@@ -9,7 +9,7 @@ class Playlist
       self.load()
     )
 
-    $('#random').bind('ajax:success', (e, data) ->
+    $('.topbar').delegate('a.update-playlist', 'ajax:success', (e, data) ->
       self.render(data)
     )
 

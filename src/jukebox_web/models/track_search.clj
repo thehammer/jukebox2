@@ -3,6 +3,7 @@
             [jukebox-web.models.library :as library]
             [clojure.string :as s]
             [clojure.java.io :as io])
+  (:use [ring.util.codec :only (url-encode)])
   (:import [java.io File]
            [java.util]))
 
@@ -11,6 +12,8 @@
 (defn- audio [file]
   (.endsWith file "mp3"))
 
+(defn uri [song]
+  (url-encode (s/replace song "music/" "")))
 
 (defn tracks [file]
   (if (.isDirectory file)

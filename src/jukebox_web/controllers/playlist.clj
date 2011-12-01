@@ -38,5 +38,7 @@
 
 (defn add [request]
   (let [song (-> request :params :song)]
-    (playlist/add-song! song)
+    (playlist/add-song! song))
+  (if (json/request? ((:headers request) "accept"))
+    (json/response (build-playlist))
     {:status 302 :headers {"Location" "/playlist"}}))

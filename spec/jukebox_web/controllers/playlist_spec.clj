@@ -10,6 +10,6 @@
 
   (it "adds the given file to the end of the queued-songs"
     (let [song "user/artist/album/track.mp3"
-          request {:params {:song song}}
+          request {:params {:song song} :headers {"accept" "text/html"}}
           response (playlist-controller/add request)]
       (should= (library/file-on-disk song) (first (playlist/queued-songs))))))

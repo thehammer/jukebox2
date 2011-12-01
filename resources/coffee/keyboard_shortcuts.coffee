@@ -1,7 +1,12 @@
 class KeyboardShortcuts
 
   constructor: ->
-    $(document).bind('keyup', (e) ->
+    $('input, textarea').bind('keyup', (e) ->
+      e.stopPropagation()
+      return true
+    )
+    $('body').bind('keyup', (e) ->
+
       switch e.keyCode
         when 32
           $('a.btn.play, a.btn.pause').trigger('click')

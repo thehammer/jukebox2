@@ -33,6 +33,7 @@
          (if (player/playing?) [:a.btn.pause {:href "/player/pause" :data-remote "true"} "Pause"])
          (if (player/playing?) (when-not (nil? (-> request :session :current-user)) [:a.btn.skip {:href "/player/skip" :data-remote "true"} "Skip"]))]]]))
 
+
 (defn playlist [song]
   (let [tags (extract-tags song)]
     [:div.meta-data

@@ -184,3 +184,34 @@ div#current_track {
     border-color: orange;
   }
 }
+
+#search {
+  position:relative;
+  left:0;
+  top:0;
+
+  #track-search-results {
+    position:absolute;
+    top:35px;
+    left:5px;
+    width:210px;
+    background-color:#333;
+    list-style:none;
+    margin:0;
+    padding:0 5px;
+
+    li {
+      padding:10px 5px;
+      border-bottom:1px solid black;
+
+      p.artist {
+        font-size:12px;
+        padding:0;
+        margin:0;
+        line-height:14px;
+      }
+    }
+  }
+
+}
+

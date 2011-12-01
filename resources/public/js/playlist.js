@@ -9,7 +9,7 @@
       $('body').delegate('.controls', 'ajax:success', function() {
         return self.load();
       });
-      $('#random').bind('ajax:success', function(e, data) {
+      $('.topbar').delegate('a.update-playlist', 'ajax:success', function(e, data) {
         return self.render(data);
       });
       this.playlistTimer = setInterval(function() {

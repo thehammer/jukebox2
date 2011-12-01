@@ -2,7 +2,11 @@
   var KeyboardShortcuts;
   KeyboardShortcuts = (function() {
     function KeyboardShortcuts() {
-      $(document).bind('keyup', function(e) {
+      $('input, textarea').bind('keyup', function(e) {
+        e.stopPropagation();
+        return true;
+      });
+      $('body').bind('keyup', function(e) {
         switch (e.keyCode) {
           case 32:
             return $('a.btn.play, a.btn.pause').trigger('click');

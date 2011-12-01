@@ -1,5 +1,6 @@
 (ns jukebox-web.views.layout
-  (:require [jukebox-web.models.user :as user])
+  (:require [jukebox-web.models.user :as user]
+            [jukebox-web.views.track-search :as track-search])
   (:use [hiccup core page-helpers form-helpers]
         [jukebox-web.views.forms]))
 
@@ -29,7 +30,7 @@
    [:li.dropdown {:data-dropdown "dropdown"}
     [:a.dropdown-toggle {:href "#"} "Add"]
     [:ul.dropdown-menu
-     [:li [:a#random {:href "/playlist/add-one" :data-remote "true"} "Random"]]
+     [:li [:a#random.update-playlist {:href "/playlist/add-one" :data-remote "true"} "Random"]]
      [:li [:a {:href "/library/browse"} "From Library"]]]]
    [:li [:a {:href "/stats"} "Stats"]]
    [:li [:a {:href "/users"} "Users"]]
@@ -82,6 +83,7 @@
        [:script {:src "/js/player.js"}]
        [:script {:src "/js/playlist.js"}]
        [:script {:src "/js/files.js"}]
+       [:script {:src "/js/track_search.js"}]
        [:script {:src "/js/v/bootstrap-dropdown.js"}]
        (include-css "/css/v/bootstrap-1.3.0.min.css")]
        (include-css "/css/style.css")
@@ -91,6 +93,7 @@
          [:div.container
           [:a.brand {:href "/"} "jukebox2"]
           (nav-links request)
+          (track-search/display-search request)
           (if (nil? current-user)
             (login-form)
             (logged-in current-user))]]]
