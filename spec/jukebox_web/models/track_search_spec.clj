@@ -13,8 +13,7 @@
 
   (it "searches file system for artist and returns all tracks"
       (let [tracks (track-search/execute "artist")]
-        (should= 4 (count tracks))
-        (should= "track.mp3" (filename (first tracks)))))
+        (should= 4 (count tracks))))
 
   (it "searches file system for album and returns all tracks"
       (let [tracks (track-search/execute "album2")]
