@@ -7,7 +7,7 @@
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
-  };
+  }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Notifications = (function() {
     function Notifications(root) {
       this.root = $(root);
@@ -62,7 +62,7 @@
   window.FileNotification = FileNotification;
   PlayerNotification = (function() {
     function PlayerNotification() {
-      if (!this.capable) {
+      this.askForPermission = __bind(this.askForPermission, this);      if (!this.capable) {
         return false;
       }
       if (!this.noPermission()) {
@@ -95,7 +95,11 @@
       return window.webkitNotifications.checkPermission() > 0;
     };
     PlayerNotification.prototype.askForPermission = function() {
-      return window.webkitNotifications.requestPermission(this.renderButton);
+      var self;
+      self = this;
+      return window.webkitNotifications.requestPermission(function() {
+        return self.renderButton();
+      });
     };
     return PlayerNotification;
   })();

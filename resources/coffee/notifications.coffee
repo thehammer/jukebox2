@@ -69,7 +69,10 @@ class PlayerNotification
   noPermission: ->
     window.webkitNotifications.checkPermission() > 0
 
-  askForPermission: ->
-    window.webkitNotifications.requestPermission(@renderButton)
+  askForPermission: =>
+    self = this
+    window.webkitNotifications.requestPermission ->
+      self.renderButton()
+
 
 $ -> window.PlayerNotification = new PlayerNotification
