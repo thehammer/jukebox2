@@ -21,6 +21,8 @@
      [:li.dropdown {:data-dropdown "dropdown"}
       [:a.dropdown-toggle (:login current-user) ]
       [:ul.dropdown-menu
+       [:li
+        [:button#enable-notifications.btn.success "Enable Notifications"]]
        [:li (form-to [:post "/users/sign-out"]
                      (danger-submit-button "Sign Out"))]]]
      [:img {:src (user/avatar-url current-user {:s "37"})}]]])

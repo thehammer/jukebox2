@@ -1,5 +1,5 @@
 (function() {
-  var FileNotification, Notifications;
+  var FileNotification, Notifications, PlayerNotification;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -60,4 +60,46 @@
     return FileNotification;
   })();
   window.FileNotification = FileNotification;
+  PlayerNotification = (function() {
+    function PlayerNotification() {
+      if (!this.capable) {
+        return false;
+      }
+      if (!this.noPermission()) {
+        this.renderButton();
+      }
+      $('#enable-notifications').bind('click', this.askForPermission);
+    }
+    PlayerNotification.prototype.render = function(options) {
+      var body, notification, title, url;
+      if (!this.capable) {
+        return false;
+      }
+      if (this.noPermission()) {
+        this.askForPermission();
+      }
+      url = options.url, title = options.title, body = options.body;
+      notification = window.webkitNotifications.createNotification(url, title, body);
+      notification.show();
+      return setTimeout(function() {
+        return notification.cancel();
+      }, 5000);
+    };
+    PlayerNotification.prototype.renderButton = function() {
+      return $('#enable-notifications').text('Notifications Enabled').unbind('click');
+    };
+    PlayerNotification.prototype.capable = function() {
+      return window.webkitNotifications;
+    };
+    PlayerNotification.prototype.noPermission = function() {
+      return window.webkitNotifications.checkPermission() > 0;
+    };
+    PlayerNotification.prototype.askForPermission = function() {
+      return window.webkitNotifications.requestPermission(this.renderButton);
+    };
+    return PlayerNotification;
+  })();
+  $(function() {
+    return window.PlayerNotification = new PlayerNotification;
+  });
 }).call(this);

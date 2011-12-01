@@ -41,3 +41,35 @@ class FileNotification extends Notifications
       $('.progress-bar', this).css({width: "#{percent}%"})
 
 window.FileNotification = FileNotification
+
+class PlayerNotification
+
+  constructor: ->
+    return false unless @capable
+    @renderButton() unless @noPermission()
+    $('#enable-notifications').bind('click', @askForPermission)
+
+  render: (options) ->
+    return false unless @capable
+    @askForPermission() if @noPermission()
+
+    {url, title, body} = options
+    notification = window.webkitNotifications.createNotification(url, title, body)
+    notification.show()
+    setTimeout ->
+      notification.cancel()
+    , 5000
+
+  renderButton: ->
+    $('#enable-notifications').text('Notifications Enabled').unbind('click')
+
+  capable: ->
+    window.webkitNotifications
+
+  noPermission: ->
+    window.webkitNotifications.checkPermission() > 0
+
+  askForPermission: ->
+    window.webkitNotifications.requestPermission(@renderButton)
+
+$ -> window.PlayerNotification = new PlayerNotification

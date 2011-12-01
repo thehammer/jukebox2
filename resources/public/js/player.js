@@ -42,6 +42,11 @@
         $('title').text("" + data.title + " - " + data.artist + " - jukebox2");
         $('.current').removeClass('current');
         $("img[title=" + data.owner + "]").addClass('current');
+        PlayerNotification.render({
+          url: "",
+          title: "Now playing",
+          body: "" + data.title + " by " + data.artist
+        });
         return $('#current_track').trigger('track.updated');
       }
     };
