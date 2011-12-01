@@ -45,12 +45,12 @@ window.FileNotification = FileNotification
 class PlayerNotification
 
   constructor: ->
-    return false unless @capable
+    return @removeButton() unless @capable()
     @renderButton() unless @noPermission()
     $('#enable-notifications').bind('click', @askForPermission)
 
   render: (options) ->
-    return false unless @capable
+    return false unless @capable()
     @askForPermission() if @noPermission()
 
     {url, title, body} = options
@@ -63,8 +63,12 @@ class PlayerNotification
   renderButton: ->
     $('#enable-notifications').text('Notifications Enabled').unbind('click')
 
+  removeButton: ->
+    $('#enable-notifications').parent('li').remove()
+    false
+
   capable: ->
-    window.webkitNotifications
+    window.webkitNotifications?
 
   noPermission: ->
     window.webkitNotifications.checkPermission() > 0

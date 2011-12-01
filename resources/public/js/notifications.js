@@ -62,8 +62,8 @@
   window.FileNotification = FileNotification;
   PlayerNotification = (function() {
     function PlayerNotification() {
-      this.askForPermission = __bind(this.askForPermission, this);      if (!this.capable) {
-        return false;
+      this.askForPermission = __bind(this.askForPermission, this);      if (!this.capable()) {
+        return this.removeButton();
       }
       if (!this.noPermission()) {
         this.renderButton();
@@ -72,7 +72,7 @@
     }
     PlayerNotification.prototype.render = function(options) {
       var body, notification, title, url;
-      if (!this.capable) {
+      if (!this.capable()) {
         return false;
       }
       if (this.noPermission()) {
@@ -88,8 +88,12 @@
     PlayerNotification.prototype.renderButton = function() {
       return $('#enable-notifications').text('Notifications Enabled').unbind('click');
     };
+    PlayerNotification.prototype.removeButton = function() {
+      $('#enable-notifications').parent('li').remove();
+      return false;
+    };
     PlayerNotification.prototype.capable = function() {
-      return window.webkitNotifications;
+      return window.webkitNotifications != null;
     };
     PlayerNotification.prototype.noPermission = function() {
       return window.webkitNotifications.checkPermission() > 0;
