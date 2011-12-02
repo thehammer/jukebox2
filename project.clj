@@ -8,7 +8,6 @@
                  [org.clojars.ghoseb/cron4j "2.2.1"]
                  [fleetdb "0.3.1"]
                  [corroborate "0.2.0"]
-                 [compojure "0.6.5"]
                  [ring-json-params "0.1.3"]
                  [ring-cors "0.0.2-SNAPSHOT"]
                  [clj-json "0.4.3"]
@@ -19,7 +18,8 @@
                  [jorbis "0.0.15"]
                  [mp3spi "1.9.5"]
                  [tritonus_share "0.3.6"]
-                 [vorbisspi "1.0.3"]]
+                 [vorbisspi "1.0.3"]
+                 [joodo "0.6.0-SNAPSHOT"]]
   :dev-dependencies [[lein-ring "0.4.5"]
                      [lein-javac "1.2.1-SNAPSHOT"]
                      [speclj "1.5.2"]
@@ -27,4 +27,6 @@
   :java-source-path [["src/jukebox_player"]]
   :main jukebox-web.core
   :ring {:handler jukebox-web.core/app}
-  :test-path "spec/")
+  :test-path "spec/"
+  :joodo-core-namespace jukebox-web.core
+  :repl-init-script "config/development/repl_init.clj")
