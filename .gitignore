@@ -7,3 +7,6 @@
 .lein-failures
 /tags
 /checkouts
+*.iml
+.idea
+*.out

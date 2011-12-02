@@ -82,12 +82,12 @@
 (defroutes jukebox-web-routes
   (GET "/" [] (render-template "index"))
   (controller-router 'jukebox-web.controller)
-  (not-found (render-template "not_found" :template-root "jukebox-web/view" :ns `jukebox-web.view.view-helpers)))
+  (not-found (render-template "not_found" :template-root "jukebox_web/view" :ns `jukebox-web.view.view-helpers)))
 
 (def app-handler
   (->
     jukebox-web-routes
-    (wrap-view-context :template-root "jukebox-web/view" :ns `jukebox-web.view.view-helpers)))
+    (wrap-view-context :template-root "jukebox_web/view" :ns `jukebox-web.view.view-helpers)))
 
 
 
