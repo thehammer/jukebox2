@@ -2,9 +2,10 @@
   (:require [clj-json.core :as json]))
 
 (defn request? [accept]
-  (when nil? accept false)
-  (let [matches (re-find #"json" accept)]
-    (not (nil? matches))))
+  (if (nil? accept)
+    false
+    (let [matches (re-find #"json" accept)]
+      (not (nil? matches)))))
 
 (defn response [data & [status]]
   {:status (or status 200)

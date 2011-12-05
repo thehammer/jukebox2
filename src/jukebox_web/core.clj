@@ -75,12 +75,19 @@
   (:use
     [compojure.core :only (defroutes GET)]
     [compojure.route :only (not-found)]
+    [ring.util.response :only (redirect)]
     [joodo.middleware.view-context :only (wrap-view-context)]
     [joodo.views :only (render-template render-html)]
-    [joodo.controllers :only (controller-router)]))
+    [joodo.controllers :only (controller-router)])
+  (:require
+    [jukebox-player.core :as player]
+    [jukebox-web.models.playlist :as playlist]
+    [jukebox-web.models.db :as db]
+    [jukebox-web.models.hammertime :as hammertime]
+    [jukebox-web.models.cron :as cron]))
 
 (defroutes jukebox-web-routes
-  (GET "/" [] (render-template "index"))
+  (GET "/" [] (redirect "/playlist"))
   (controller-router 'jukebox-web.controller)
   (not-found (render-template "not_found" :template-root "jukebox_web/view" :ns `jukebox-web.view.view-helpers)))
 
@@ -88,6 +95,12 @@
   (->
     jukebox-web-routes
     (wrap-view-context :template-root "jukebox_web/view" :ns `jukebox-web.view.view-helpers)))
+
+(db/connect! "data/jukebox.fdb")
+
+(player/start (playlist/playlist-seq))
+(hammertime/schedule-all!)
+(cron/schedule! "0 * * * *" db/compact!)
 
 
 

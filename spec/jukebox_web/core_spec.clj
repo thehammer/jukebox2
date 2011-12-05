@@ -9,10 +9,9 @@
   (with-mock-rendering)
   (with-routes app-handler)
 
-  (it "handles home page"
-    (let [result (do-get "/")]
-      (should= 200 (:status result))
-      (should= "index" @rendered-template)))
+  (it "root redirects to playlist"
+    (let [response (do-get "/")]
+      (should-redirect-to response "/playlist")))
   )
 
 (run-specs)
