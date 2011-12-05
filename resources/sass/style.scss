@@ -124,12 +124,15 @@ h1, h2, h3, h4, h5, h6 {
     margin:10px 0;
     padding:5px 0;
     border-bottom:1px solid lightgray;
+    position: relative;
+    clear:right;
 
     .title, .artist, .album {
       color: gray;
       display:inline;
       padding:3px;
     }
+
     .title {
       font-size: 14px;
       text-transform:none;
@@ -137,6 +140,13 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .artist, .album { font-size:12px; }
+
+    .requester, .owner {
+      font-size: 11px;
+      color: #aaa;
+      padding: 0 5px;
+      float: right;
+    }
 
   }
 }
@@ -152,6 +162,13 @@ div.song {
     .title {
       width: 600px;
     }
+  }
+
+  .play-count, .owner, .requester {
+    margin: 0;
+    color: #aaa;
+    float: right;
+    clear: right;
   }
 
   .artist, .album {

@@ -1,6 +1,8 @@
 (ns jukebox-web.models.playlist
   (:require [jukebox-web.models.library :as library]
-            [jukebox-web.models.user :as user]))
+            [jukebox-web.models.playlist-track]
+            [jukebox-web.models.user :as user])
+  (:import [jukebox-web.models.playlist-track PlaylistTrack]))
 
 (def current-song-atom (atom nil))
 (def queued-songs-atom (atom []))
@@ -28,17 +30,18 @@
 (defn- recent-songs-to-keep []
   (* (count (library/all-tracks)) *recent-songs-factor*))
 
-(defn add-song! [song]
-  (swap! queued-songs-atom conj (library/file-on-disk song))
-  (swap! recent-songs-atom conj song)
-  (if (< (recent-songs-to-keep) (count @recent-songs-atom))
-    (swap! recent-songs-atom pop)))
+(defn add-song! [song & [user]]
+  (let [track (PlaylistTrack. (library/file-on-disk song) user)]
+    (swap! queued-songs-atom conj track)
+    (swap! recent-songs-atom conj track)
+    (if (< (recent-songs-to-keep) (count @recent-songs-atom))
+      (swap! recent-songs-atom pop))))
 
 (defn add-random-song! []
   (loop [song (random-song) attempts 0]
     (if (or (nil? song) (.contains @recent-songs-atom song))
       (recur (random-song) (inc attempts))
-      (add-song! song))))
+      (add-song! song {:login "(randomizer)"}))))
 
 (defn reset-state! []
   (reset! current-song-atom nil)
@@ -47,14 +50,14 @@
 
 (defn- move-to-next-track! []
   (reset! current-song-atom (first @queued-songs-atom))
-  (library/increment-play-count! @current-song-atom)
+  (library/increment-play-count! (:song @current-song-atom))
   (swap! queued-songs-atom (comp vec rest)))
 
 (defn next-track [_]
   (if-let [queued (first @queued-songs-atom)]
     (move-to-next-track!)
     (do (add-random-song!) (move-to-next-track!)))
-  @current-song-atom)
+  (:song @current-song-atom))
 
 (defn playlist-seq []
   (iterate next-track (next-track "")))

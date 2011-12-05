@@ -8,11 +8,11 @@
     [jukebox-web.models.playlist :as playlist]))
 
 (defn- respond-to [request]
-  (let [song (playlist/current-song)
+  (let [track (playlist/current-song)
         loggedin (not (nil? (-> request :session :current-user)))
         progress (int (player/current-time))]
   (if (json/request? ((:headers request) "accept"))
-    (json/response (merge (extract-tags song) {:progress progress :playing (player/playing?) :canSkip loggedin :playCount (library/play-count song)}))
+    (json/response (merge (extract-tags (:song track)) {:progress progress :playing (player/playing?) :canSkip loggedin :playCount (library/play-count (:song track))}))
     {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn play [request]

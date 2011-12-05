@@ -107,7 +107,9 @@ h1, h2, h3, h4, h5, h6 {
   #playlist li {
     margin: 10px 0;
     padding: 5px 0;
-    border-bottom: 1px solid lightgray; }
+    border-bottom: 1px solid lightgray;
+    position: relative;
+    clear: right; }
     #playlist li .title, #playlist li .artist, #playlist li .album {
       color: gray;
       display: inline;
@@ -118,6 +120,11 @@ h1, h2, h3, h4, h5, h6 {
       line-height: 20px; }
     #playlist li .artist, #playlist li .album {
       font-size: 12px; }
+    #playlist li .requester, #playlist li .owner {
+      font-size: 11px;
+      color: #aaa;
+      padding: 0 5px;
+      float: right; }
 
 div.song a {
   cursor: default; }
@@ -126,6 +133,11 @@ div.song .meta-data {
   padding-left: 20px; }
   div.song .meta-data .title {
     width: 600px; }
+div.song .play-count, div.song .owner, div.song .requester {
+  margin: 0;
+  color: #aaa;
+  float: right;
+  clear: right; }
 div.song .artist, div.song .album {
   font-size: 16px; }
 div.song .remaining {

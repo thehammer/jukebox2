@@ -42,18 +42,12 @@
 (defn- current-track-template [request]
   [:script#track-template {:type "text/example" }
    [:h1.title "{{ track.title }}"]
+   [:p.play-count "Play count: {{ track.playCount }}"]
+   [:p.owner "Owner: {{ track.owner }}"]
+   [:p.requester "Requester: {{ track.requester }}"]
    [:p.artist "{{ track.artist }}"]
    [:p.album "{{ track.album }}"]
-   [:p.play-count "Play count: {{ track.playCount }}"]])
-
-(defn- playlist-template [request]
-  [:script#playlist-template {:type "text/example" }
-   "<% _.each(tracks, function(track) { %>"
-   [:li
-     [:div.meta-data
-       [:h6.title "{{ track.title }}"]
-       [:p.artist "{{ track.artist }}"]]]
-    "<% }); %>"])
+   ])
 
 (defn- player-controls-template [request]
   [:script#player-template {:type "text/example" }
@@ -67,6 +61,18 @@
     "<% } } else { %>"
     [:a.btn.pause {:href "/player/play" :data-remote "true"} "Play"]
     "<% } %>"]])
+
+(defn- playlist-template [request]
+  [:script#playlist-template {:type "text/example" }
+   "<% _.each(tracks, function(track) { %>"
+   [:li
+     [:div.meta-data
+       [:h6.title "{{ track.title }}"]
+       [:p.artist "{{ track.artist }}"]
+       [:p.owner "Owner: {{ track.owner }}"]
+       [:p.requester "Requester: {{ track.requester }}"]]]
+    "<% }); %>"])
+
 
 (defn main [request title & content]
   (let [current-user (user/find-by-login (-> request :session :current-user))]

@@ -32,7 +32,7 @@
           (should (empty? (playlist/queued-songs)))
           (playlist/add-song! "user/artist/track.mp3")
           (should= 1 (count (playlist/queued-songs)))
-          (should= (library/file-on-disk "user/artist/track.mp3") (first (playlist/queued-songs))))
+          (should= (library/file-on-disk "user/artist/track.mp3") (:song (first (playlist/queued-songs)))))
 
       (it "adds the song to the end of the queue"
           (playlist/add-song! "user/artist/first_track.mp3")
@@ -55,9 +55,9 @@
       (it "only selects songs from enabled users"
         (user/toggle-enabled! "user")
         (user/toggle-enabled! "user2")
-        (playlist/add-random-song!) 
-        (let [next-song (first (playlist/queued-songs))]
-          (should= "user2" (library/owner next-song))))
+        (playlist/add-random-song!)
+        (let [next-track (first (playlist/queued-songs))]
+          (should= "user2" (library/owner (:song next-track)))))
 
       (it "adds a random song that has not been recently played"
         (loop [count 0]
@@ -86,8 +86,8 @@
         (let [next-track (playlist/next-track "")]
           (playlist/add-song! "track-d")
           (should= (library/file-on-disk "track-a") next-track)
-          (should= (library/file-on-disk "track-b") (first (playlist/queued-songs)))
-          (should= (map library/file-on-disk ["track-c" "track-d"]) (rest (playlist/queued-songs)))))
+          (should= (library/file-on-disk "track-b") (:song (first (playlist/queued-songs))))
+          (should= (map library/file-on-disk ["track-c" "track-d"]) (map :song (rest (playlist/queued-songs))))))
 
       (it "increments play-count when moving to next track"
         (playlist/add-song! "track-a")
@@ -103,9 +103,9 @@
         (should (empty? (playlist/queued-songs)))
         (should-not-be-nil (first (playlist/playlist-seq))))
 
-      (it "returns the first queued track"
+      (it "returns the first queued song, ready for playing"
         (playlist/add-random-song!)
-        (let [expected (first (playlist/queued-songs))]
+        (let [expected (:song (first (playlist/queued-songs)))]
           (should= expected (first (playlist/playlist-seq)))))
 
       (it "will return random tracks indefinitely"
