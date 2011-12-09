@@ -55,7 +55,7 @@ class TrackSearch
     @focused = @el.find('li:first-child')
 
     @el.bind 'keydown', (e) ->
-      e.preventDefault()
+      e.preventDefault() unless e.keyCode is 13
 
     @el.bind 'keyup', (e) ->
       switch e.keyCode

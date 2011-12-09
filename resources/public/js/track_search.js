@@ -67,7 +67,9 @@
       self = this;
       this.focused = this.el.find('li:first-child');
       this.el.bind('keydown', function(e) {
-        return e.preventDefault();
+        if (e.keyCode !== 13) {
+          return e.preventDefault();
+        }
       });
       this.el.bind('keyup', function(e) {
         switch (e.keyCode) {
