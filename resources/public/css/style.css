@@ -174,6 +174,10 @@ div#current_track img.current {
     #search #track-search-results li {
       padding: 10px 5px;
       border-bottom: 1px solid black; }
+      #search #track-search-results li a {
+        outline: 0; }
+      #search #track-search-results li a:focus {
+        color: #FFF; }
       #search #track-search-results li p.artist {
         font-size: 12px;
         padding: 0;

@@ -1,6 +1,8 @@
 class TrackSearch
 
   constructor: ->
+    self = this
+    @focused = ''
     @el = $('#track-search-results')
     @template = _.template $('#track-result-template').html()
 
@@ -8,12 +10,15 @@ class TrackSearch
 
     $('body').bind 'click', (e) ->
       return true if $(e.srcElement).parents('form#search').length
-      $('#track-search-results').hide()
+      self.el.hide()
 
     $('#query').bind 'focus', (e) ->
-      $('#track-search-results').show()
+      self.el.show()
 
     $('#query').bind 'keyup', @load
+
+    @el.find('li a').bind 'click', ->
+      self.el.hide()
 
   render: (e, tracks) =>
     self = this
@@ -25,12 +30,13 @@ class TrackSearch
     @el.html(html)
     @el.show()
 
-  load: (e) ->
-    self = $(this)
+  load: (e) =>
+    return @traverseList() if e.keyCode is 40
+    self = $(e.srcElement)
     $form = self.parent('form')
     value = self.val()
 
-    return true unless value.length > 2
+    return @reset() unless value.length > 2
 
     $.ajax
       method: 'GET'
@@ -39,6 +45,34 @@ class TrackSearch
       dataType: 'json'
       success: (data, status, xhr) ->
         self.trigger 'ajax:success', [data, status, xhr]
+
+  reset: ->
+    @el.html('')
+
+  traverseList: ->
+    return unless @el.children().length
+    self = this
+    @focused = @el.find('li:first-child')
+
+    @el.bind 'keydown', (e) ->
+      e.preventDefault()
+
+    @el.bind 'keyup', (e) ->
+      switch e.keyCode
+        when 40
+          self.focused = self.focused.next('li')
+          self.focused.find('a').focus()
+        when 38
+          self.focused = self.focused.prev('li')
+          if self.focused.length is 1
+            self.focused.find('a').focus()
+          else
+            $('#query').focus()
+            self.el.unbind('keyup')
+
+
+    @focused.find('a').focus()
+    return false
 
 
 $ -> new TrackSearch

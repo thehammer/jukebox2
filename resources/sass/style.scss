@@ -221,6 +221,12 @@ div#current_track {
       padding:10px 5px;
       border-bottom:1px solid black;
 
+      a { outline:0; }
+
+      a:focus {
+        color:#FFF;
+      }
+
       p.artist {
         font-size:12px;
         padding:0;
@@ -237,3 +243,4 @@ div#current_track {
   padding:4px 9px;
   width:148px;
 }
+
