@@ -50,8 +50,7 @@ class PlayerNotification
     $('#enable-notifications').bind('click', @askForPermission)
 
   render: (options) ->
-    return false unless @capable()
-    @askForPermission() if @noPermission()
+    return false if isnt @capable() || @noPermission()
 
     {url, title, body} = options
     notification = window.webkitNotifications.createNotification(url, title, body)

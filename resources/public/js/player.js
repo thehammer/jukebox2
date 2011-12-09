@@ -35,20 +35,21 @@
         track: data
       }));
       $('#player-controls').html(controls).trigger('track.tick', [data]);
-      if (this.album !== data.album) {
-        this.album = data.album;
-        $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album);
-        $('#track').html(track);
-        $('title').text("" + data.title + " - " + data.artist + " - jukebox2");
-        $('.current').removeClass('current');
-        $("img[title=" + data.owner + "]").addClass('current');
-        PlayerNotification.render({
-          url: "",
-          title: "Now playing",
-          body: "" + data.title + " by " + data.artist
-        });
-        return $('#current_track').trigger('track.updated');
+      if (this.album === data.album) {
+        return;
       }
+      this.album = data.album;
+      $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album);
+      $('#track').html(track);
+      $('title').text("" + data.title + " - " + data.artist + " - jukebox2");
+      $('.current').removeClass('current');
+      $("img[title='" + data.owner + "']").addClass('current');
+      PlayerNotification.render({
+        url: "",
+        title: "Now playing",
+        body: "" + data.title + " by " + data.artist
+      });
+      return $('#current_track').trigger('track.updated');
     };
     return Player;
   })();

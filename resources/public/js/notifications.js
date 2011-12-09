@@ -76,7 +76,7 @@
         return false;
       }
       if (this.noPermission()) {
-        this.askForPermission();
+        return $('#enable-notifications').click();
       }
       url = options.url, title = options.title, body = options.body;
       notification = window.webkitNotifications.createNotification(url, title, body);
