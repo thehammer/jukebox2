@@ -72,11 +72,8 @@
     }
     PlayerNotification.prototype.render = function(options) {
       var body, notification, title, url;
-      if (!this.capable()) {
+      if (!this.capable() || this.noPermission()) {
         return false;
-      }
-      if (this.noPermission()) {
-        return $('#enable-notifications').click();
       }
       url = options.url, title = options.title, body = options.body;
       notification = window.webkitNotifications.createNotification(url, title, body);
