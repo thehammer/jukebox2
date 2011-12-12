@@ -9,6 +9,7 @@
 (describe "playlist"
   (with-test-music-library)
   (with-database-connection)
+  (with-smaller-weight-threshold)
 
   (context "without users"
     (before
@@ -26,6 +27,11 @@
       (user/sign-up! (factory/user {:login "user2"}))
       (user/toggle-enabled! "user2")
       (playlist/reset-state!))
+
+    (describe "weighted-users"
+      (it "gives users with song counts past threshold a higher chance of being chosen"
+        (user/toggle-enabled! "user2")
+        (should= ["user2" "user" "user" "user" "user" "user"] (playlist/weighted-users))))
 
     (describe "add-song!"
       (it "adds the given song to the queued songs"
