@@ -12,7 +12,7 @@
         loggedin (not (nil? (-> request :session :current-user)))
         progress (int (player/current-time))]
   (if (json/request? ((:headers request) "accept"))
-    (json/response (merge (extract-tags (:song track)) {:progress progress :playing (player/playing?) :canSkip loggedin :playCount (library/play-count (:song track))}))
+    (json/response (merge (extract-tags (:song track)) {:progress progress :playing (player/playing?) :canSkip loggedin :playCount (library/play-count (:song track)) :skipCount (library/skip-count (:song track))}))
     {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn play [request]
@@ -28,4 +28,5 @@
     (player/skip!)
     (do (Thread/sleep 1000))
     (user/increment-skip-count! current-user))
+    (library/increment-skip-count! (:song (playlist/current-song)))
   (respond-to request))

@@ -9,6 +9,7 @@
          {:requester (:login (:requester track))
           :owner (library/owner (:song track))
           :playCount (library/play-count (:song track))
+          :skipCount (library/skip-count (:song track))
           }))
 
 

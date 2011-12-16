@@ -7,3 +7,5 @@
 .lein-failures
 /tags
 /checkouts
+nohup.out
+.lein*

@@ -33,6 +33,7 @@
           response-json (json/parse-string (:body response))]
       (should= 2 (count response-json))
       (should= { "playCount" 0
+                 "skipCount" 0
                  "owner"     "user"
                  "requester" nil
                  "duration"  16
@@ -55,6 +56,7 @@
           response (playlist-controller/current-track request)
           response-json (json/parse-string (:body response))]
       (should= { "playCount" 1
+                 "skipCount" 0
                  "owner"     "user"
                  "requester" nil
                  "duration"  16

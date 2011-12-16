@@ -82,6 +82,19 @@
         (library/increment-play-count! track)
         (should= 2 (library/play-count track)))))
 
+  (describe "skip-count"
+    (with-database-connection)
+
+    (it "returns 0 for a new track"
+      (should= 0 (library/skip-count (library/random-song))))
+
+    (it "increments with increment-skip-count!"
+      (let [track (library/random-song)]
+        (library/increment-skip-count! track)
+        (should= 1 (library/skip-count track))
+        (library/increment-skip-count! track)
+        (should= 2 (library/skip-count track)))))
+
   (describe "most-played"
     (with-database-connection)
 

@@ -13,7 +13,8 @@
     (it "includes song information, owner, and requester"
         (let [track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3")
                                      {:login "requestinguser"})]
-          (should= { :playCount 0
+          (should= { :skipCount 0
+                     :playCount 0
                      :owner     "user"
                      :requester "requestinguser"
                      :duration  16
