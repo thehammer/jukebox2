@@ -9,6 +9,7 @@
 
 (def *music-library* "music")
 (def *play-counts-model* "play-counts")
+(def *skip-counts-model* "skip-counts")
 
 (defn extension [filename]
   (last (string/split (str filename) #"\.")))
@@ -76,6 +77,10 @@
   (let [play-count-row (first (db/find-by-field *play-counts-model* "track" (str track)))]
     (or (:count play-count-row) 0)))
 
+(defn skip-count [track]
+  (let [skip-count-row (first (db/find-by-field *skip-counts-model* "track" (str track)))]
+    (or (:count skip-count-row) 0)))
+
 (defn most-played []
   (let [play-counts (db/find-all *play-counts-model* {"order" ["count" "desc"] "limit" 20})]
     (map #(dissoc % :id) play-counts)))
@@ -96,3 +101,9 @@
         current-play-count (play-count track)]
     (when (= 0 (db/update *play-counts-model* {:track track-name :count (inc current-play-count)} "track" track-name))
       (db/insert *play-counts-model* {:track track-name :count 1}))))
+
+(defn increment-skip-count! [track]
+  (let [track-name (str track)
+        current-skip-count (skip-count track)]
+    (when (= 0 (db/update *skip-counts-model* {:track track-name :count (inc current-skip-count)} "track" track-name))
+      (db/insert *skip-counts-model* {:track track-name :count 1}))))

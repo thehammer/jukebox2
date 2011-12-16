@@ -43,6 +43,7 @@
   [:script#track-template {:type "text/example" }
    [:h1.title "{{ track.title }}"]
    [:p.play-count "Play count: {{ track.playCount }}"]
+   [:p.skip-count "Skip count: {{ track.skipCount }}"]
    [:p.owner "Owner: {{ track.owner }}"]
    [:p.requester "Requester: {{ track.requester }}"]
    [:p.artist "{{ track.artist }}"]

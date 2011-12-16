@@ -133,7 +133,7 @@ div.song .meta-data {
   padding-left: 20px; }
   div.song .meta-data .title {
     width: 600px; }
-div.song .play-count, div.song .owner, div.song .requester {
+div.song .play-count, div.song .skip-count, div.song .owner, div.song .requester {
   margin: 0;
   color: #aaa;
   float: right;
