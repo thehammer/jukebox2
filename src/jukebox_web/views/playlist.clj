@@ -23,6 +23,7 @@
       [:div#track.meta-data
         [:h1.title (:title metadata)]
         [:p.play-count "Play count: " (library/play-count (:song track))]
+        [:p.skip-count "Skip count: " (library/skip-count (:song track))]
         [:p.owner "Owner: " (:owner metadata)]
         [:p.requester "Requester: " (:requester metadata)]
         [:p.artist (:artist metadata)]
