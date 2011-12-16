@@ -7,7 +7,7 @@
       this.url = '/playlist/current-track';
       this.trackTemplate = _.template($('#track-template').html());
       this.playerTemplate = _.template($('#player-template').html());
-      this.album = $('#current_track .album-cover').data('album');
+      this.title = $('#current_track .album-cover').data('title');
       $('body').delegate('#track', 'track.render', function(e, data) {
         return self.render(data);
       });
@@ -35,18 +35,16 @@
         track: data
       }));
       $('#player-controls').html(controls).trigger('track.tick', [data]);
-      if (this.album === data.album) {
+      if (this.title === data.title) {
         return;
       }
-      this.album = data.album;
-      $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album);
+      this.title = data.title;
+      $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album).attr('data-title', data.title);
       $('#track').html(track);
       $('title').text("" + data.title + " - " + data.artist + " - jukebox2");
       $('.current').removeClass('current');
       $("img[title='" + data.owner + "']").addClass('current');
       PlayerNotification.render({
-        url: "",
-        title: "Now playing",
         body: "" + data.title + " by " + data.artist
       });
       return $('#current_track').trigger('track.updated');

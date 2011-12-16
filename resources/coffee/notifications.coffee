@@ -47,12 +47,16 @@ class PlayerNotification
   constructor: ->
     return @removeButton() unless @capable()
     @renderButton() unless @noPermission()
+    @defaultOptions =
+      url: ''
+      title: 'Now Playing'
+      body: ''
     $('#enable-notifications').bind('click', @askForPermission)
 
   render: (options) ->
     return false if !@capable() or @noPermission()
 
-    {url, title, body} = options
+    {url, title, body} = $.extend @defaultOptions, options
     notification = window.webkitNotifications.createNotification(url, title, body)
     notification.show()
     setTimeout ->

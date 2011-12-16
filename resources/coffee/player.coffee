@@ -5,7 +5,7 @@ class Player
     @trackTemplate = _.template $('#track-template').html()
     @playerTemplate = _.template $('#player-template').html()
 
-    @album = $('#current_track .album-cover').data('album')
+    @title = $('#current_track .album-cover').data('title')
 
     $('body').delegate('#track', 'track.render', (e, data) ->
       self.render(data)
@@ -32,17 +32,15 @@ class Player
     track = $ @trackTemplate {track: data}
     controls = $ @playerTemplate {track: data}
     $('#player-controls').html(controls).trigger('track.tick', [data])
-    return if @album is data.album
+    return if @title is data.title
 
-    @album = data.album
-    $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album)
+    @title = data.title
+    $('div.album-cover').attr('data-artist', data.artist).attr('data-album', data.album).attr('data-title', data.title)
     $('#track').html(track)
     $('title').text("#{data.title} - #{data.artist} - jukebox2")
     $('.current').removeClass('current')
     $("img[title='#{data.owner}']").addClass('current')
     PlayerNotification.render
-      url: ""
-      title: "Now playing"
       body: "#{data.title} by #{data.artist}"
     $('#current_track').trigger('track.updated')
 

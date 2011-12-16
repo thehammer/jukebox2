@@ -68,14 +68,19 @@
       if (!this.noPermission()) {
         this.renderButton();
       }
+      this.defaultOptions = {
+        url: '',
+        title: 'Now Playing',
+        body: ''
+      };
       $('#enable-notifications').bind('click', this.askForPermission);
     }
     PlayerNotification.prototype.render = function(options) {
-      var body, notification, title, url;
+      var body, notification, title, url, _ref;
       if (!this.capable() || this.noPermission()) {
         return false;
       }
-      url = options.url, title = options.title, body = options.body;
+      _ref = $.extend(this.defaultOptions, options), url = _ref.url, title = _ref.title, body = _ref.body;
       notification = window.webkitNotifications.createNotification(url, title, body);
       notification.show();
       return setTimeout(function() {

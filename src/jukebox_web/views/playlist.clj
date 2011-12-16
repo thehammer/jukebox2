@@ -19,7 +19,7 @@
 (defn- display-song [track request]
   (let [metadata (playlist-track/metadata track)]
     [:div.song.media-grid
-      [:div.album-cover {:data-thumbnail "large" :data-artist (:artist metadata) :data-album (:album metadata)}]
+      [:div.album-cover {:data-thumbnail "large" :data-title (:title metadata) :data-artist (:artist metadata) :data-album (:album metadata)}]
       [:div#track.meta-data
         [:h1.title (:title metadata)]
         [:p.play-count "Play count: " (library/play-count (:song track))]
