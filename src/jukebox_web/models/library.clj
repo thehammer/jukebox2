@@ -71,7 +71,7 @@
   ([] (random-song ""))
   ([path]
     (let [tracks (all-tracks path)]
-      (if-not (empty? tracks) (rand-nth tracks) nil))))
+      (if-not (empty? tracks) (rand-nth (shuffle tracks)) nil))))
 
 (defn play-count [track]
   (let [play-count-row (first (db/find-by-field *play-counts-model* "track" (str track)))]

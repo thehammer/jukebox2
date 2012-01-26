@@ -9,7 +9,7 @@
 (def recent-songs-atom (atom clojure.lang.PersistentQueue/EMPTY))
 
 (def *recent-songs-factor* 0.25)
-(def *weight-threshold* 25)
+(def *weight-threshold* 35)
 
 (defn- enabled-with-counts []
   (let [users (user/find-enabled)
@@ -31,7 +31,7 @@
 (defn- random-song-for-enabled-user []
   (let [users (user/find-enabled)]
     (if (not (empty? users))
-      (library/random-song (rand-nth (weighted-users)))
+      (library/random-song (rand-nth (shuffle (weighted-users))))
       (library/random-song))))
 
 (defn- random-song []
