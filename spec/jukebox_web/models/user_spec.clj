@@ -54,6 +54,10 @@
     (let [errors (user/validate-for-sign-up (factory/user {:password-confirmation "different"}))]
       (should= ["does not match"] (:password-confirmation errors))))
 
+  (it "requires a non-reserved name"
+    (let [errors (user/validate-for-sign-up (factory/user {:login "(randomizer)"}))]
+      (should= '("can't be a reserved name") (:login errors))))
+
   (it "requires unique login on sign up"
     (user/sign-up! (factory/user {}))
     (let [errors (user/validate-for-sign-up (factory/user {}))]

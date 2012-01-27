@@ -3,6 +3,7 @@
             [jukebox-web.models.db :as db]
             [jukebox-web.models.library :as library]
             [jukebox-web.util.crypt :as crypt]
+            [jukebox-web.util.reserved-names :as reserved-names]
             [jukebox-web.util.url :as url])
   (:use [clojure.contrib.string :only (blank?)]))
 
@@ -39,7 +40,8 @@
 
 (co/defvalidator validate-new-user
   :password-confirmation (co/is-confirmed-by :password)
-  :login #(if-not (nil? (find-by-login (%2 %1))) "must be unique"))
+  :login #(if-not (nil? (find-by-login (%2 %1))) "must be unique")
+  :login (co/is-excluded-from (reserved-names/restricted) "can't be a reserved name"))
 
 (defn validate-for-sign-up [user]
   (co/validate-staged user
