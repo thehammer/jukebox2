@@ -111,6 +111,16 @@
     (let [errors (user/update! (factory/user {}) {:login ""})]
       (should= ["is required"] (:login errors)))))
 
+(describe "delete!"
+  (with-database-connection)
+
+  (it "deletes the user"
+    (user/sign-up! (factory/user {:login "avatar-test" :avatar "old-avatar.png"}))
+    (let [test-user (user/find-by-login "avatar-test")]
+      (user/delete! test-user)
+      (let [deleted-user (user/find-by-login "avatar-test")]
+        (should= nil deleted-user)))))
+
 (describe "find-all"
   (with-database-connection)
 

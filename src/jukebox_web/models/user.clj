@@ -94,3 +94,6 @@
 (defn enabled? [login]
   (let [user (find-by-login login)]
      (:enabled user)))
+
+(defn delete! [user]
+  (db/delete *model* (:id user)))
