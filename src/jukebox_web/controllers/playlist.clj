@@ -24,11 +24,12 @@
   (let [track (playlist/current-song)
         html (view/current-track request track (playlist/queued-songs))
         etag (sha256 html)
-        loggedin (not (nil? (-> request :session :current-user)))
+        user (user/find-by-login (-> request :session :current-user))
+        canSkip (playlist/canSkip? track user) 
         progress (int (player/current-time))]
     (if (json/request? ((:headers request) "accept"))
       (json/response
-        (merge (playlist-track/metadata track) { :progress progress :playing (player/playing?) :canSkip loggedin}))
+        (merge (playlist-track/metadata track) { :progress progress :playing (player/playing?) :canSkip canSkip}))
       {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html})))
 
 (defn add-one [request]

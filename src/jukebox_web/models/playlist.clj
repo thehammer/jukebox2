@@ -1,6 +1,6 @@
 (ns jukebox-web.models.playlist
   (:require [jukebox-web.models.library :as library]
-            [jukebox-web.models.playlist-track]
+            [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user])
   (:import [jukebox-web.models.playlist-track PlaylistTrack]))
 
@@ -18,6 +18,13 @@
 
 (defn- threshold [songs]
   (if (>= songs *weight-threshold*) 5 1))
+
+(defn canSkip? [track user]
+  (let [metadata (playlist-track/metadata track)
+        requester (:login (:requester track))]
+    (if (contains? #{nil "(randomizer)" "(guest)"}  requester)
+      (not (nil? user))
+      (= (:requester track) (:login user)))))
 
 (defn weighted-users []
   (let [expanded-set (atom [])]
