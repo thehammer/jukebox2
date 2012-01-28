@@ -9,10 +9,11 @@
 
 (defn- respond-to [request]
   (let [track (playlist/current-song)
-        loggedin (not (nil? (-> request :session :current-user)))
+        user (user/find-by-login (-> request :session :current-user))
+        canSkip (playlist/canSkip? track user)
         progress (int (player/current-time))]
   (if (json/request? ((:headers request) "accept"))
-    (json/response (merge (extract-tags (:song track)) {:progress progress :playing (player/playing?) :canSkip loggedin :playCount (library/play-count (:song track)) :skipCount (library/skip-count (:song track))}))
+    (json/response (merge (extract-tags (:song track)) {:progress progress :playing (player/playing?) :canSkip canSkip :playCount (library/play-count (:song track)) :skipCount (library/skip-count (:song track))}))
     {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn play [request]
@@ -24,9 +25,10 @@
   (respond-to request))
 
 (defn skip [request]
-  (when-let [current-user (-> request :session :current-user)]
-    (player/skip!)
-    (do (Thread/sleep 1000))
-    (user/increment-skip-count! current-user))
-    (library/increment-skip-count! (:song (playlist/current-song)))
+  (let [current-user (-> request :session :current-user)]
+    (when (playlist/canSkip? (playlist/current-song) current-user)
+      (player/skip!)
+      (do (Thread/sleep 1000))
+      (user/increment-skip-count! current-user)
+      (library/increment-skip-count! (:song (playlist/current-song)))))
   (respond-to request))
