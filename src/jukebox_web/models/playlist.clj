@@ -20,11 +20,10 @@
   (if (>= songs *weight-threshold*) 5 1))
 
 (defn canSkip? [track user]
-  (let [metadata (playlist-track/metadata track)
-        requester (:login (:requester track))]
+  (let [requester (:login (:requester track))]
     (if (contains? #{nil "(randomizer)" "(guest)"}  requester)
       (not (nil? user))
-      (= (:requester track) (:login user)))))
+      (= requester (:login user)))))
 
 (defn weighted-users []
   (let [expanded-set (atom [])]
