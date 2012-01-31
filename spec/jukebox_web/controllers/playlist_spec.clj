@@ -1,6 +1,8 @@
 (ns jukebox-web.controllers.playlist-spec
   (:require [clj-json.core :as json]
             [clojure.contrib.pprint :as pprint]
+            [jukebox-web.models.user :as user]
+            [jukebox-web.models.factory :as factory]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.models.library :as library]
             [jukebox-web.controllers.playlist :as playlist-controller])
@@ -13,8 +15,9 @@
   (before (playlist/reset-state!))
 
   (it "adds the given file to the end of the queued-songs"
+    (user/sign-up! (factory/user {:login "user"}))
     (let [song "user/artist/album/track.mp3"
-          request {:params {:song song} :headers {"accept" "text/html"}}
+          request {:params {:song song} :headers {"accept" "text/html"} :session {:current-user "user"}}
           response (playlist-controller/add request)]
       (should= (library/file-on-disk song) (:song (first (playlist/queued-songs)))))))
 
