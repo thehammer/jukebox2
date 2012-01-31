@@ -41,6 +41,9 @@
                  "requester" nil
                  "duration"  16
                  "title"     "jukebox2"
+                 "progress"  0
+                 "playing"   false
+                 "canSkip"   false
                  "album"     "Hammer's Album"
                  "artist"    "Hammer"         } (first response-json))
       )))

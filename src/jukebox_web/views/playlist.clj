@@ -16,8 +16,8 @@
 (defn- display-enabled-users [current-song]
   (map (partial build-avatar current-song) (user/find-enabled)))
 
-(defn- display-song [track request]
-  (let [metadata (playlist-track/metadata track)]
+(defn- display-song [track user request]
+  (let [metadata (playlist-track/metadata track user)]
     [:div.song.media-grid
       [:div.album-cover {:data-thumbnail "large" :data-title (:title metadata) :data-artist (:artist metadata) :data-album (:album metadata)}]
       [:div#track.meta-data
@@ -37,8 +37,8 @@
          (if (player/playing?) (when-not (nil? (-> request :session :current-user)) [:a.btn.skip {:href "/player/skip" :data-remote "true"} "Skip"]))]]]))
 
 
-(defn playlist [track]
-  (let [metadata (playlist-track/metadata track)]
+(defn playlist [track user]
+  (let [metadata (playlist-track/metadata track user)]
     [:div.meta-data
      [:h6.title (:title metadata)]
      [:p.artist (:artist metadata)]
@@ -46,20 +46,20 @@
      [:p.requester "Requester: " (:requester metadata)]
      ]))
 
-(defn current-track [request current-song queued-songs]
+(defn current-track [request current-song user queued-songs]
   (html
-    (display-song current-song request)
+    (display-song current-song user request)
     [:h3 "Playing Music From"]
     (display-enabled-users (:song current-song))
     [:div.row
       [:h3 "Playlist"]
       [:ol#playlist.span12.clearfix
       (if-not (empty? queued-songs)
-        (map #(vector :li (playlist %)) queued-songs)
+        (map #(vector :li (playlist % user)) queued-songs)
         [:li.random "Choosing random tracks"])]]))
 
-(defn index [request current-song queued-songs]
+(defn index [request current-song user queued-songs]
   (let [tags (extract-tags (:song current-song))]
     (layout/main request (str (:title tags) " - " (:artist tags))
        [:div#current_track
-         (current-track request current-song queued-songs)])))
+         (current-track request current-song user queued-songs)])))

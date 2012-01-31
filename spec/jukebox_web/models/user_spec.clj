@@ -1,9 +1,11 @@
 (ns jukebox-web.models.user-spec
   (:require [jukebox-web.models.user :as user]
+            [jukebox-web.models.library :as library]
             [jukebox-web.models.factory :as factory])
   (:use [speclj.core]
         [jukebox-web.spec-helper])
-  (:import [org.mindrot.jbcrypt BCrypt]))
+  (:import [org.mindrot.jbcrypt BCrypt]
+           [jukebox-web.models.playlist-track PlaylistTrack]))
 
 (describe "sign-up!"
   (with-database-connection)
@@ -31,6 +33,35 @@
     (let [[user errors] (user/sign-up! {})]
       (should-not (empty? errors))
       (should= ["is required"] (:login errors)))))
+
+(describe "canSkip?"
+  (with-test-music-library)
+  (with-database-connection)
+
+  (before
+    (user/sign-up! (factory/user {:login "user"}))
+    (user/sign-up! (factory/user {:login "user2"})))
+
+  (it "allows skips for the requesting user"
+    (let [user (user/find-by-login "user")
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3")
+                                 (:login user))]
+      (should (user/canSkip? track user))))
+
+  (it "allows skips if the requesting user is randomizer"
+    (let [user (user/find-by-login "user")
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"})]
+      (should (user/canSkip? track user))))
+
+  (it "prevents skips if you're not logged in"
+    (let [user (user/find-by-login "user")
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login user})]
+      (should-not (user/canSkip? track nil))))
+
+  (it "prevents skips if you're not the request user"
+    (let [user (user/find-by-login "user2")
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "user"})]
+      (should-not (user/canSkip? track user)))))
 
 (describe "validate"
   (with-database-connection)

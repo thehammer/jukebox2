@@ -48,33 +48,6 @@
             (playlist/add-song! "user/artist/second_track.mp3")
             (should= first-value (first (playlist/queued-songs))))))
 
-    (describe "canSkip?"
-      (with-test-music-library)
-      (with-database-connection)
-
-      (it "allows skips for the requesting user"
-        (let [user (user/find-by-login "user")
-              track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3")
-                                     (:login user))]
-          (should (playlist/canSkip? track user))))
-
-      (it "allows skips if the requesting user is randomizer"
-        (let [user (user/find-by-login "user")
-              track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"})]
-          (should (playlist/canSkip? track user))))
-
-      (it "prevents skips if you're not logged in"
-        (let [user (user/find-by-login "user")
-              track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login user})]
-          (should-not (playlist/canSkip? track nil))))
-
-      (it "prevents skips if you're not the request user"
-        (let [user (user/find-by-login "user2")
-              track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "user"})]
-          (should-not (playlist/canSkip? track user)))))
-
-
-
     (describe "add-random-song!"
       (it "adds a random song to the queued songs"
           (should (empty? (playlist/queued-songs)))

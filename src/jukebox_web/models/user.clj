@@ -37,6 +37,12 @@
 (defn canAdd? [user]
   (not (nil? user)))
 
+(defn canSkip? [track user]
+  (let [requester (:login (:requester track))]
+    (if (contains? #{nil "(randomizer)" "(guest)"}  requester)
+      (not (nil? user))
+      (= requester (:login user)))))
+
 (co/defvalidator validate
   :password (co/is-required)
   :login (co/is-required))

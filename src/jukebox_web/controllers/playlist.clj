@@ -9,10 +9,10 @@
             [jukebox-web.models.user :as user]))
 
 
-(defn- build-playlist []
+(defn- build-playlist [user]
   (let [tracks (playlist/queued-songs)]
     (if-not (empty? tracks)
-      (map #(playlist-track/metadata %) tracks)
+      (map #(playlist-track/metadata % user) tracks)
       {})))
 
 (defn- current-user [request]
@@ -20,32 +20,29 @@
 
 (defn index [request]
   (if (json/request? ((:headers request) "accept"))
-      (json/response (build-playlist))
-      (view/index request (playlist/current-song) (playlist/queued-songs))))
+      (json/response (build-playlist (current-user request)))
+      (view/index request (playlist/current-song) (current-user request) (playlist/queued-songs))))
 
 (defn current-track [request]
   (let [track (playlist/current-song)
-        html (view/current-track request track (playlist/queued-songs))
-        etag (sha256 html)
         user (current-user request)
-        canSkip (playlist/canSkip? track user)
-        progress (int (player/current-time))]
+        html (view/current-track request track user (playlist/queued-songs))
+        etag (sha256 html)]
     (if (json/request? ((:headers request) "accept"))
-      (json/response
-        (merge (playlist-track/metadata track) { :progress progress :playing (player/playing?) :canSkip canSkip}))
-      {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html})))
+      (json/response (playlist-track/metadata track user))
+      {:status 200 :headers {"E-Tag" etag} :body html})))
 
 (defn add-one [request]
   (let [user (current-user request)]
-    (when (user/canAdd? user) (playlist/add-random-song!)))
+    (when (user/canAdd? user) (playlist/add-random-song!))
   (if (json/request? ((:headers request) "accept"))
-    (json/response (build-playlist))
-    {:status 302 :headers {"Location" "/playlist"}}))
+    (json/response (build-playlist user))
+    {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn add [request]
   (let [song (-> request :params :song)
         user (current-user request)]
     (when (user/canAdd? user) (playlist/add-song! song user))
   (if (json/request? ((:headers request) "accept"))
-    (json/response (build-playlist))
+    (json/response (build-playlist user))
     {:status 302 :headers {"Location" "/playlist"}})))
