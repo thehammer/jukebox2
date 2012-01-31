@@ -8,6 +8,7 @@
       var self;
       self = this;
       this.focused = '';
+      this.loggedIn = $('.logged-in').length > 0;
       this.el = $('#track-search-results');
       this.template = _.template($('#track-result-template').html());
       $('#query').bind('ajax:success', this.render);
@@ -30,6 +31,8 @@
       self = this;
       html = '';
       _.each(tracks, function(track) {
+        track.canAdd = self.loggedIn;
+        console.dir(track);
         return html += self.template(track);
       });
       this.el.html(html);
@@ -61,7 +64,7 @@
     };
     TrackSearch.prototype.traverseList = function() {
       var self;
-      if (!this.el.children().length) {
+      if (!this.loggedIn || this.el.children().length === 0) {
         return;
       }
       self = this;

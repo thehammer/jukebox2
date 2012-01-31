@@ -27,17 +27,18 @@
                      (danger-submit-button "Sign Out"))]]]
      [:img {:src (user/avatar-url current-user {:s "37"})}]]])
 
-(defn- nav-links [request]
+(defn- nav-links [request user]
   [:ul.nav
    [:li.dropdown {:data-dropdown "dropdown"}
     [:a.dropdown-toggle {:href "#"} "Add"]
     [:ul.dropdown-menu
-     [:li [:a#random.update-playlist {:href "/playlist/add-one" :data-remote "true"} "Random"]]
-     [:li [:a {:href "/library/browse"} "From Library"]]]]
+     (when (user/canAdd? user)
+       [:li [:a#random.update-playlist {:href "/playlist/add-one" :data-remote "true"} "Random"]])
+     [:li [:a {:href "/library/browse"} "Browse Library"]]]]
    [:li [:a {:href "/stats"} "Stats"]]
    [:li [:a {:href "/users"} "Users"]]
    [:li [:a {:href "/hammertimes"} "Hammertimes"]]
-   (when (nil? (-> request :session :current-user)) [:li [:a {:href "/users/sign-up"} [:span.label.success "Sign Up"]]])])
+   (when (nil? user) [:li [:a {:href "/users/sign-up"} [:span.label.success "Sign Up"]]])])
 
 (defn- current-track-template [request]
   [:script#track-template {:type "text/example" }
@@ -101,7 +102,7 @@
         [:div.fill
          [:div.container
           [:a.brand {:href "/"} "jukebox2"]
-          (nav-links request)
+          (nav-links request current-user)
           (track-search/display-search request)
           (if (nil? current-user)
             (login-form)

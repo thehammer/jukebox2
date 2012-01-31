@@ -15,6 +15,9 @@
       (map #(playlist-track/metadata %) tracks)
       {})))
 
+(defn- current-user [request]
+  (user/find-by-login (-> request :session :current-user)))
+
 (defn index [request]
   (if (json/request? ((:headers request) "accept"))
       (json/response (build-playlist))
@@ -24,8 +27,8 @@
   (let [track (playlist/current-song)
         html (view/current-track request track (playlist/queued-songs))
         etag (sha256 html)
-        user (user/find-by-login (-> request :session :current-user))
-        canSkip (playlist/canSkip? track user) 
+        user (current-user request)
+        canSkip (playlist/canSkip? track user)
         progress (int (player/current-time))]
     (if (json/request? ((:headers request) "accept"))
       (json/response
@@ -33,16 +36,16 @@
       {:status 200 :headers {"E-Tag" etag "X-Progress" (str progress)} :body html})))
 
 (defn add-one [request]
-  (playlist/add-random-song!)
+  (let [user (current-user request)]
+    (when (user/canAdd? user) (playlist/add-random-song!)))
   (if (json/request? ((:headers request) "accept"))
     (json/response (build-playlist))
     {:status 302 :headers {"Location" "/playlist"}}))
 
 (defn add [request]
   (let [song (-> request :params :song)
-        current-user (or (user/find-by-login (-> request :session :current-user))
-                         {:login "(guest)"})]
-    (playlist/add-song! song current-user))
+        user (current-user request)]
+    (when (user/canAdd? user) (playlist/add-song! song user))
   (if (json/request? ((:headers request) "accept"))
     (json/response (build-playlist))
-    {:status 302 :headers {"Location" "/playlist"}}))
+    {:status 302 :headers {"Location" "/playlist"}})))

@@ -34,6 +34,9 @@
 (defn find-enabled []
   (filter #(:enabled %) (find-all)))
 
+(defn canAdd? [user]
+  (not (nil? user)))
+
 (co/defvalidator validate
   :password (co/is-required)
   :login (co/is-required))

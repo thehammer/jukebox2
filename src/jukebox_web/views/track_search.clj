@@ -4,7 +4,11 @@
 (defn results [request]
   [:script#track-result-template {:type "text/example"}
     [:li.result
-     [:a.update-playlist {:href "/playlist/add/{{ path }}" :data-remote "true"} "{{ title }}"]
+     "<% if(canAdd) { %>"
+       [:a.update-playlist {:href "/playlist/add/{{ path }}" :data-remote "true"} "{{ title }}"]
+     "<% } else { %>"
+       [:p.update-playlist "{{ title }}"]
+     "<% } %>"
      [:p.artist "{{ artist }}"]]])
 
 (defn display-search [request]

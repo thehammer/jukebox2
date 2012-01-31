@@ -3,6 +3,7 @@ class TrackSearch
   constructor: ->
     self = this
     @focused = ''
+    @loggedIn = $('.logged-in').length > 0
     @el = $('#track-search-results')
     @template = _.template $('#track-result-template').html()
 
@@ -25,6 +26,8 @@ class TrackSearch
     html = ''
 
     _.each tracks, (track) ->
+      track.canAdd = self.loggedIn
+      console.dir(track)
       html += self.template track
 
     @el.html(html)
@@ -50,7 +53,9 @@ class TrackSearch
     @el.html('')
 
   traverseList: ->
-    return unless @el.children().length
+    if !@loggedIn or @el.children().length == 0
+      return
+
     self = this
     @focused = @el.find('li:first-child')
 
