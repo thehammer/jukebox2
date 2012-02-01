@@ -2,7 +2,8 @@
   (:require [jukebox-web.models.library :as library]
             [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user])
-  (:import [jukebox-web.models.playlist-track PlaylistTrack]))
+  (:import [jukebox-web.models.playlist-track PlaylistTrack]
+           [java.util UUID]))
 
 (def current-song-atom (atom nil))
 (def queued-songs-atom (atom []))
@@ -49,7 +50,8 @@
   (* (count (library/all-tracks)) *recent-songs-factor*))
 
 (defn add-song! [song & [user]]
-  (let [track (PlaylistTrack. (library/file-on-disk song) user)]
+  (let [uuid (.toString (UUID/randomUUID))
+        track (PlaylistTrack. (library/file-on-disk song) user uuid)]
     (swap! queued-songs-atom conj track)
     (swap! recent-songs-atom conj track)
     (if (< (recent-songs-to-keep) (count @recent-songs-atom))
@@ -60,6 +62,10 @@
     (if (or (nil? song) (.contains @recent-songs-atom song))
       (recur (random-song) (inc attempts))
       (add-song! song {:login "(randomizer)"}))))
+
+(defn delete-song! [id]
+  (let [filter-fun (fn [queue] (filter #(not (= (:id %) id)) (queued-songs)))]
+    (swap! queued-songs-atom filter-fun)))
 
 (defn reset-state! []
   (reset! current-song-atom nil)

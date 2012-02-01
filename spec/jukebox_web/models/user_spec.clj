@@ -45,22 +45,22 @@
   (it "allows skips for the requesting user"
     (let [user (user/find-by-login "user")
           track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3")
-                                 (:login user))]
+                                 (:login user) "")]
       (should (user/canSkip? track user))))
 
   (it "allows skips if the requesting user is randomizer"
     (let [user (user/find-by-login "user")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"})]
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"} "")]
       (should (user/canSkip? track user))))
 
   (it "prevents skips if you're not logged in"
     (let [user (user/find-by-login "user")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login user})]
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login user} "")]
       (should-not (user/canSkip? track nil))))
 
   (it "prevents skips if you're not the request user"
     (let [user (user/find-by-login "user2")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "user"})]
+          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "user"} "")]
       (should-not (user/canSkip? track user)))))
 
 (describe "validate"

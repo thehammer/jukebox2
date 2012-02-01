@@ -19,7 +19,7 @@
     (it "includes song information, owner, and requester"
         (let [user (user/find-by-login "user")
               track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3")
-                                     {:login "user"})]
+                                     {:login "user"} "")]
           (should= { :skipCount 0
                      :playCount 0
                      :owner     "user"

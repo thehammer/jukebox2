@@ -42,6 +42,12 @@
           (should= 1 (count (playlist/queued-songs)))
           (should= (library/file-on-disk "user/artist/track.mp3") (:song (first (playlist/queued-songs)))))
 
+      (it "adds the song with a unique id"
+          (should (empty? (playlist/queued-songs)))
+          (playlist/add-song! "user/artist/track.mp3")
+          (should= 1 (count (playlist/queued-songs)))
+          (should (not (nil? (:id (first (playlist/queued-songs)))))))
+
       (it "adds the song to the end of the queue"
           (playlist/add-song! "user/artist/first_track.mp3")
           (let [first-value (first (playlist/queued-songs))]
@@ -85,6 +91,25 @@
         (playlist/add-random-song!)
         (playlist/add-random-song!)
         (should= 7 (count (playlist/queued-songs)))))
+
+    (describe "delete-song!"
+      (it "deletes a song when given a playlist id"
+        (playlist/reset-state!)
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (let [uuid (:id (first (playlist/queued-songs)))]
+          (playlist/delete-song! uuid)
+          (should= 1 (count (playlist/queued-songs)))
+          (should (not (= (:id (first (playlist/queued-songs))) uuid)))))
+
+      (it "leaves the queue alone if id isn't found"
+        (playlist/reset-state!)
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (let [uuid (:id (first (playlist/queued-songs)))]
+          (playlist/delete-song! "0")
+          (should= 2 (count (playlist/queued-songs)))
+          (should= (:id (first (playlist/queued-songs))) uuid))))
 
     (describe "next-track"
       (it "returns the next track in the queue, retaining order"
