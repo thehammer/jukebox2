@@ -9,6 +9,9 @@
       $('body').delegate('.controls', 'ajax:success', function() {
         return self.load();
       });
+      $('body').delegate('a.delete-playlist-track', 'ajax:success', function(e, data) {
+        return self.render(data);
+      });
       $('.topbar').delegate('a.update-playlist', 'ajax:success', function(e, data) {
         return self.render(data);
       });

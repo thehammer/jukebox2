@@ -11,15 +11,22 @@ class Jukebox
 
   remote: (e) ->
     e.preventDefault()
+    data = {}
     $el = $(this)
     url = $el.attr('href') || $el.attr('action')
     data = $el.serialize() if $el.is 'form'
-    method = $el.attr('method') || 'GET'
+    methodOverride = $el.attr('data-method')
+
+    if methodOverride? and methodOverride isnt 'GET'
+      method = 'POST'
+      data['_method'] = $el.attr('data-method')
+    else
+      method = $el.attr('method') || 'GET'
 
     $.ajax
-      method: method
+      type: method
       url: url
-      data: data || {}
+      data: data
       dataType: 'json'
       success: (data, status, xhr) ->
         $el.trigger 'ajax:success', [data, status, xhr]

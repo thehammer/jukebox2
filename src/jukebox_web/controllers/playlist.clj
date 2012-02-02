@@ -32,7 +32,7 @@
       (json/response (playlist-track/metadata track user))
       {:status 200 :headers {"E-Tag" etag} :body html})))
 
-(defn delete-track [request]
+(defn delete [request]
   (let [user (current-user request)
         uuid (-> request :params :id)]
     (when (user/isRequester? (playlist/queued-song uuid) user)

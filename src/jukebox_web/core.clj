@@ -25,6 +25,7 @@
   (GET "/playlist/current-track" [] playlist-controller/current-track)
   (GET "/playlist/add-one" [] playlist-controller/add-one)
   (POST "/playlist/add" [] playlist-controller/add)
+  (DELETE "/playlist/:id/delete" [] playlist-controller/delete)
   (GET ["/playlist/add/:song" :song #".*"] [] playlist-controller/add)
   (GET "/player/play" [] player-controller/play)
   (GET "/player/pause" [] player-controller/pause)

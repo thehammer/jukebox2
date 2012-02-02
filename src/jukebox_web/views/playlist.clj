@@ -44,6 +44,9 @@
      [:p.artist (:artist metadata)]
      [:p.owner "Owner: " (:owner metadata)]
      [:p.requester "Requester: " (:requester metadata)]
+     (when (:isRequester metadata)
+       [:p
+        [:a.delete-playlist-track {:href (str "/playlist/" (:id metadata) "/delete") :data-remote "true" :data-method "DELETE"} "Delete"]])
      ]))
 
 (defn current-track [request current-song user queued-songs]

@@ -27,7 +27,7 @@
           response (playlist-controller/add request)]
       (should= (library/file-on-disk song) (:song (first (playlist/queued-songs)))))))
 
-(describe "delete-track"
+(describe "delete"
   (with-test-music-library)
   (with-database-connection)
   (before (playlist/reset-state!))
@@ -37,7 +37,7 @@
     (playlist/add-song! "user/artist/album/track.mp3" {:login "user"})
     (let [uuid (:id (first (playlist/queued-songs)))
           request {:params {:id uuid} :headers {"accept" "application/json"} :session {:current-user "user"}}
-          response (playlist-controller/delete-track request)]
+          response (playlist-controller/delete request)]
       (should= [] (playlist/queued-songs))))
 
   (it "doesn't deletes a song from the queue if user isn't requester"
@@ -45,7 +45,7 @@
     (playlist/add-song! "user/artist/album/track.mp3" {:login "user2"})
     (let [uuid (:id (first (playlist/queued-songs)))
           request {:params {:id uuid} :headers {"accept" "application/json"} :session {:current-user "user"}}
-          response (playlist-controller/delete-track request)]
+          response (playlist-controller/delete request)]
       (should= 1 (count (playlist/queued-songs))))))
 
 (describe "index"
@@ -59,6 +59,7 @@
 
   (it "yields the current playlist as a json response"
     (let [request {:headers {"accept" "application/json"}}
+          uuid (:id (first (playlist/queued-songs)))
           response (playlist-controller/index request)
           response-json (json/parse-string (:body response))]
       (should= 2 (count response-json))
@@ -70,7 +71,8 @@
                  "title"     "jukebox2"
                  "progress"  0
                  "playing"   false
-                 "canSkip"   false
+                 "isRequester"   false
+                 "id"   uuid
                  "album"     "Hammer's Album"
                  "artist"    "Hammer"         } (first response-json))
       )))
@@ -86,6 +88,7 @@
 
   (it "yields the current track as a json response"
     (let [request {:headers {"accept" "application/json"}}
+          uuid (:id (playlist/current-song))
           response (playlist-controller/current-track request)
           response-json (json/parse-string (:body response))]
       (should= { "playCount" 1
@@ -96,7 +99,8 @@
                  "title"     "jukebox2"
                  "progress"  0
                  "playing"   false
-                 "canSkip"   false
+                 "isRequester"   false
+                 "id" uuid
                  "album"     "Hammer's Album"
                  "artist"    "Hammer"         } response-json)
       )))

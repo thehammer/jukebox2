@@ -72,8 +72,12 @@
        [:h6.title "{{ track.title }}"]
        [:p.artist "{{ track.artist }}"]
        [:p.owner "Owner: {{ track.owner }}"]
-       [:p.requester "Requester: {{ track.requester }}"]]]
-    "<% }); %>"])
+       [:p.requester "Requester: {{ track.requester }}"]
+       "<% if(track.isRequester) { %>"
+         [:p
+          [:a.delete-playlist-track {:href "/playlist/{{ track.id }}/delete" :data-remote "true" :data-method "DELETE"} "Delete"]]
+        "<% } %>"
+    "<% }); %>"]]])
 
 
 (defn main [request title & content]

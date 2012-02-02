@@ -12,18 +12,25 @@
       Typekit.load();
     }
     Jukebox.prototype.remote = function(e) {
-      var $el, data, method, url;
+      var $el, data, method, methodOverride, url;
       e.preventDefault();
+      data = {};
       $el = $(this);
       url = $el.attr('href') || $el.attr('action');
       if ($el.is('form')) {
         data = $el.serialize();
       }
-      method = $el.attr('method') || 'GET';
+      methodOverride = $el.attr('data-method');
+      if ((methodOverride != null) && methodOverride !== 'GET') {
+        method = 'POST';
+        data['_method'] = $el.attr('data-method');
+      } else {
+        method = $el.attr('method') || 'GET';
+      }
       return $.ajax({
-        method: method,
+        type: method,
         url: url,
-        data: data || {},
+        data: data,
         dataType: 'json',
         success: function(data, status, xhr) {
           return $el.trigger('ajax:success', [data, status, xhr]);

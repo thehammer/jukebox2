@@ -9,6 +9,10 @@ class Playlist
       self.load()
     )
 
+    $('body').delegate('a.delete-playlist-track', 'ajax:success', (e, data) ->
+      self.render(data)
+    )
+
     $('.topbar').delegate('a.update-playlist', 'ajax:success', (e, data) ->
       self.render(data)
     )

@@ -15,7 +15,8 @@
           :skipCount (library/skip-count (:song track))
           :progress (int (player/current-time))
           :playing (player/playing?)
-          :canSkip (user/isRequester? track user)
+          :isRequester (user/isRequester? track user)
+          :id (:id track)
           }))
 
 

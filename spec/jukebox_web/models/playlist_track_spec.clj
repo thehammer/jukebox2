@@ -25,7 +25,8 @@
                      :owner     "user"
                      :requester "user"
                      :duration  16
-                     :canSkip true
+                     :isRequester true
+                     :id ""
                      :progress 0
                      :playing false
                      :title     "jukebox2"
