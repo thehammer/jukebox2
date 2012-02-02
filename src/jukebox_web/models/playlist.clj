@@ -67,8 +67,8 @@
   (first (filter #(= (:id %) id) (queued-songs))))
 
 (defn delete-song! [id]
-  (let [filter-fun (fn [queue] (filter #(not (= (:id %) id)) (queued-songs)))]
-    (swap! queued-songs-atom filter-fun)))
+  (let [filter-func (fn [queue] (filter #(not (= (:id %) id)) (queued-songs)))]
+    (swap! queued-songs-atom (comp vec filter-func))))
 
 (defn reset-state! []
   (reset! current-song-atom nil)

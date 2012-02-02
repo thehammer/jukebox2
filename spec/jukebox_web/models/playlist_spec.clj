@@ -116,6 +116,16 @@
           (should= 1 (count (playlist/queued-songs)))
           (should (not (= (:id (first (playlist/queued-songs))) uuid)))))
 
+      (it "adds a song to the end of the queue after deleting a song"
+        (playlist/reset-state!)
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (let [uuid (:id (first (playlist/queued-songs)))
+              last-uuid (:id (last (playlist/queued-songs)))]
+          (playlist/delete-song! uuid)
+          (playlist/add-song! "user/artist/album/track.mp3")
+          (should= (:id (first (playlist/queued-songs))) last-uuid)))
+
       (it "leaves the queue alone if id isn't found"
         (playlist/reset-state!)
         (playlist/add-song! "user/artist/album/track.mp3")
