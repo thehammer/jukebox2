@@ -58,7 +58,7 @@
    [:p.controls
     "<% if (track.playing) { %>"
     [:a.btn.play {:href "/player/pause" :data-remote "true"} "Pause"]
-    "<% if (track.canSkip) { %>"
+    "<% if (track.isRequester) { %>"
     [:a.btn.skip {:href "/player/skip" :data-remote "true"} "Skip"]
     "<% } } else { %>"
     [:a.btn.pause {:href "/player/play" :data-remote "true"} "Play"]
