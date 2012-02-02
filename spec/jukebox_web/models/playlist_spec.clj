@@ -92,6 +92,20 @@
         (playlist/add-random-song!)
         (should= 7 (count (playlist/queued-songs)))))
 
+    (describe "queued-song"
+      (it "grabs a queued song based on id"
+        (playlist/reset-state!)
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (let [uuid (:id (first (playlist/queued-songs)))
+              song (playlist/queued-song uuid)]
+          (should= (:id (first (playlist/queued-songs))) (:id song))))
+
+      (it "returns nil if song doesn't exist"
+        (playlist/reset-state!)
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (should (nil? (playlist/queued-song "0")))))
+
     (describe "delete-song!"
       (it "deletes a song when given a playlist id"
         (playlist/reset-state!)

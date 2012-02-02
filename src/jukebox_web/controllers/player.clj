@@ -25,7 +25,7 @@
 
 (defn skip [request]
   (let [current-user (-> request :session :current-user)]
-    (when (user/canSkip? (playlist/current-song) current-user)
+    (when (user/isRequester? (playlist/current-song) current-user)
       (player/skip!)
       (do (Thread/sleep 1000))
       (user/increment-skip-count! current-user)

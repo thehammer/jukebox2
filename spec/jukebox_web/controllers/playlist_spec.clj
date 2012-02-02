@@ -27,6 +27,27 @@
           response (playlist-controller/add request)]
       (should= (library/file-on-disk song) (:song (first (playlist/queued-songs)))))))
 
+(describe "delete-track"
+  (with-test-music-library)
+  (with-database-connection)
+  (before (playlist/reset-state!))
+
+  (it "deletes a song from the queue if requesters match"
+    (user/sign-up! (factory/user {:login "user"}))
+    (playlist/add-song! "user/artist/album/track.mp3" {:login "user"})
+    (let [uuid (:id (first (playlist/queued-songs)))
+          request {:params {:id uuid} :headers {"accept" "application/json"} :session {:current-user "user"}}
+          response (playlist-controller/delete-track request)]
+      (should= [] (playlist/queued-songs))))
+
+  (it "doesn't deletes a song from the queue if user isn't requester"
+    (user/sign-up! (factory/user {:login "user"}))
+    (playlist/add-song! "user/artist/album/track.mp3" {:login "user2"})
+    (let [uuid (:id (first (playlist/queued-songs)))
+          request {:params {:id uuid} :headers {"accept" "application/json"} :session {:current-user "user"}}
+          response (playlist-controller/delete-track request)]
+      (should= 1 (count (playlist/queued-songs))))))
+
 (describe "index"
   (with-test-music-library)
   (with-database-connection)

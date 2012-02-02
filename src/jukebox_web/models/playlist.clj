@@ -63,6 +63,9 @@
       (recur (random-song) (inc attempts))
       (add-song! song {:login "(randomizer)"}))))
 
+(defn queued-song [id]
+  (first (filter #(= (:id %) id) (queued-songs))))
+
 (defn delete-song! [id]
   (let [filter-fun (fn [queue] (filter #(not (= (:id %) id)) (queued-songs)))]
     (swap! queued-songs-atom filter-fun)))

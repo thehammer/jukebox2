@@ -37,7 +37,7 @@
 (defn canAdd? [user]
   (not (nil? user)))
 
-(defn canSkip? [track user]
+(defn isRequester? [track user]
   (let [requester (:login (:requester track))]
     (if (contains? #{nil "(randomizer)" "(guest)"}  requester)
       (not (nil? user))

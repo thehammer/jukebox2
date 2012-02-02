@@ -32,6 +32,15 @@
       (json/response (playlist-track/metadata track user))
       {:status 200 :headers {"E-Tag" etag} :body html})))
 
+(defn delete-track [request]
+  (let [user (current-user request)
+        uuid (-> request :params :id)]
+    (when (user/isRequester? (playlist/queued-song uuid) user)
+      (playlist/delete-song! uuid))
+    (if (json/request? ((:headers request) "accept"))
+      (json/response (build-playlist user))
+      {:status 302 :headers {"Location" "/playlist"}})))
+
 (defn add-one [request]
   (let [user (current-user request)]
     (when (user/canAdd? user) (playlist/add-random-song!))
