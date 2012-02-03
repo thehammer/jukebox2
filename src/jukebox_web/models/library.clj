@@ -5,7 +5,7 @@
             [clojure.string :as string]
             [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
-        [jukebox-web.util.file :only (relative-uri file-path mkdir-p mv)]))
+        [jukebox-web.util.file :only (strip-slashes relative-uri file-path mkdir-p mv)]))
 
 (def *music-library* "music")
 (def *play-counts-model* "play-counts")
@@ -16,8 +16,8 @@
 
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)
-        dir (file-path *music-library* user artist album)
-        new-file (file-path dir (str title "." (extension file)))]
+        dir (file-path *music-library* user (strip-slashes artist) (strip-slashes album))
+        new-file (file-path dir (str (strip-slashes title) "." (extension file)))]
     (mkdir-p dir)
     (mv file new-file)))
 

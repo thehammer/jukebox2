@@ -1,5 +1,6 @@
 (ns jukebox-web.util.file
-  (:import [java.io File]) 
+  (:import [java.io File])
+  (:require [clojure.contrib.string :as clojure-string])
   (:use [clojure.java.io :only (as-file)]
         [ring.util.codec :only (url-encode)]))
 
@@ -15,3 +16,5 @@
 (defn mv [from to]
   (.renameTo (as-file from) (as-file to)))
 
+(defn strip-slashes [string]
+  (clojure-string/replace-str "/" " " string))
