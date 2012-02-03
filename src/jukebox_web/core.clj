@@ -63,7 +63,7 @@
 (cron/schedule! "0 * * * *" db/compact!)
 
 (def app
-  (-> (handler/site main-routes)
+  (-> (handler/site main-routes {:session {:cookie-attrs {:max-age 28800} :cookie-name "jukebox"}})
     (cors/wrap-cors :access-control-allow-origin #".*")
     flash/wrap-flash))
 
