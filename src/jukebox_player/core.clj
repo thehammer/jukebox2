@@ -36,7 +36,7 @@
   (let [format (out-format playable)]
     (* time (* (.getFrameRate format) (.getFrameSize format)))))
 
-(defn- play-snippet [playable start-time end-time]
+(defn play-snippet [playable start-time end-time]
   (let [start-index (byte-index-for-time playable start-time)
         snippet-length (- (byte-index-for-time playable end-time) start-index)
         buffer (byte-array *buffer-size*)
@@ -80,8 +80,9 @@
     (.start player)
     player))
 
-(defn hammertime! [file start end]
+(defn hammertime! [file start end pause]
   (let [old-state @player-state]
     (when (= :play @player-state) (pause!))
     (play-snippet (load-track file) start end)
-    (reset! player-state old-state)))
+    (if (not (= pause "true"))
+      (reset! player-state old-state))))
