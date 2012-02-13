@@ -12,6 +12,8 @@
    (labeled-field text-field :start "Start" (:start hammertime) errors)
    (labeled-field text-field :end "End" (:end hammertime) errors)
    (labeled-field text-field :schedule "Schedule" (:schedule hammertime) errors)
+   (hidden-field :pause "false")
+   (labeled-field check-box :pause "Pause after hammertime?" "true" errors)
    ])
 
 (defn create [request errors]
@@ -27,6 +29,7 @@
     [:td (:file hammertime)]
     [:td (:start hammertime)]
     [:td (:end hammertime)]
+    [:td (:pause hammertime)]
     [:td
       (form-to [:post "/hammertimes/play"]
         (hidden-field :name (:name hammertime))
@@ -38,7 +41,7 @@
 (defn index [request hammertimes]
   (layout/main request "Hamertimes"
     [:table
-      [:tr [:th "Name"] [:th "File"] [:th "Start"] [:th "End"] [:th]]
+      [:tr [:th "Name"] [:th "File"] [:th "Start"] [:th "End"] [:th "Pause after?"] [:th ]]
       (map show-hammertime hammertimes)]
     [:a {:href "/hammertimes/browse"} [:button.btn.success "Add"]]))
 
