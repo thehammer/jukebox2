@@ -43,8 +43,8 @@
     errors))
 
 (defn play! [hammertime]
-  (let [{:keys [file start end]} hammertime]
-    (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end))))
+  (let [{:keys [file start end pause]} hammertime]
+    (player/hammertime! (library/file-on-disk file) (read-string start) (read-string end) pause)))
 
 (defn- schedule [hammertime]
   (cron/schedule! (:schedule hammertime) #(do (println "playing hammertime:" hammertime) (play! hammertime))))

@@ -13,5 +13,5 @@
     (Thread/sleep 5000)
     (skip!)
     (Thread/sleep 5000)
-    (hammertime! (first files) 15 20)
+    (hammertime! (first files) 15 20 false)
     (.join player)))
