@@ -2,8 +2,7 @@
   (:require [jukebox-web.models.library :as library]
             [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user])
-  (:import [jukebox-web.models.playlist-track PlaylistTrack]
-           [java.util UUID]))
+  (:import [java.util UUID]))
 
 (def current-song-atom (atom nil))
 (def queued-songs-atom (atom []))
@@ -51,7 +50,7 @@
 
 (defn add-song! [song & [user]]
   (let [uuid (.toString (UUID/randomUUID))
-        track (PlaylistTrack. (library/file-on-disk song) user uuid)]
+        track (playlist-track/new-playlist-track (library/file-on-disk song) user uuid)]
     (swap! queued-songs-atom conj track)
     (swap! recent-songs-atom conj track)
     (if (< (recent-songs-to-keep) (count @recent-songs-atom))

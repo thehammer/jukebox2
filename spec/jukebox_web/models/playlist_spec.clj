@@ -4,7 +4,6 @@
             [jukebox-web.models.library :as library]
             [jukebox-web.models.user :as user]
             [jukebox-web.models.factory :as factory])
-  (:import [jukebox-web.models.playlist-track PlaylistTrack])
   (:use [speclj.core]
         [jukebox-web.spec-helper]))
 
@@ -36,22 +35,24 @@
         (should= ["user2" "user" "user" "user" "user" "user"] (playlist/weighted-users))))
 
     (describe "add-song!"
+      (with-test-music-library)
+
       (it "adds the given song to the queued songs"
           (should (empty? (playlist/queued-songs)))
-          (playlist/add-song! "user/artist/track.mp3")
+          (playlist/add-song! "user/artist/album/track.mp3")
           (should= 1 (count (playlist/queued-songs)))
-          (should= (library/file-on-disk "user/artist/track.mp3") (:song (first (playlist/queued-songs)))))
+          (should= (library/file-on-disk "user/artist/album/track.mp3") (:song (first (playlist/queued-songs)))))
 
       (it "adds the song with a unique id"
           (should (empty? (playlist/queued-songs)))
-          (playlist/add-song! "user/artist/track.mp3")
+          (playlist/add-song! "user/artist/album/track.mp3")
           (should= 1 (count (playlist/queued-songs)))
           (should (not (nil? (:id (first (playlist/queued-songs)))))))
 
       (it "adds the song to the end of the queue"
-          (playlist/add-song! "user/artist/first_track.mp3")
+          (playlist/add-song! "user/artist/album/track.mp3")
           (let [first-value (first (playlist/queued-songs))]
-            (playlist/add-song! "user/artist/second_track.mp3")
+            (playlist/add-song! "user/artist/album/track2.mp3")
             (should= first-value (first (playlist/queued-songs))))))
 
     (describe "add-random-song!"
@@ -136,24 +137,26 @@
           (should= (:id (first (playlist/queued-songs))) uuid))))
 
     (describe "next-track"
+      (with-test-music-library)
+
       (it "returns the next track in the queue, retaining order"
-        (playlist/add-song! "track-a")
-        (playlist/add-song! "track-b")
-        (playlist/add-song! "track-c")
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-song! "user/artist/album/track2.mp3")
+        (playlist/add-song! "user/artist/album/track2.mp3")
         (let [next-track (playlist/next-track "")]
-          (playlist/add-song! "track-d")
-          (should= (library/file-on-disk "track-a") next-track)
-          (should= (library/file-on-disk "track-b") (:song (first (playlist/queued-songs))))
-          (should= (map library/file-on-disk ["track-c" "track-d"]) (map :song (rest (playlist/queued-songs))))))
+          (playlist/add-song! "user/artist/album/track2.mp3")
+          (should= (library/file-on-disk "user/artist/album/track.mp3") next-track)
+          (should= (library/file-on-disk "user/artist/album/track2.mp3") (:song (first (playlist/queued-songs))))
+          (should= (map library/file-on-disk ["user/artist/album/track2.mp3" "user/artist/album/track2.mp3"]) (map :song (rest (playlist/queued-songs))))))
 
       (it "increments play-count when moving to next track"
-        (playlist/add-song! "track-a")
-        (playlist/add-song! "track-b")
+        (playlist/add-song! "user/artist/album/track.mp3")
+        (playlist/add-song! "user/artist/album/track2.mp3")
         (let [next-track (playlist/next-track "")]
-          (should= 1 (library/play-count (library/file-on-disk "track-a")))
-          (should= 0 (library/play-count (library/file-on-disk "track-b")))
+          (should= 1 (library/play-count (library/file-on-disk "user/artist/album/track.mp3")))
+          (should= 0 (library/play-count (library/file-on-disk "user/artist/album/track2.mp3")))
           (playlist/next-track "")
-          (should= 1 (library/play-count (library/file-on-disk "track-b"))))))
+          (should= 1 (library/play-count (library/file-on-disk "user/artist/album/track2.mp3"))))))
 
     (describe "playlist-seq"
       (it "returns a random track if there are no tracks queued up"

@@ -11,6 +11,7 @@
 
 (describe "add"
   (with-database-connection)
+  (with-test-music-library)
 
   (before (playlist/reset-state!))
 
@@ -67,6 +68,7 @@
                  "skipCount" 0
                  "owner"     "user"
                  "requester" nil
+                 "artwork" "no_art_lrg.png"
                  "duration"  16
                  "title"     "jukebox2"
                  "progress"  0
@@ -97,6 +99,7 @@
                  "requester" nil
                  "duration"  16
                  "title"     "jukebox2"
+                 "artwork" "no_art_lrg.png"
                  "progress"  0
                  "playing"   false
                  "isRequester"   false

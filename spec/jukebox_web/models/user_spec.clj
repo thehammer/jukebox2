@@ -1,11 +1,11 @@
 (ns jukebox-web.models.user-spec
   (:require [jukebox-web.models.user :as user]
             [jukebox-web.models.library :as library]
+            [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.factory :as factory])
   (:use [speclj.core]
         [jukebox-web.spec-helper])
-  (:import [org.mindrot.jbcrypt BCrypt]
-           [jukebox-web.models.playlist-track PlaylistTrack]))
+  (:import [org.mindrot.jbcrypt BCrypt]))
 
 (describe "sign-up!"
   (with-database-connection)
@@ -44,23 +44,23 @@
 
   (it "allows skips for the requesting user"
     (let [user (user/find-by-login "user")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3")
+          track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3")
                                  (:login user) "")]
       (should (user/isRequester? track user))))
 
   (it "allows skips if the requesting user is randomizer"
     (let [user (user/find-by-login "user")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"} "")]
+          track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"} "")]
       (should (user/isRequester? track user))))
 
   (it "prevents skips if you're not logged in"
     (let [user (user/find-by-login "user")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login user} "")]
+          track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3") {:login user} "")]
       (should-not (user/isRequester? track nil))))
 
   (it "prevents skips if you're not the request user"
     (let [user (user/find-by-login "user2")
-          track (PlaylistTrack. (library/file-on-disk "user/artist/album/track.mp3") {:login "user"} "")]
+          track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3") {:login "user"} "")]
       (should-not (user/isRequester? track user)))))
 
 (describe "validate"
