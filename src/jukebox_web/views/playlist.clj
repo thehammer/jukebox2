@@ -19,15 +19,17 @@
 (defn- display-song [track user request]
   (let [metadata (playlist-track/metadata track user)]
     [:div.song.media-grid
-      [:div.album-cover {:data-thumbnail "large" :data-title (:title metadata) :data-artist (:artist metadata) :data-album (:album metadata)}]
-      [:div#track.meta-data
-        [:h1.title (:title metadata)]
-        [:p.play-count "Play count: " (library/play-count (:song track))]
-        [:p.skip-count "Skip count: " (library/skip-count (:song track))]
-        [:p.owner "Owner: " (:owner metadata)]
-        [:p.requester "Requester: " (:requester metadata)]
-        [:p.artist (:artist metadata)]
-        [:p.album (:album metadata)]]
+      [:div#track
+        [:div.album-cover {:data-thumbnail "large" :data-title (:title metadata) :data-artist (:artist metadata) :data-album (:album metadata)}
+         [:a {:href "#"} [:img.thumbnail {:src (:artwork track)}]]]
+       [:div.meta-data
+          [:h1.title (:title metadata)]
+          [:p.play-count "Play count: " (library/play-count (:song track))]
+          [:p.skip-count "Skip count: " (library/skip-count (:song track))]
+          [:p.owner "Owner: " (:owner metadata)]
+          [:p.requester "Requester: " (:requester metadata)]
+          [:p.artist (:artist metadata)]
+          [:p.album (:album metadata)]]]
      [:div#player-controls.meta-data
         [:p.progress {:data-current (str (int (player/current-time))) :data-duration (str (:duration metadata))}
           [:span.remaining]]

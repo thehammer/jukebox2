@@ -151,7 +151,8 @@ p.random {
   color: gray; }
 
 div#current_track img {
-  margin: 3px; }
+  margin: 3px;
+  max-width: 200px; }
 div#current_track img.current {
   margin: 0px;
   border-style: solid;

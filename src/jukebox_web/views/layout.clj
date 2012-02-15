@@ -42,14 +42,17 @@
 
 (defn- current-track-template [request]
   [:script#track-template {:type "text/example" }
-   [:h1.title "{{ track.title }}"]
-   [:p.play-count "Play count: {{ track.playCount }}"]
-   [:p.skip-count "Skip count: {{ track.skipCount }}"]
-   [:p.owner "Owner: {{ track.owner }}"]
-   [:p.requester "Requester: {{ track.requester }}"]
-   [:p.artist "{{ track.artist }}"]
-   [:p.album "{{ track.album }}"]
-   ])
+    [:div.album-cover {:data-thumbnail "large" :data-title "{{ track.title}}" :data-artist "{{ track.artist }}" :data-album "{{ track.album }}"}
+     [:a { :href "#" } [:img.thumbnail { :src "{{ track.artwork }}" }]]]
+    [:div.meta-data
+      [:h1.title "{{ track.title }}"]
+      [:p.play-count "Play count: {{ track.playCount }}"]
+      [:p.skip-count "Skip count: {{ track.skipCount }}"]
+      [:p.owner "Owner: {{ track.owner }}"]
+      [:p.requester "Requester: {{ track.requester }}"]
+      [:p.artist "{{ track.artist }}"]
+      [:p.album "{{ track.album }}"]]
+    ])
 
 (defn- player-controls-template [request]
   [:script#player-template {:type "text/example" }
@@ -93,7 +96,6 @@
        [:script {:src "/js/progress.js"}]
        [:script {:src "/js/uploader.js"}]
        [:script {:src "/js/notifications.js"}]
-       [:script {:src "/js/artwork.js"}]
        [:script {:src "/js/player.js"}]
        [:script {:src "/js/playlist.js"}]
        [:script {:src "/js/files.js"}]
