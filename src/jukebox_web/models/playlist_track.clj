@@ -6,7 +6,7 @@
             [jukebox-web.models.artwork :as artwork]
             [jukebox-web.models.user :as user]))
 
-(def default-artwork "no_art_lrg.png")
+(def default-artwork "/img/no_art_lrg.png")
 
 (defprotocol Print
   (metadata [this] {}))
