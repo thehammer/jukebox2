@@ -8,7 +8,7 @@
     (it "returns default artwork if album isnt found"
       (let [album (artwork/album-cover "user" "test")]
         (should (not (nil? album)))
-        (should= album "no_art_lrg.png")))
+        (should= album "/img/no_art_lrg.png")))
 
     (it "finds artwork for an album"
       (let [album (artwork/album-cover "21" "Adele")]

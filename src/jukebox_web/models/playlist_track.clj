@@ -6,8 +6,6 @@
             [jukebox-web.models.artwork :as artwork]
             [jukebox-web.models.user :as user]))
 
-(def default-artwork "/img/no_art_lrg.png")
-
 (defprotocol Print
   (metadata [this] {}))
 
@@ -21,7 +19,7 @@
     (let [tags (extract-tags song)
           image (artwork/album-cover (:album tags) (:artist tags))]
       (PlaylistTrack. song requester id image))
-    (PlaylistTrack. song requester id default-artwork)))
+    (PlaylistTrack. song requester id (artwork/default-image))))
 
 (defn metadata [track user]
   (let [tags (extract-tags (:song track))]
