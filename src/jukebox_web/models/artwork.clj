@@ -19,7 +19,7 @@
   (let [json-response (read-json (string http-response))
         images (:image (:album json-response))
         artwork (first (filter #(= (:size %) "large") images))]
-    (if (nil? artwork)
+    (if (or (nil? artwork) (= "" artwork))
       (default-image)
       (val (first artwork)))))
 
