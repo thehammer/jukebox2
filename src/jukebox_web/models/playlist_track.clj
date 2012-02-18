@@ -6,13 +6,24 @@
             [jukebox-web.models.artwork :as artwork]
             [jukebox-web.models.user :as user]))
 
-(defprotocol Print
-  (metadata [this] {}))
+(defprotocol Metadata
+  (track-metadata [this user] {}))
 
 (defrecord PlaylistTrack [song requester id artwork]
-  Print
-  (metadata [this]
-    {}))
+  Metadata
+  (track-metadata [this user]
+    (merge (extract-tags song)
+       {
+          :requester (:login requester)
+          :owner (library/owner song)
+          :playCount (library/play-count song)
+          :skipCount (library/skip-count song)
+          :progress (int (player/current-time))
+          :playing (player/playing?)
+          :artwork artwork
+          :isRequester (user/isRequester? this user)
+          :id id
+       })))
 
 (defn new-playlist-track [song requester id & [artwork]]
   (if (nil? artwork)
@@ -21,16 +32,4 @@
       (PlaylistTrack. song requester id image))
     (PlaylistTrack. song requester id (artwork/default-image))))
 
-(defn metadata [track user]
-  (let [tags (extract-tags (:song track))]
-    (merge tags
-           {:requester (:login (:requester track))
-            :owner (library/owner (:song track))
-            :playCount (library/play-count (:song track))
-            :skipCount (library/skip-count (:song track))
-            :progress (int (player/current-time))
-            :playing (player/playing?)
-            :artwork (:artwork track)
-            :isRequester (user/isRequester? track user)
-            :id (:id track)
-            })))
+(defn metadata [track user] (track-metadata track user))
