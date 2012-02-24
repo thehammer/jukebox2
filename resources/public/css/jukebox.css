@@ -1,0 +1,30 @@
+html {
+  height: 100%;
+  background: -webkit-radial-gradient(circle, white, #dddddd); }
+  html p {
+    margin: 0; }
+  html h1, html h2, html h3, html h4, html h5, html h6 {
+    margin: 0.5em;
+    font-family: franklin-gothic-urw,sans-serif; }
+
+div.song {
+  width: 960px;
+  margin: auto; }
+  div.song div.album-cover {
+    float: left;
+    width: 200px;
+    text-align: center; }
+    div.song div.album-cover img {
+      box-shadow: 0px 1px 6px #666;
+      border-radius: 2px; }
+  div.song div.meta-data {
+    margin-right: 10px;
+    float: left; }
+  div.song div.counts {
+    float: left;
+    padding: 0 5px;
+    color: #666;
+    font-size: 12px; }
+  div.song div#player-controls {
+    clear: both;
+    float: none; }
