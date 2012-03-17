@@ -24,7 +24,6 @@
                      [lein-javac "1.2.1-SNAPSHOT"]
                      [speclj "1.5.2"]
                      [speclj-growl "1.0.0-SNAPSHOT"]]
-  :java-source-path [["src/jukebox_player"]]
   :main jukebox-web.core
   :ring {:handler jukebox-web.core/app}
   :test-path "spec/")
