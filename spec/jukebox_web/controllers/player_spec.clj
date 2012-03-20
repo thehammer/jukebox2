@@ -30,4 +30,4 @@
             last-song (playlist/current-song)
             response (player-controller/skip request)]
         (should= 302 (:status response))
-        (should= 1 (library/skip-count (:song last-song)))))
+        (should= 1 (library/skip-count (:song last-song)))))))
