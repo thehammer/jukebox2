@@ -31,8 +31,3 @@
             response (player-controller/skip request)]
         (should= 302 (:status response))
         (should= 1 (library/skip-count (:song last-song)))))
-
-    (it "does nothing unless you're logged in"
-      (let [request {:session {} :headers {"accept" "text/html"}}
-            response (player-controller/skip request)]
-        (should= 302 (:status response))))))
