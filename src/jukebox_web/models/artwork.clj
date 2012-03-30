@@ -26,7 +26,9 @@
 (defn album-cover [album artist]
   (let [http-request (http-agent (url album artist))]
     (await-for 10000 http-request)
-    (if (success? http-request)
-      (transform http-request)
-      (default-image))))
+    (try
+      (if (success? http-request)
+        (transform http-request)
+        (default-image))
+      (catch java.lang.Exception e (default-image)))))
 
