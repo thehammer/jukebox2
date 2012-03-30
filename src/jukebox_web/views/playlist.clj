@@ -18,18 +18,19 @@
 
 (defn- display-song [track user request]
   (let [metadata (playlist-track/metadata track user)]
-    [:div.song.media-grid
+    [:div.song
       [:div#track
         [:div.album-cover {:data-thumbnail "large" :data-title (:title metadata) :data-artist (:artist metadata) :data-album (:album metadata)}
-         [:a {:href "#"} [:img.thumbnail {:src (:artwork track)}]]]
+         [:img.thumbnail {:src (:artwork track)}]]
+       [:h1.title (:title metadata)]
        [:div.meta-data
-          [:h1.title (:title metadata)]
-          [:p.play-count "Play count: " (library/play-count (:song track))]
-          [:p.skip-count "Skip count: " (library/skip-count (:song track))]
-          [:p.owner "Owner: " (:owner metadata)]
-          [:p.requester "Requester: " (:requester metadata)]
           [:p.artist (:artist metadata)]
-          [:p.album (:album metadata)]]]
+          [:p.album (:album metadata)]
+          [:img {:src (user/avatar-url (:owner metadata))}]
+          [:img {:src (user/avatar-url (:requester metadata))}]]
+        [:div.counts
+          [:p.play-count "Play count: " (library/play-count (:song track))]
+          [:p.skip-count "Skip count: " (library/skip-count (:song track))]]]
      [:div#player-controls.meta-data
         [:p.progress {:data-current (str (int (player/current-time))) :data-duration (str (:duration metadata))}
           [:span.remaining]]
@@ -53,15 +54,15 @@
 
 (defn current-track [request current-song user queued-songs]
   (html
-    (display-song current-song user request)
-    [:h3 "Playing Music From"]
-    (display-enabled-users (:song current-song))
-    [:div.row
-      [:h3 "Playlist"]
-      [:ol#playlist.span12.clearfix
-      (if-not (empty? queued-songs)
-        (map #(vector :li (playlist % user)) queued-songs)
-        [:li.random "Choosing random tracks"])]]))
+    (display-song current-song user request)))
+    ;[:h3 "Playing Music From"]
+    ;(display-enabled-users (:song current-song))
+    ;[:div.row
+    ;  [:h3 "Playlist"]
+    ;  [:ol#playlist.span12.clearfix
+    ;  (if-not (empty? queued-songs)
+    ;    (map #(vector :li (playlist % user)) queued-songs)
+    ;    [:li.random "Choosing random tracks"])]]))
 
 (defn index [request current-song user queued-songs]
   (let [tags (extract-tags (:song current-song))]

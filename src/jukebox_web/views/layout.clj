@@ -100,19 +100,9 @@
        [:script {:src "/js/playlist.js"}]
        [:script {:src "/js/files.js"}]
        [:script {:src "/js/track_search.js"}]
-       [:script {:src "/js/v/bootstrap-dropdown.js"}]
-       (include-css "/css/v/bootstrap-1.3.0.min.css")]
        (include-css "/css/style.css")
+       (include-css "/css/jukebox.css")]
       [:body {:data-accept "mp3|m4a|mp4|mpeg"}
-       [:div.topbar
-        [:div.fill
-         [:div.container
-          [:a.brand {:href "/"} "jukebox2"]
-          (nav-links request current-user)
-          (track-search/display-search request)
-          (if (nil? current-user)
-            (login-form)
-            (logged-in current-user))]]]
        [:ul#notifications]
        [:div.container
         [:div.content

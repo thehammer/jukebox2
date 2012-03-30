@@ -4,7 +4,6 @@ html {
   html p {
     margin: 0; }
   html h1, html h2, html h3, html h4, html h5, html h6 {
-    margin: 0;
     font-family: franklin-gothic-urw,sans-serif; }
 
 div.song {
@@ -27,4 +26,4 @@ div.song {
     font-size: 12px; }
   div.song div#player-controls {
     clear: both;
-    float: left; }
+    float: none; }
