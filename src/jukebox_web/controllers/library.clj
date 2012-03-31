@@ -10,7 +10,7 @@
   "upload complete"))
 
 (defn browse-root [request]
-  (view/browse request "Music Library" (library/list-directory)))
+  (view/browse request library/*music-library-title* (library/list-directory)))
 
 (defn browse [request]
   (let [path (-> request :params :path)

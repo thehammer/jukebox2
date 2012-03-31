@@ -7,6 +7,9 @@
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (strip-slashes relative-uri file-path mkdir-p mv)]))
 
+;; constants
+;; TODO: earmuffs should denote mutable vars, not constants
+(def *music-library-title* "Music Library")
 (def *music-library* "music")
 (def *play-counts-model* "play-counts")
 (def *skip-counts-model* "skip-counts")
