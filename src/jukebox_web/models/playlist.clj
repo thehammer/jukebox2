@@ -57,7 +57,7 @@
       (swap! recent-songs-atom pop))))
 
 (defn add-album! [album-directory & [user]]
-  (let [album-songs (library/list-directory album-directory)]
+  (let [album-songs (library/list-music album-directory)]
     (doseq [song album-songs] (add-song! song user))))
 
 (defn add-random-song! []

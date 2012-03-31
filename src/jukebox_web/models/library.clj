@@ -5,7 +5,15 @@
             [clojure.string :as string]
             [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
-        [jukebox-web.util.file :only (strip-slashes relative-uri file-path mkdir-p mv)]))
+        [jukebox-web.util.file :only (strip-slashes
+                                      relative-uri
+                                      file-path
+                                      mkdir-p
+                                      mv
+                                      ls
+                                      relativize
+                                      not-dotfiles
+                                      mp3?)]))
 
 ;; constants
 ;; TODO: earmuffs should denote mutable vars, not constants
@@ -29,16 +37,6 @@
     (io/copy tempfile file-with-ext)
     (rename-with-tags user file-with-ext)))
 
-(defn- filter-dotfiles [files]
-  (->> files
-    (filter #(or (.isDirectory %) (.endsWith (.getName %) ".mp3")))
-    (remove #(.startsWith (.getName %) "."))))
-
-(defn- relativize [parent child]
-  (let [parent-uri (.toURI (io/file parent))
-        child-uri (.toURI (io/file child))]
-    (io/file (.getPath (.relativize parent-uri child-uri)))))
-
 (defn parent-directory [path]
   (if (string/blank? path)
     nil
@@ -46,9 +44,10 @@
 
 (defn list-directory
   ([] (list-directory ""))
-  ([path]
-    (let [files (filter-dotfiles (.listFiles (io/file *music-library* path)))]
-      (map #(relativize *music-library* %) files))))
+  ([path] (ls *music-library* path)))
+
+(defn list-music [path]
+  (ls *music-library* path #(and (not-dotfiles %) (mp3? %))))
 
 (defn file-on-disk [relative-path]
   (io/file *music-library* relative-path))
