@@ -56,9 +56,9 @@
     (it "returns a random song with no prefix when no argument is provided"
       (should-not-be-nil (library/random-song)))
 
-    (it "returns a random song from the given path"
+    (it "returns the default song if no user songs exist"
       (let [selections (take 10 (map library/random-song (repeat "user")))]
-        (should-not (includes? (map #(.getName %) selections) "jukebox.mp3")))))
+        (should (includes? (map #(.getName %) selections) "jukebox2.mp3")))))
 
   (describe "owner"
     (it "returns nil for a path without a user"

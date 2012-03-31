@@ -54,12 +54,13 @@
   (.isFile (file-on-disk relative-path)))
 
 (defn all-tracks
-  ([] (all-tracks ""))
+  ([]
+     (all-tracks ""))
   ([path]
-   (let [contents (file-seq (io/file *music-library* path))]
-     (->> contents
-       (filter #(.endsWith (.getName %) ".mp3"))
-       (map #(relativize *music-library* %))))))
+     (let [contents (file-seq (io/file *music-library* path))]
+       (->> contents
+            (filter #(.endsWith (.getName %) ".mp3"))
+            (map #(relativize *music-library* %))))))
 
 (defn owner [song]
   (let [path (.getPath (relativize *music-library* song))
@@ -68,10 +69,13 @@
       (first filename-parts))))
 
 (defn random-song
-  ([] (random-song ""))
+  ([]
+     (random-song ""))
   ([path]
-    (let [tracks (all-tracks path)]
-      (if-not (empty? tracks) (rand-nth (shuffle tracks)) nil))))
+     (let [tracks (all-tracks path)]
+       (if-not (empty? tracks)
+         (rand-nth (shuffle tracks))
+         (random-song "")))))
 
 (defn play-count [track]
   (let [play-count-row (first (db/find-by-field *play-counts-model* "track" (str track)))]
