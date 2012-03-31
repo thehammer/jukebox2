@@ -21,6 +21,9 @@
     (mkdir-p dir)
     (mv file new-file)))
 
+(defn create-user-directory [username]
+  (mkdir-p (file-path *music-library* username)))
+
 (defn save-file [tempfile user ext]
   (let [file-with-ext (io/as-file (file-path *music-library* (str (UUID/randomUUID) "." ext)))]
     (io/copy tempfile file-with-ext)
