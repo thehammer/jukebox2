@@ -2,13 +2,15 @@
   (:require [jukebox-web.util.file :as util-file]
             [clojure.java.io :as io])
   (:use [speclj.core]
-        [clojure.contrib.seq :only [includes?]]))
+        [clojure.contrib.seq :only [includes?]]
+        [jukebox-web.spec-helper]))
 
 (defn file-set [files]
   (set (map io/file files)))
 
-(describe
- "ls"
+(describe "ls"
+ (with-test-music-library)
+          
  (it "returns directories and .mp3 files for a basic directory"
      (should= (file-set ["jukebox2.mp3" "user" "user2"])
               (set (util-file/ls "spec/music" ""))))
