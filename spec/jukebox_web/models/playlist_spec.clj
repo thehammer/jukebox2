@@ -55,6 +55,16 @@
             (playlist/add-song! "user/artist/album/track2.mp3")
             (should= first-value (first (playlist/queued-songs))))))
 
+    (describe "add-album!"
+              (with-test-music-library)
+
+              (it "adds all the songs in this album to the queued songs"
+                  (playlist/add-album! "user/artist/album")
+                  (should= 2 (count (playlist/queued-songs)))
+                  (should= #{(library/file-on-disk "user/artist/album/track.mp3")
+                             (library/file-on-disk "user/artist/album/track2.mp3")}
+                           (set (map :song (playlist/queued-songs))))))
+
     (describe "add-random-song!"
       (it "adds a random song to the queued songs"
           (should (empty? (playlist/queued-songs)))

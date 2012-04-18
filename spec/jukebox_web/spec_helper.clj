@@ -1,5 +1,6 @@
 (ns jukebox-web.spec-helper
   (:require [fleetdb.embedded :as fleetdb]
+            [fs.core :as fs]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.hammertime :as hammertime]
             [jukebox-web.models.library :as library]
@@ -18,6 +19,8 @@
 (defn with-test-music-library []
   (around [spec]
     (binding [library/*music-library* "spec/music"]
+      (fs/delete-dir "spec/music")
+      (fs/copy-dir "spec/fixtures/music" "spec/music")
       (expect [artwork/album-cover (returns "no_art_lrg.png")]
       (spec)))))
 
