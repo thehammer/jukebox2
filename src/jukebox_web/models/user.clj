@@ -60,7 +60,9 @@
 (defn sign-up! [user-args]
   (let [errors (validate-for-sign-up user-args)]
     (if (empty? errors)
-      [(db/insert *model* (build-user user-args)) errors]
+      (do
+        (library/create-user-directory (:login user-args))
+        [(db/insert *model* (build-user user-args)) errors])
       [nil errors])))
 
 (defn authenticate [login password]

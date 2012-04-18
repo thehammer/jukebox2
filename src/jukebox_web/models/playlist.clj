@@ -62,7 +62,9 @@
 
 (defn add-random-song! []
   (loop [song (random-song) attempts 0]
-    (if (or (nil? song) (.contains @recent-songs-atom song))
+    (if (and (< attempts 4)
+             (or (nil? song)
+                 (.contains @recent-songs-atom song)))
       (recur (random-song) (inc attempts))
       (add-song! song {:login "(randomizer)"}))))
 
