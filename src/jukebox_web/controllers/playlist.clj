@@ -52,6 +52,15 @@
   (let [song (-> request :params :song)
         user (current-user request)]
     (when (user/canAdd? user) (playlist/add-song! song user))
-  (if (json/request? ((:headers request) "accept"))
-    (json/response (build-playlist user))
-    {:status 302 :headers {"Location" "/playlist"}})))
+    (if (json/request? ((:headers request) "accept"))
+      (json/response (build-playlist user))
+      {:status 302 :headers {"Location" "/playlist"}})))
+
+(defn add-album [request]
+  (let [album-directory (-> request :params :album-dir)
+        user (current-user request)]
+    (when (user/canAdd? user)
+      (playlist/add-album! album-directory user))
+    (if (json/request? ((:headers request) "accept"))
+      (json/response (build-playlist user))
+      {:status 302 :headers {"Location" "/playlist"}})))

@@ -56,6 +56,10 @@
     (if (< (recent-songs-to-keep) (count @recent-songs-atom))
       (swap! recent-songs-atom pop))))
 
+(defn add-album! [album-directory & [user]]
+  (let [album-songs (library/list-music album-directory)]
+    (doseq [song album-songs] (add-song! song user))))
+
 (defn add-random-song! []
   (loop [song (random-song) attempts 0]
     (if (or (nil? song) (.contains @recent-songs-atom song))
