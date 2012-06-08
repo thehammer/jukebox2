@@ -30,6 +30,6 @@
     (let [tags (extract-tags song)
           image (artwork/album-cover (:album tags) (:artist tags))]
       (PlaylistTrack. song requester id image))
-    (PlaylistTrack. song requester id (artwork/default-image))))
+    (PlaylistTrack. song requester id (artwork/default-images))))
 
 (defn metadata [track user] (track-metadata track user))
