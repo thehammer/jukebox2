@@ -43,7 +43,7 @@
 (defn- current-track-template [request]
   [:script#track-template {:type "text/example" }
     [:div.album-cover {:data-thumbnail "large" :data-title "{{ track.title}}" :data-artist "{{ track.artist }}" :data-album "{{ track.album }}"}
-     [:a { :href "#" } [:img.thumbnail { :src "{{ track.artwork }}" }]]]
+     [:a { :href "#" } [:img.thumbnail { :src "{{ track.artwork.large }}" }]]]
     [:div.meta-data
       [:h1.title "{{ track.title }}"]
       [:p.play-count "Play count: {{ track.playCount }}"]
