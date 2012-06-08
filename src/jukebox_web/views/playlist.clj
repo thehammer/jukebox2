@@ -21,7 +21,7 @@
     [:div.song.media-grid
       [:div#track
         [:div.album-cover {:data-thumbnail "large" :data-title (:title metadata) :data-artist (:artist metadata) :data-album (:album metadata)}
-         [:a {:href "#"} [:img.thumbnail {:src (:artwork track)}]]]
+         [:a {:href "#"} [:img.thumbnail {:src (:large (:artwork track))}]]]
        [:div.meta-data
           [:h1.title (:title metadata)]
           [:p.play-count "Play count: " (library/play-count (:song track))]
