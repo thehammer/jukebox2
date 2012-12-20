@@ -21,9 +21,18 @@
           hashed-password (:password hammer)]
       (should (BCrypt/checkpw "pass" hashed-password))))
 
+  (it "encrypts the password before storing"
+    (let [[hammer errors] (user/sign-up! (factory/user {:password "pass" :password-confirmation "pass"}))
+          hashed-password (:password hammer)]
+      (should (BCrypt/checkpw "pass" hashed-password))))
+
   (it "sets the users skip-count to zero"
     (user/sign-up! (factory/user {:login "test"}))
     (should= 0 (:skip-count (user/find-by-login "test"))))
+
+  (it "doesnt store password confirmation"
+    (user/sign-up! (factory/user {:login "test" :password "pass" :password-confirmation "pass"}))
+    (should=  nil (:password-confirmation (user/find-by-login "test"))))
 
   (it "enables the user"
     (user/sign-up! (factory/user {:login "test"}))
