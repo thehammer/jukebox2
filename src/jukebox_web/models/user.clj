@@ -17,7 +17,7 @@
   (assoc user-args :password (crypt/hash-password password)))
 
 (defn- build-user [user-args]
-  (-> user-args merge-defaults hash-password))
+  (dissoc (-> user-args merge-defaults hash-password) :password-confirmation))
 
 (defn find-by-id [id]
   (first (db/find-by-field *model* "id" id)))
