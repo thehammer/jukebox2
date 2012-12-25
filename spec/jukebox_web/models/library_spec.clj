@@ -39,9 +39,11 @@
       (should= "user%2Fdaft+punk" (library/parent-directory "user/daft punk/discovery"))))
 
   (describe "all-tracks"
-    (it "only returns files matching .mp3"
+    (it "returns files matching .mp3 and m4a"
       (let [tracks (library/all-tracks)]
-        (should-not (includes? (map #(.getName %) tracks) "jukebox2.ogg"))))
+        (should-not (includes? (map #(.getName %) tracks) "jukebox2.ogg"))
+        (should (includes? (map #(.getName %) tracks) "jukebox2.m4a"))
+        (should (includes? (map #(.getName %) tracks) "jukebox2.mp3"))))
 
     (it "does not return dotfiles"
       (let [tracks (library/all-tracks)]

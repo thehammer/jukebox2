@@ -12,13 +12,13 @@
  (with-test-music-library)
           
  (it "returns directories and .mp3 files for a basic directory"
-     (should= (file-set ["jukebox2.mp3" "user" "user2"])
+     (should= (file-set ["jukebox2.m4a" "jukebox2.mp3" "user" "user2"])
               (set (util-file/ls "spec/music" ""))))
 
  (it "returns relative paths for a directory + path"
      (should= (file-set ["user/artist/album" "user/artist/album2"])
               (set (util-file/ls "spec/music" "user/artist"))))
 
- (it "returns only files specified by optional filter"
-     (should= (file-set ["jukebox2.mp3"])
-              (set (util-file/ls "spec/music" "" util-file/mp3?)))))
+ (it "returns only known files(mp3 and m4a)"
+     (should= (file-set ["jukebox2.m4a", "jukebox2.mp3"])
+              (set (util-file/ls "spec/music" "" util-file/has-known-extension?)))))

@@ -13,7 +13,7 @@
                                       ls
                                       relativize
                                       not-dotfiles
-                                      mp3?)]))
+                                      has-known-extension?)]))
 
 ;; constants
 ;; TODO: earmuffs should denote mutable vars, not constants
@@ -47,7 +47,7 @@
   ([path] (ls *music-library* path)))
 
 (defn list-music [path]
-  (ls *music-library* path #(and (not-dotfiles %) (mp3? %))))
+  (ls *music-library* path #(and (not-dotfiles %) (has-known-extension? %))))
 
 (defn file-on-disk [relative-path]
   (io/file *music-library* relative-path))
@@ -60,7 +60,7 @@
   ([path]
    (let [contents (file-seq (io/file *music-library* path))]
      (->> contents
-       (filter #(.endsWith (.getName %) ".mp3"))
+       (filter #(has-known-extension? %))
        (map #(relativize *music-library* %))))))
 
 (defn owner [song]
