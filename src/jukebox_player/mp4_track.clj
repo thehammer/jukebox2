@@ -13,7 +13,7 @@
        buffer (SampleBuffer.)
        output (ByteArrayOutputStream.)]
     (loop [frame (.readNextFrame track-data)]
-      (when-not (nil? frame)
+      (when (.hasMoreFrames track-data)
         (.decodeFrame decoder (.getData frame) buffer)
         (.write output (.getData buffer) 0 (alength (.getData buffer)))
         (recur (.readNextFrame track-data))))
@@ -36,5 +36,3 @@
                        (.getChannelCount track-data)
                        true
                        true))))
-
-

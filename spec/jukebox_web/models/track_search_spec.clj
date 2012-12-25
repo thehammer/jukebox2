@@ -9,7 +9,7 @@
   (with-test-music-library)
 
   (it "searches the file system for tracks"
-      (should= "jukebox2.mp3" (filename (first (track-search/execute "jukebox")))))
+      (should= ["jukebox2.m4a", "jukebox2.mp3"] (map filename (track-search/execute "jukebox"))))
 
   (it "searches file system for artist and returns all tracks"
       (let [tracks (track-search/execute "artist")]
