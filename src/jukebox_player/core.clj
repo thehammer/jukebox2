@@ -32,6 +32,9 @@
 (defn- build-line-out [playable]
   (AudioSystem/getSourceDataLine (out-format playable)))
 
+(defn- speak [^javax.sound.sampled.SourceDataLine speaker buffer bytes-read]
+  (.write speaker buffer 0 bytes-read))
+
 (defn- byte-index-for-time [playable time]
   (let [format (out-format playable)]
     (* time (* (.getFrameRate format) (.getFrameSize format)))))
@@ -47,7 +50,7 @@
     (loop [bytes-to-play (.read audio-stream buffer)
            bytes-played 0]
       (when-not (or (> bytes-played snippet-length) (= bytes-to-play -1))
-        (.write speaker buffer 0 bytes-to-play)
+        (speak speaker buffer bytes-to-play)
         (recur (.read audio-stream buffer) (+ bytes-played bytes-to-play))))
     (doto speaker (.close))))
 
@@ -58,10 +61,10 @@
     (doto speaker (.open) (.start))
     (loop [bytes-read (.read audio-stream buffer)]
       (cond
-        (skip-requested?) (with-skip-reset (.write speaker buffer 0 bytes-read) nil)
+        (skip-requested?) (with-skip-reset (speak speaker buffer bytes-read) nil)
         (playing?)
           (when-not (= bytes-read -1)
-            (.write speaker buffer 0 bytes-read)
+            (speak speaker buffer bytes-read)
             (dosync (ref-set microseconds (.getMicrosecondPosition speaker)))
             (recur (.read audio-stream buffer)))
         (paused?) (do (Thread/sleep 100) (recur bytes-read))))

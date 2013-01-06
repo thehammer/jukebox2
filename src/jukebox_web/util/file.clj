@@ -10,12 +10,12 @@
 (defn directory? [file]
   (.isDirectory file))
 
-(defn mp3? [file]
-  (.endsWith (.getName file) ".mp3"))
+(defn has-known-extension? [file]
+  (re-find #"mp3|m4a$" (.getName file)))
 
 (defn default-filter [file]
   (and (not-dotfiles file)
-       (or (directory? file) (mp3? file))))
+       (or (directory? file) (has-known-extension? file))))
 
 (defn relativize [parent child]
   (let [parent-uri (.toURI (io/file parent))
