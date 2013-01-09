@@ -1,0 +1,2 @@
+export PATH=./bin:$PATH
+export LEIN_HOME=~/.lein-one
