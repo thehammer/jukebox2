@@ -22,9 +22,7 @@
                  [vorbisspi "1.0.3"]
                  [fs "1.1.2"]]
   :dev-dependencies [[lein-ring "0.4.5"]
-                     [lein-javac "1.2.1-SNAPSHOT"]
-                     [speclj "1.5.2"]
-                     [speclj-growl "1.0.0-SNAPSHOT"]]
+                     [lein-javac "1.2.1-SNAPSHOT"]]
   :main jukebox-web.core
   :ring {:handler jukebox-web.core/app}
-  :test-path "spec/")
+  :test-path "test/")
