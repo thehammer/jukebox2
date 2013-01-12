@@ -2,7 +2,6 @@
   (:require [fleetdb.embedded :as fleetdb]
             [fs.core :as fs]
             [jukebox-web.models.db :as db]
-            [jukebox-web.models.hammertime :as hammertime]
             [jukebox-web.models.library :as library]
             [jukebox-web.models.artwork :as artwork]
             [jukebox-web.models.playlist :as playlist])

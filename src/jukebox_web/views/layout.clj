@@ -37,7 +37,6 @@
      [:li [:a {:href "/library/browse"} "Browse Library"]]]]
    [:li [:a {:href "/stats"} "Stats"]]
    [:li [:a {:href "/users"} "Users"]]
-   [:li [:a {:href "/hammertimes"} "Hammertimes"]]
    (when (nil? user) [:li [:a {:href "/users/sign-up"} [:span.label.success "Sign Up"]]])])
 
 (defn- current-track-template [request]

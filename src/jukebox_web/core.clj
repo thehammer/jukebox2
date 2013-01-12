@@ -9,9 +9,7 @@
             [jukebox-player.core :as player]
             [jukebox-web.models.cron :as cron]
             [jukebox-web.models.db :as db]
-            [jukebox-web.models.hammertime :as hammertime]
             [jukebox-web.models.playlist :as playlist]
-            [jukebox-web.controllers.hammertimes :as hammertimes-controller]
             [jukebox-web.controllers.library :as library-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
@@ -39,15 +37,6 @@
   (POST "/users/toggle-enabled" [] users-controller/toggle-enabled)
   (GET "/users/:id/edit" [] users-controller/edit)
   (POST "/users/:id/update" [] users-controller/update)
-  (GET "/hammertimes" [] hammertimes-controller/index)
-  (POST "/hammertimes" [] hammertimes-controller/create)
-  (GET ["/hammertimes/new/:file" :file #".*"] [] hammertimes-controller/create-form)
-  (POST "/hammertimes/play" [] hammertimes-controller/play)
-  (POST "/hammertimes/:id/delete" [] hammertimes-controller/delete)
-  (GET "/hammertimes/:id/edit" [] hammertimes-controller/edit)
-  (POST "/hammertimes/:id/update" [] hammertimes-controller/update)
-  (GET "/hammertimes/browse" [] hammertimes-controller/browse-root)
-  (GET ["/hammertimes/browse/:path", :path #".*"] [] hammertimes-controller/browse)
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET "/library/search" [] track-search-controller/index)
@@ -60,7 +49,6 @@
 (db/connect! "data/jukebox.fdb")
 
 (player/start (playlist/playlist-seq))
-(hammertime/schedule-all!)
 (cron/schedule! "0 * * * *" db/compact!)
 
 (def app
