@@ -8,7 +8,6 @@
             [ring.middleware.cors :as cors]
             [ring.adapter.jetty :as adapter]
             [jukebox-player.core :as player]
-            [jukebox-web.models.cron :as cron]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.controllers.library :as library-controller]
