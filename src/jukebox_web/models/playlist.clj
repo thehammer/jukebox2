@@ -1,7 +1,9 @@
 (ns jukebox-web.models.playlist
   (:require [jukebox-web.models.library :as library]
             [jukebox-web.models.playlist-track :as playlist-track]
-            [jukebox-web.models.user :as user])
+            [jukebox-web.models.user :as user]
+            [clojure.contrib.sql :as sql]
+            [jukebox-web.models.db :as db])
   (:import [java.util UUID]))
 
 (def current-song-atom (atom nil))

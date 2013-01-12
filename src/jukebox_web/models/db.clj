@@ -6,19 +6,32 @@
 
 (def *db*)
 
-(defn connect! [file]
-  )
+(defn connect! [db]
+  (defonce *db* db))
 
 (defn keys-to-keywords [record]
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
 
-(defn compact! []
-  )
 
 (defn migrate! []
   (let [tables (resultset-seq (-> (sql/connection)
                                   (.getMetaData)
                                   (.getTables nil "APP" "%", nil)))]
+
+    (when (empty? (filter #(= "PLAY_COUNTS" (:table_name %)) tables))
+      (sql/create-table
+        :play_counts
+        [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
+        [:track "VARCHAR(255)" "NOT NULL"]
+        [:count "INTEGER" "DEFAULT 0"]))
+
+    (when (empty? (filter #(= "SKIP_COUNTS" (:table_name %)) tables))
+      (sql/create-table
+        :skip_counts
+        [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
+        [:track "VARCHAR(255)" "NOT NULL"]
+        [:count "INTEGER" "DEFAULT 0"]))
+
     (when (empty? (filter #(= "USERS" (:table_name %)) tables))
       (sql/create-table
         :users

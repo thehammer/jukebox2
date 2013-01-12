@@ -24,7 +24,7 @@
   (user/sign-up! (factory/user {:login "user2"}))
   (playlist/reset-state!)
 
-  (is (= ["user2" "user" "user" "user" "user" "user"]
+  (is (= ["user" "user" "user" "user" "user" "user2"]
          (playlist/weighted-users))))
 
 (deftest adding-songs

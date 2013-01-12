@@ -70,7 +70,7 @@
         (paused?) (do (Thread/sleep 100) (recur bytes-read))))
      (doto speaker (.close))))
 
-(defn- start-player [files]
+(defn start-player [files]
   (loop [files-to-play files]
     (when-let [file (first files-to-play)]
       (cond

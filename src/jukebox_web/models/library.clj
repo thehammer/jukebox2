@@ -3,6 +3,7 @@
            [java.util UUID])
   (:require [clojure.java.io :as io]
             [clojure.string :as string]
+            [clojure.contrib.sql :as sql]
             [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (strip-slashes
@@ -19,8 +20,8 @@
 ;; TODO: earmuffs should denote mutable vars, not constants
 (def *music-library-title* "Music Library")
 (def *music-library* "music")
-(def *play-counts-model* "play-counts")
-(def *skip-counts-model* "skip-counts")
+(def *play-counts-model* :play_counts)
+(def *skip-counts-model* :skip_counts)
 
 (defn extension [filename]
   (last (string/split (str filename) #"\.")))
@@ -84,8 +85,12 @@
     (or (:count skip-count-row) 0)))
 
 (defn most-played []
-  (let [play-counts (db/find-all *play-counts-model* {"order" ["count" "desc"] "limit" 20})]
-    (map #(dissoc % :id) play-counts)))
+  (db/find-all [(str "SELECT * FROM ("
+                       "SELECT ROW_NUMBER() OVER() AS rownum, play_counts.* "
+                       "FROM play_counts "
+                       "ORDER BY count DESC "
+                      ") AS tmp "
+                      "WHERE rownum <= 20 ")]))
 
 (defn artist [track]
   (let [relative-file-name (string/replace (.getPath track) (str *music-library* "/") "")
@@ -101,11 +106,13 @@
 (defn increment-play-count! [track]
   (let [track-name (str track)
         current-play-count (play-count track)]
-    (when (= 0 (db/update *play-counts-model* {:track track-name :count (inc current-play-count)} "track" track-name))
-      (db/insert *play-counts-model* {:track track-name :count 1}))))
+    (if (= 0 current-play-count)
+      (db/insert *play-counts-model* {:track track-name :count 1})
+      (db/update *play-counts-model* {:track track-name :count (inc current-play-count)} :track track-name))))
 
 (defn increment-skip-count! [track]
   (let [track-name (str track)
         current-skip-count (skip-count track)]
-    (when (= 0 (db/update *skip-counts-model* {:track track-name :count (inc current-skip-count)} "track" track-name))
-      (db/insert *skip-counts-model* {:track track-name :count 1}))))
+    (if (= 0 current-skip-count)
+      (db/insert *skip-counts-model* {:track track-name :count 1})
+      (db/update *skip-counts-model* {:track track-name :count (inc current-skip-count)} "track" track-name))))

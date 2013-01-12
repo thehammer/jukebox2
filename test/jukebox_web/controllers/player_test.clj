@@ -23,7 +23,7 @@
         response (player-controller/skip request)]
     (testing "increments skip-count for the current user"
       (is (= 302 (:status response)))
-      (is (= 1 (:skip-count (user/find-by-login "bob")))))
+      (is (= 1 (:skip_count (user/find-by-login "bob")))))
 
     (testing "increments skip-count for the current song"
       (is (= 302 (:status response)))

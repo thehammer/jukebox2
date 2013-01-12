@@ -96,9 +96,9 @@
   (dotimes [_ 2] (library/increment-play-count! "two"))
   (let [most-played (library/most-played)]
     (is (= 3 (count most-played)))
-    (is (= {:track "three" :count 3} (nth most-played 0)))
-    (is (= {:track "two" :count 2} (nth most-played 1)))
-    (is (= {:track "one" :count 1} (nth most-played 2)))))
+    (is (= "three" (:track (nth most-played 0))))
+    (is (= "two"   (:track (nth most-played 1))))
+    (is (= "one"   (:track (nth most-played 2))))))
 
 (deftest returns-only-the-20-most-played-tracks
   (dotimes [n 21] (library/increment-play-count! n))

@@ -75,6 +75,7 @@
 
 (deftest toggles-enabled
   (testing "redirects back to users index"
+    (user/sign-up! (factory/user {:login "test"}))
     (let [response (users-controller/toggle-enabled {:params {:login "test"}})]
       (is (= 302 (:status response)))
       (is (= {"Location" "/users"} (:headers response))))))

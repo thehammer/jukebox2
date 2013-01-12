@@ -1,7 +1,8 @@
 (ns jukebox-web.core
   (:use compojure.core
         clojure.contrib.command-line)
-  (:require [compojure.route :as route]
+  (:require [clojure.contrib.sql :as sql]
+            [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
             [ring.middleware.cors :as cors]
@@ -46,18 +47,33 @@
   (route/resources "/")
   (route/not-found "Page not found"))
 
-(db/connect! "data/jukebox.fdb")
+(db/connect! {:classname "org.apache.derby.jdbc.EmbeddedDriver"
+              :subprotocol "derby"
+              :subname "data/jukebox.db"
+              :create true})
 
-(player/start (playlist/playlist-seq))
-(cron/schedule! "0 * * * *" db/compact!)
+(sql/with-connection db/*db*
+  (db/migrate!))
+
+(defn run-player []
+  (.start (Thread. (fn []
+                     (sql/with-connection db/*db*
+                        (player/start-player (playlist/playlist-seq)))))))
+
+(defn wrap-db-connection [app]
+  (fn [request]
+    (sql/with-connection db/*db*
+      (app request))))
 
 (def app
   (-> (handler/site main-routes {:session {:cookie-attrs {:max-age 28800} :cookie-name "jukebox"}})
     (cors/wrap-cors :access-control-allow-origin #".*")
-    flash/wrap-flash))
+    flash/wrap-flash
+    wrap-db-connection))
 
 (defn -main [& args]
   (with-command-line args "Jukebox Web Server"
     [[port p "The port on which to run this server" "3000"]]
+    (run-player)
     (adapter/run-jetty app {:port (read-string port)})))
 
