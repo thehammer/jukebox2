@@ -14,7 +14,7 @@
         hammer (user/find-by-login "hammer")]
     (is (empty? errors))
     (is (= "http://gravitar.org/somepic" (:avatar hammer)))))
-
+;
 (deftest sign-up-encrypts-password-before-storing
   (let [[hammer errors] (user/sign-up! (factory/user {:password "pass" :password-confirmation "pass"}))
         hashed-password (:password hammer)]
@@ -22,7 +22,7 @@
 
 (deftest sign-up-sets-users-skip-count-to-zero
   (user/sign-up! (factory/user {:login "test"}))
-  (is (= 0 (:skip-count (user/find-by-login "test")))))
+  (is (= 0 (:skip_count (user/find-by-login "test")))))
 
 (deftest sign-up-does-not-store-confirmation
   (user/sign-up! (factory/user {:login "test" :password "pass" :password-confirmation "pass"}))
@@ -106,15 +106,15 @@
 
 (deftest increment-skip-count-increments-the-skip-count-for-the-given-user
     (user/sign-up! (factory/user {:login "test"}))
-    (is (= 0 (:skip-count (user/find-by-login "test"))))
+    (is (= 0 (:skip_count (user/find-by-login "test"))))
     (user/increment-skip-count! "test")
-    (is (= 1 (:skip-count (user/find-by-login "test")))))
+    (is (= 1 (:skip_count (user/find-by-login "test")))))
 
 (deftest increment-skip-count-increments-multiple-skips
     (user/sign-up! (factory/user {:login "test"}))
     (user/increment-skip-count! "test")
     (user/increment-skip-count! "test")
-    (is (= 2 (:skip-count (user/find-by-login "test")))))
+    (is (= 2 (:skip_count (user/find-by-login "test")))))
 
 (deftest update-updates-the-user
   (user/sign-up! (factory/user {:login "avatar-test" :avatar "old-avatar.png"}))
@@ -162,6 +162,7 @@
 
 (deftest toggle-enabled-disables-an-enabled-user
   (user/sign-up! (factory/user {:login "test" :enabled true}))
+  (is (user/enabled? "test"))
   (user/toggle-enabled! "test")
   (is (not (user/enabled? "test"))))
 

@@ -9,3 +9,4 @@
 /checkouts
 nohup.out
 .lein*
+derby.log

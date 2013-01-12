@@ -7,10 +7,10 @@
             [jukebox-web.util.url :as url])
   (:use [clojure.contrib.string :only (blank?)]))
 
-(def *model* :user)
+(def *model* :users)
 
 (defn- merge-defaults [user-args]
-  (let [defaults {:skip-count 0 :enabled true}]
+  (let [defaults {:skip_count 0 :enabled true}]
     (merge defaults user-args)))
 
 (defn- hash-password [{password :password :as user-args}]
@@ -26,13 +26,13 @@
   (first (db/find-by-field *model* "login" login)))
 
 (defn find-all []
-  (db/find-all *model*))
+  (db/find-all ["SELECT * FROM users"]))
 
 (defn find-random []
-  (rand-nth (db/find-all *model*)))
+  (rand-nth (find-all)))
 
 (defn find-enabled []
-  (filter #(:enabled %) (find-all)))
+  (db/find-by-field *model* "enabled" true))
 
 (defn canAdd? [user]
   (not (nil? user)))
@@ -84,12 +84,12 @@
 
 (defn increment-skip-count! [login]
   (let [user (find-by-login login)
-        skip-count (:skip-count user)]
-  (db/update *model* {:skip-count (inc skip-count)} "login" login)))
+        skip-count (:skip_count user)]
+  (db/update *model* {:skip_count (inc skip-count)} "login" login)))
 
 (defn toggle-enabled! [login]
-  (let [enabled (:enabled (find-by-login login))]
-    (db/update *model* {:enabled (not enabled)} :login login)))
+  (let [{:keys [id enabled]} (find-by-login login)]
+    (db/update *model* {:enabled (not (.booleanValue enabled))} :id id)))
 
 (defn update! [user user-args]
   (let [errors (validate (conj user user-args))]
@@ -101,8 +101,8 @@
   (count (library/all-tracks (:login user))))
 
 (defn enabled? [login]
-  (let [user (find-by-login login)]
-     (:enabled user)))
+  (if-let [user (find-by-login login)]
+     (.booleanValue (:enabled user))))
 
 (defn delete! [user]
   (db/delete *model* (:id user)))

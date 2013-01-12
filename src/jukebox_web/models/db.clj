@@ -1,50 +1,54 @@
 (ns jukebox-web.models.db
-  (:import [java.util UUID]
-           [java.io File])
-  (:require [fleetdb.embedded :as fleetdb])
+  (:import [java.io File])
+  (:require [clojure.contrib.sql :as sql]
+            [clojure.contrib.string :as cstr])
   (:use [clojure.contrib.string :only [as-str]]))
 
 (def *db*)
 
-(defn- open-db [file]
-  (if (.exists (File. file))
-    (fleetdb/load-persistent file)
-    (fleetdb/init-persistent file)))
-
 (defn connect! [file]
-  (defonce *db* (open-db file)))
-
-(defn- add-id [record id]
-  (conj record ["id" id]))
-
-(defn- generate-id []
-  (str (UUID/randomUUID)))
-
-(defn- keys-to-strings [record]
-  (reduce #(conj %1 [(as-str (first %2)) (nth %2 1)]) {} record))
+  )
 
 (defn keys-to-keywords [record]
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
 
 (defn compact! []
-  (fleetdb/compact *db*))
+  )
+
+(defn migrate! []
+  (let [tables (resultset-seq (-> (sql/connection)
+                                  (.getMetaData)
+                                  (.getTables nil "APP" "%", nil)))]
+    (when (empty? (filter #(= "USERS" (:table_name %)) tables))
+      (sql/create-table
+        :users
+        [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
+        [:login "VARCHAR(255)" "NOT NULL"]
+        [:skip_count "INTEGER" "DEFAULT 0"]
+        [:password "VARCHAR(255)"]
+        [:avatar "VARCHAR(255)"]
+        [:enabled "BOOLEAN" "DEFAULT TRUE"]))))
 
 (defn delete [model id]
-  (fleetdb/query *db* ["delete" (as-str model) {"where" ["=" "id" id]}]))
+  (sql/delete-rows model ["id=?" id]))
+
+(defn find-all [query-with-bindings]
+  (sql/with-query-results result-seq query-with-bindings
+    (if-let [results (doall result-seq)]
+      results
+      [])))
 
 (defn insert [model record]
-  (let [id (generate-id)]
-    (fleetdb/query *db* ["insert" (as-str model) (add-id (keys-to-strings record) id)])
-    (conj record {:id id})))
-
-(defn find-all
-  ([model]
-   (find-all model nil))
-  ([model conditions]
-   (map keys-to-keywords (fleetdb/query *db* ["select" (as-str model) conditions]))))
+  (sql/insert-records model record)
+  (sql/with-query-results res ["VALUES IDENTITY_VAL_LOCAL()"]
+    (assoc record :id (int (first (vals (first res)))))))
 
 (defn find-by-field [model field value]
-  (map keys-to-keywords (find-all model {"where" ["=" (as-str field) value]})))
+  (find-all [(str "SELECT * "
+                  "FROM " (cstr/as-str model) " "
+                  "WHERE " (cstr/as-str field) " = ?") value]))
 
 (defn update [model updates field value]
-  (fleetdb/query *db* ["update" (as-str model) (keys-to-strings updates) {"where" ["=" (as-str field) value]}]))
+  (sql/update-values model
+                     [(str (cstr/as-str field) "=?") value]
+                     updates))
