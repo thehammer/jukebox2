@@ -9,8 +9,8 @@
 
 (deftest searching
   (testing "searches the file system for tracks"
-    (is (= ["jukebox2.m4a", "jukebox2.mp3"]
-           (map filename (track-search/execute "jukebox")))))
+    (is (= #{"jukebox2.m4a", "jukebox2.mp3"}
+           (set (map filename (track-search/execute "jukebox"))))))
 
   (testing "searches file system for artist and returns all tracks"
     (let [tracks (track-search/execute "artist")]
