@@ -1,5 +1,5 @@
 (ns jukebox-web.controllers.playlist-test
-  (:require [clj-json.core :as json]
+  (:require [cheshire.core :as json]
             [jukebox-web.models.user :as user]
             [jukebox-web.models.factory :as factory]
             [jukebox-web.models.playlist :as playlist]

@@ -5,7 +5,7 @@
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
-            [ring.middleware.cors :as cors]
+            ;[ring.middleware.cors :as cors]
             [ring.adapter.jetty :as adapter]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
@@ -66,7 +66,7 @@
 
 (def app
   (-> (handler/site main-routes {:session {:cookie-attrs {:max-age 28800} :cookie-name "jukebox"}})
-    (cors/wrap-cors :access-control-allow-origin #".*")
+;    (cors/wrap-cors :access-control-allow-origin #".*")
     flash/wrap-flash
     wrap-db-connection))
 

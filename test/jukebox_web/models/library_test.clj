@@ -31,10 +31,10 @@
     (is (= "user" (library/parent-directory "user/artist"))))
 
   (testing "returns url encoded values"
-    (is (= "daft+punk" (library/parent-directory "daft punk/discovery"))))
+    (is (= "daft%20punk" (library/parent-directory "daft punk/discovery"))))
 
   (testing "returns url encoded values correctly for subdirectories"
-    (is (= "user%2Fdaft+punk" (library/parent-directory "user/daft punk/discovery")))))
+    (is (= "user%2Fdaft%20punk" (library/parent-directory "user/daft punk/discovery")))))
 
 (deftest finding-all-tracks
   (testing "returns files matching .mp3 and m4a"

@@ -2,7 +2,6 @@
   (:require [jukebox-web.controllers.users :as users-controller])
   (:require [jukebox-web.models.user :as user])
   (:require [jukebox-web.models.factory :as factory])
-  (:require [clojure.contrib.string :as string])
   (:use [clojure.test]
         [jukebox-web.test-helper]))
 
@@ -30,7 +29,7 @@
     (let [[user errors] (user/sign-up! (factory/user {:login "test-edit"}))
           request {:params {:id (:id user)}}
           response (users-controller/edit request)]
-      (is (string/substring? "Edit test-edit" response)))))
+      (is (.contains response "Edit test-edit")))))
 
 (deftest update-users
   (testing "updates the user and redirects"

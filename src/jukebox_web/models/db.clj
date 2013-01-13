@@ -2,7 +2,7 @@
   (:import [java.io File])
   (:require [clojure.java.jdbc :as sql]))
 
-(def ^{:dynamic true} *db*)
+(def ^:dynamic *db*)
 
 (defn connect! [db]
   (defonce *db* db))

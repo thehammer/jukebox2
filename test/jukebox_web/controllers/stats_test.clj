@@ -2,7 +2,7 @@
   (:require [jukebox-web.controllers.stats :as stats-controller]
             [jukebox-web.models.factory :as factory]
             [jukebox-web.models.user :as user]
-            [clj-json.core :as json])
+            [cheshire.core :as json])
   (:use [clojure.test]
         [jukebox-web.test-helper]))
 

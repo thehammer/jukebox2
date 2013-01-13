@@ -1,7 +1,8 @@
 (ns jukebox-web.models.artwork
   (:require [clj-http.client :as client]
+            [cheshire.core :as json]
             [ring.util.codec :as codec])
-  (:use [clojure.data.json :only (read-str)]
+  (:use 
         [clojure.java.io :only (reader)]))
 
 (def default-image-path "/img/no_art_lrg.png")
@@ -17,7 +18,7 @@
   (get (first (filter #(and (= (get % "size") size) (not (empty? (get % "#text")))) images)) "#text" default-image-path))
 
 (defn transform [http-response]
-  (let [json-response (read-str (:body http-response))
+  (let [json-response (json/parse-string (:body http-response))
         images (get-in json-response ["album" "image"])]
     (if (empty? images)
       default-images
