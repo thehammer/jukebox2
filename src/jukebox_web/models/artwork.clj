@@ -14,7 +14,7 @@
   (format "%s&album=%s&artist=%s" base-url (codec/url-encode album) (codec/url-encode artist)))
 
 (defn image-for-size [images size]
-  (get (first (filter #(and (= (:size %) size) (not (empty? (:#text %)))) images)) "#text"))
+  (get (first (filter #(and (= (get % "size") size) (not (empty? (get % "#text")))) images)) "#text" default-image-path))
 
 (defn transform [http-response]
   (let [json-response (read-str (:body http-response))

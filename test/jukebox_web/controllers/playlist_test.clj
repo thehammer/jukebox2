@@ -58,7 +58,7 @@
                "skipCount" 0
                "owner"     "user"
                "requester" nil
-               "artwork"   {"large" ""  "extra-large" ""}
+               "artwork"   {"large" "/img/no_art_lrg.png"  "extra-large" "/img/no_art_lrg.png"}
                "duration"  16
                "title"     "jukebox2"
                "progress"  0
@@ -82,7 +82,7 @@
             "requester"   nil
             "duration"    16
             "title"       "jukebox2"
-            "artwork"     {"large" ""  "extra-large" ""}
+            "artwork"     {"large" "/img/no_art_lrg.png"  "extra-large" "/img/no_art_lrg.png"}
             "progress"    0
             "playing"     false
             "isRequester" false
