@@ -1,6 +1,8 @@
-(defproject
-  jukebox "1.0.0-SNAPSHOT"
+(defproject jukebox "1.0.0-SNAPSHOT"
   :description "Jukebox"
+  :url "http://example.com/FIXME"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :repositories {"local" ~(str (.toURI (java.io.File. "maven_repository")))}
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/tools.cli "0.2.2"]
@@ -19,9 +21,10 @@
                  [mp3spi "1.9.5"]
                  [tritonus_share "0.3.6"]
                  [vorbisspi "1.0.3"]
-                 [fs "1.1.2"]]
-  :dev-dependencies [[lein-ring "0.4.5"]
-                     [lein-javac "1.2.1-SNAPSHOT"]]
+                 [fs "1.1.2"]
+                 [lein-ring "0.4.5"]
+                 [lein-javac "1.2.1-SNAPSHOT"]]
+  :source-paths ["src"]
+  :test-paths ["test"]
   :main jukebox-web.core
-  :ring {:handler jukebox-web.core/app}
-  :test-path "test/")
+  :ring {:handler jukebox-web.core/app})
