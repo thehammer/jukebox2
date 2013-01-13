@@ -22,9 +22,14 @@
                  [tritonus_share "0.3.6"]
                  [vorbisspi "1.0.3"]
                  [fs "1.1.2"]
-                 [lein-ring "0.4.5"]
-                 [lein-javac "1.2.1-SNAPSHOT"]]
-  :source-paths ["src"]
+                 [lein-ring "0.4.5"]]
+  :plugins [[lein-cljsbuild "0.2.10"]
+            [lein-haml-sass "0.2.4"]]
+  :source-paths ["src/clj"]
   :test-paths ["test"]
   :main jukebox-web.core
-  :ring {:handler jukebox-web.core/app})
+  :ring {:handler jukebox-web.core/app}
+  :cljsbuild {:builds [{:source-path "src/cljs"
+                        :compiler {:output-to "resources/public/js/jukebox-cljs.js"
+                                   :optimizations :whitespace
+                                   :pretty-print true}}]})
