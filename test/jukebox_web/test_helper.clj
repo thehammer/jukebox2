@@ -1,18 +1,18 @@
 (ns jukebox-web.test-helper
-  (:require [clojure.contrib.sql :as sql]
+  (:require [clojure.java.jdbc :as sql]
+            [clojure.java.io :as io]
             [fs.core :as fs]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.library :as library]
             [jukebox-web.models.artwork :as artwork]
-            [jukebox-web.models.playlist :as playlist])
-  (:use [clojure.contrib.mock]))
+            [jukebox-web.models.playlist :as playlist]))
 
 (def test-db "/tmp/jukebox-test.db")
 
 (defn delete-file
     "Delete file f. Raise an exception if it fails unless silently is true."
     [f & [silently]]
-    (or (.delete (clojure.contrib.io/as-file f))
+    (or (.delete (io/as-file f))
               silently
               (throw (java.io.IOException. (str "Couldn't delete " f)))))
 
@@ -20,7 +20,7 @@
     "Delete file f. If it's a directory, recursively delete all its contents.
     Raise an exception if any deletion fails unless silently is true."
     [f & [silently]]
-    (let [f (clojure.contrib.io/as-file f)]
+    (let [f (io/as-file f)]
           (if (.isDirectory f)
                   (doseq [child (.listFiles f)]
                             (delete-file-recursively child silently)))
@@ -41,8 +41,7 @@
   (binding [library/*music-library* "test/music"]
     (fs/delete-dir "test/music")
     (fs/copy-dir "test/fixtures/music" "test/music")
-    (expect [artwork/album-cover (returns "no_art_lrg.png")]
-    (spec))))
+    (spec)))
 
 (defn with-smaller-weight-threshold [spec]
   (binding [playlist/*weight-threshold* 3]

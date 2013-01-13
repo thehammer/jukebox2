@@ -2,7 +2,6 @@
   (:require [clojure.java.io :as io]
             [jukebox-web.models.library :as library])
   (:use [clojure.test]
-        [clojure.contrib.seq :only [includes?]]
         [jukebox-web.test-helper]))
 
 (use-fixtures :each with-test-music-library with-database-connection)
@@ -10,16 +9,16 @@
 (deftest listing-a-directory
   (testing "returns a seq with the files contained in the root path with no arguments"
     (let [files (map #(.getPath %) (library/list-directory))]
-      (is (not (includes? files "jukebox2.ogg")))
-      (is (includes? files "jukebox2.mp3"))))
+      (is (not (some (partial = "jukebox2.ogg") files)))
+      (is (some (partial = "jukebox2.mp3") files))))
 
   (testing "returns the list of files for a given directory"
     (let [files (map #(.getPath %) (library/list-directory "user"))]
-      (is (includes? files "user/artist"))))
+      (is (some (partial = "user/artist") files))))
 
   (testing "does not include dotfiles in the list"
     (let [files (map #(.getPath %) (library/list-directory))]
-      (is (not (includes? files ".gitkeep"))))))
+      (is (not (some (partial = ".gitkeep") files))))))
 
 (deftest finding-parent-directory
   (testing "returns nil when path is the music library"
@@ -40,18 +39,18 @@
 (deftest finding-all-tracks
   (testing "returns files matching .mp3 and m4a"
     (let [tracks (library/all-tracks)]
-      (is (not (includes? (map #(.getName %) tracks) "jukebox2.ogg")))
-      (is (includes? (map #(.getName %) tracks) "jukebox2.m4a"))
-      (is (includes? (map #(.getName %) tracks) "jukebox2.mp3"))))
+      (is (not (some (partial = "jukebox2.ogg") (map #(.getName %) tracks))))
+      (is (some (partial = "jukebox2.m4a") (map #(.getName %) tracks) ))
+      (is (some (partial = "jukebox2.mp3") (map #(.getName %) tracks) ))))
 
   (testing "does not return dotfiles"
     (let [tracks (library/all-tracks)]
-      (is (not (includes? (map #(.getName %) tracks) ".gitkeep")))))
+      (is (not (some (partial = ".gitkeep") (map #(.getName %) tracks))))))
 
   (testing "allows scoping by subdirectory"
     (let [tracks (library/all-tracks "user")]
-      (is (includes? (map #(.getName %) tracks) "track.mp3"))
-      (is (not (includes? (map #(.getName %) tracks) "jukebox.mp3"))))))
+      (is (some (partial = "track.mp3") (map #(.getName %) tracks) ))
+      (is (not (some (partial = "jukebox.mp3") (map #(.getName %) tracks)))))))
 
 (deftest find-random-song
   (testing "returns a random song with no prefix when no argument is provided"
@@ -59,7 +58,7 @@
 
   (testing "returns a random song from the given path"
     (let [selections (take 10 (map library/random-song (repeat "user")))]
-      (is (not (includes? (map #(.getName %) selections) "jukebox.mp3"))))))
+      (is (not (some (partial = "jukebox.mp3") (map #(.getName %) selections)))))))
 
 (deftest owners
   (testing "returns nil for a path without a user"

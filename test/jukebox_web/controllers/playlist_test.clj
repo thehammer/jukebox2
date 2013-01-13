@@ -1,6 +1,5 @@
 (ns jukebox-web.controllers.playlist-test
   (:require [clj-json.core :as json]
-            [clojure.contrib.pprint :as pprint]
             [jukebox-web.models.user :as user]
             [jukebox-web.models.factory :as factory]
             [jukebox-web.models.playlist :as playlist]
@@ -59,7 +58,7 @@
                "skipCount" 0
                "owner"     "user"
                "requester" nil
-               "artwork" "no_art_lrg.png"
+               "artwork"   {"large" ""  "extra-large" ""}
                "duration"  16
                "title"     "jukebox2"
                "progress"  0
@@ -83,7 +82,7 @@
             "requester"   nil
             "duration"    16
             "title"       "jukebox2"
-            "artwork"     "no_art_lrg.png"
+            "artwork"     {"large" ""  "extra-large" ""}
             "progress"    0
             "playing"     false
             "isRequester" false

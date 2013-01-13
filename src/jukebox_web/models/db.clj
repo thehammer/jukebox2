@@ -1,10 +1,8 @@
 (ns jukebox-web.models.db
   (:import [java.io File])
-  (:require [clojure.contrib.sql :as sql]
-            [clojure.contrib.string :as cstr])
-  (:use [clojure.contrib.string :only [as-str]]))
+  (:require [clojure.java.jdbc :as sql]))
 
-(def *db*)
+(def ^{:dynamic true} *db*)
 
 (defn connect! [db]
   (defonce *db* db))
@@ -58,10 +56,10 @@
 
 (defn find-by-field [model field value]
   (find-all [(str "SELECT * "
-                  "FROM " (cstr/as-str model) " "
-                  "WHERE " (cstr/as-str field) " = ?") value]))
+                  "FROM " (name model) " "
+                  "WHERE " (name field) " = ?") value]))
 
 (defn update [model updates field value]
   (sql/update-values model
-                     [(str (cstr/as-str field) "=?") value]
+                     [(str (name field) "=?") value]
                      updates))

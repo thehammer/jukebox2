@@ -1,6 +1,7 @@
 (ns jukebox-web.models.playlist-track-test
   (:require [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user]
+            [jukebox-web.models.artwork :as artwork]
             [jukebox-web.models.factory :as factory]
             [jukebox-web.models.library :as library])
   (:use [clojure.test]
@@ -34,9 +35,8 @@
             :isRequester true
             :id          ""
             :progress    0
-            :artwork     "no_art_lrg.png"
             :playing     false
             :title       "jukebox2"
             :album       "Hammer's Album"
             :artist      "Hammer"}
-           (playlist-track/metadata track user)))))
+           (dissoc (playlist-track/metadata track user) :artwork)))))

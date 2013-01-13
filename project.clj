@@ -2,15 +2,17 @@
   jukebox "1.0.0-SNAPSHOT"
   :description "Jukebox"
   :repositories {"local" ~(str (.toURI (java.io.File. "maven_repository")))}
-  :dependencies [[org.clojure/clojure "1.2.0"]
-                 [org.clojure/clojure-contrib "1.2.0"]
+  :dependencies [[org.clojure/clojure "1.3.0"]
+                 [org.clojure/tools.cli "0.2.2"]
+                 [org.clojure/java.jdbc "0.2.3"]
+                 [org.clojure/data.json "0.2.0"]
+                 [clj-http "0.6.3"]
                  [org.jaudiotagger/jaudiotagger "2.0.1"]
                  [org.apache.derby/derby "10.9.1.0"]
                  [corroborate "0.2.0"]
                  [compojure "0.6.5"]
                  [ring-json-params "0.1.3"]
                  [ring-cors "0.0.2-SNAPSHOT"]
-                 [clj-json "0.4.3"]
                  [org.mindrot/jbcrypt "0.3m"]
                  [jaad "0.8.3"]
                  [jl "1.0.1"]

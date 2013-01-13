@@ -1,7 +1,7 @@
 (ns jukebox-web.models.artwork
-  (:use [ring.util.codec :as codec]
-        [clojure.contrib.json :only (read-json)]
-        [clojure.contrib.http.agent :only (success? request-uri string http-agent stream)]
+  (:require [clj-http.client :as client]
+            [ring.util.codec :as codec])
+  (:use [clojure.data.json :only (read-str)]
         [clojure.java.io :only (reader)]))
 
 (def default-image-path "/img/no_art_lrg.png")
@@ -14,22 +14,23 @@
   (format "%s&album=%s&artist=%s" base-url (codec/url-encode album) (codec/url-encode artist)))
 
 (defn image-for-size [images size]
-  (get (first (filter #(and (= (:size %) size) (not (empty? (:#text %)))) images)) :#text default-image-path))
+  (get (first (filter #(and (= (:size %) size) (not (empty? (:#text %)))) images)) "#text"))
 
 (defn transform [http-response]
-  (let [json-response (read-json (string http-response))
-        images (:image (:album json-response))]
+  (let [json-response (read-str (:body http-response))
+        images (get-in json-response ["album" "image"])]
     (if (empty? images)
       default-images
       {:large (image-for-size images "large")
        :extra-large (image-for-size images "mega")})))
 
 (defn album-cover [album artist]
-  (let [http-request (http-agent (url album artist))]
-    (await-for 10000 http-request)
-    (try
-      (if (success? http-request)
-        (transform http-request)
-        default-images)
-      (catch java.lang.Exception e default-images))))
+  (try
+    (let [response (client/get (url album artist))]
+      (if (= 200 (:status response))
+        (transform response)
+        default-images))
+    (catch java.lang.Exception e (do
+                                   (prn e)
+                                   default-images))))
 

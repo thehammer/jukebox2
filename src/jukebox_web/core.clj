@@ -1,7 +1,7 @@
 (ns jukebox-web.core
   (:use compojure.core
-        clojure.contrib.command-line)
-  (:require [clojure.contrib.sql :as sql]
+        [clojure.tools.cli :only [cli]])
+  (:require [clojure.java.jdbc :as sql]
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
@@ -71,8 +71,8 @@
     wrap-db-connection))
 
 (defn -main [& args]
-  (with-command-line args "Jukebox Web Server"
-    [[port p "The port on which to run this server" "3000"]]
+  (let [[options _] (cli args
+                         ["-p" "--port" "Listen on this port" :default "3000"])]
     (run-player)
-    (adapter/run-jetty app {:port (read-string port)})))
+    (adapter/run-jetty app {:port (read-string (:port options))})))
 

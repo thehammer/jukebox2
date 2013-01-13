@@ -5,9 +5,9 @@
             [jukebox-web.util.crypt :as crypt]
             [jukebox-web.util.reserved-names :as reserved-names]
             [jukebox-web.util.url :as url])
-  (:use [clojure.contrib.string :only (blank?)]))
+  (:use [clojure.string :only (blank?)]))
 
-(def *model* :users)
+(def model :users)
 
 (defn- merge-defaults [user-args]
   (let [defaults {:skip_count 0 :enabled true}]
@@ -20,10 +20,10 @@
   (dissoc (-> user-args merge-defaults hash-password) :password-confirmation))
 
 (defn find-by-id [id]
-  (first (db/find-by-field *model* "id" id)))
+  (first (db/find-by-field model "id" id)))
 
 (defn find-by-login [login]
-  (first (db/find-by-field *model* "login" login)))
+  (first (db/find-by-field model "login" login)))
 
 (defn find-all []
   (db/find-all ["SELECT * FROM users"]))
@@ -32,7 +32,7 @@
   (rand-nth (find-all)))
 
 (defn find-enabled []
-  (db/find-by-field *model* "enabled" true))
+  (db/find-by-field model "enabled" true))
 
 (defn canAdd? [user]
   (not (nil? user)))
@@ -60,7 +60,7 @@
 (defn sign-up! [user-args]
   (let [errors (validate-for-sign-up user-args)]
     (if (empty? errors)
-      [(db/insert *model* (build-user user-args)) errors]
+      [(db/insert model (build-user user-args)) errors]
       [nil errors])))
 
 (defn authenticate [login password]
@@ -85,16 +85,16 @@
 (defn increment-skip-count! [login]
   (let [user (find-by-login login)
         skip-count (:skip_count user)]
-  (db/update *model* {:skip_count (inc skip-count)} "login" login)))
+  (db/update model {:skip_count (inc skip-count)} "login" login)))
 
 (defn toggle-enabled! [login]
   (let [{:keys [id enabled]} (find-by-login login)]
-    (db/update *model* {:enabled (not (.booleanValue enabled))} :id id)))
+    (db/update model {:enabled (not (.booleanValue enabled))} :id id)))
 
 (defn update! [user user-args]
   (let [errors (validate (conj user user-args))]
     (if (empty? errors)
-      (db/update *model* user-args :id (:id user)))
+      (db/update model user-args :id (:id user)))
     errors))
 
 (defn count-songs [user]
@@ -105,4 +105,4 @@
      (.booleanValue (:enabled user))))
 
 (defn delete! [user]
-  (db/delete *model* (:id user)))
+  (db/delete model (:id user)))

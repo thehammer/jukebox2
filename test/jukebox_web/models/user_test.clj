@@ -184,9 +184,9 @@
 
 (deftest avatar-url-returns-the-default-url
   (let [user (factory/user {:avatar ""})]
-    (is (= "http://www.gravatar.com/avatar/no-avatar?s=35&d=mm" (user/avatar-url user)))))
+    (is (= "http://www.gravatar.com/avatar/no-avatar?d=mm&s=35" (user/avatar-url user)))))
 
 (deftest avatar-url-allows-size-to-be-specified
   (let [user (factory/user {:avatar "http://www.gravatar.com/me.png"})
         url (user/avatar-url user {:s 1234})]
-    (is (= "http://www.gravatar.com/me.png?s=1234&d=mm" url))))
+    (is (= "http://www.gravatar.com/me.png?d=mm&s=1234" url))))

@@ -5,7 +5,7 @@
             [jukebox-player.basic-track :as basic])
   (:import [javax.sound.sampled AudioSystem]))
 
-(def *buffer-size* 4096)
+(def ^:dynamic *buffer-size* 4096)
 (def player-state (atom :pause))
 (def skipping-state (atom false))
 (def microseconds (ref 0))

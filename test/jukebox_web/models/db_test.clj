@@ -1,5 +1,5 @@
 (ns jukebox-web.models.db-test
-  (:require [clojure.contrib.sql :as sql]
+  (:require [clojure.java.jdbc :as sql]
             [jukebox-web.test-helper :as helper])
   (:use clojure.test
         jukebox-web.models.db))

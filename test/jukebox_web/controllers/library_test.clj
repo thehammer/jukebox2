@@ -1,6 +1,5 @@
 (ns jukebox-web.controllers.library-test
-  (:require [jukebox-web.controllers.library :as library-controller]
-            [clojure.contrib.string :as string])
+  (:require [jukebox-web.controllers.library :as library-controller])
   (:use [clojure.test]
         [jukebox-web.test-helper]))
 
@@ -9,4 +8,4 @@
 (deftest browse-library
   (testing "renders successfully"
     (let [response (library-controller/browse-root nil)]
-      (is (string/substring? "Files in Music Library" response)))))
+      (is (.contains response "Files in Music Library")))))

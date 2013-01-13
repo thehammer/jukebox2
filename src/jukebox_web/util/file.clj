@@ -1,7 +1,7 @@
 (ns jukebox-web.util.file
   (:import [java.io File])
-  (:require [clojure.contrib.string :as clojure-string]
-            [clojure.java.io :as io])
+  (:require [clojure.java.io :as io]
+            [clojure.string :as cstr])
   (:use [ring.util.codec :only (url-encode)]))
 
 (defn not-dotfiles [file]
@@ -35,7 +35,7 @@
   (.renameTo (io/as-file from) (io/as-file to)))
 
 (defn strip-slashes [string]
-  (clojure-string/replace-str "/" " " string))
+  (cstr/replace "/" " " string))
 
 (defn ls [dir path & [filters]]
   (let [filterer (or filters default-filter)

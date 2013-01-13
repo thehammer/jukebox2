@@ -2,7 +2,6 @@
   (:require [jukebox-web.util.file :as util-file]
             [clojure.java.io :as io])
   (:use [clojure.test]
-        [clojure.contrib.seq :only [includes?]]
         [jukebox-web.test-helper]))
 
 (defn file-set [files]

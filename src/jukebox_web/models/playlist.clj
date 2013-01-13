@@ -2,7 +2,7 @@
   (:require [jukebox-web.models.library :as library]
             [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user]
-            [clojure.contrib.sql :as sql]
+            [clojure.java.jdbc :as sql]
             [jukebox-web.models.db :as db])
   (:import [java.util UUID]))
 
@@ -10,8 +10,8 @@
 (def queued-songs-atom (atom []))
 (def recent-songs-atom (atom clojure.lang.PersistentQueue/EMPTY))
 
-(def *recent-songs-factor* 0.25)
-(def *weight-threshold* 35)
+(def ^{:dynamic true} *recent-songs-factor* 0.25)
+(def ^{:dynamic true} *weight-threshold* 35)
 
 (defn- enabled-with-counts []
   (let [users (user/find-enabled)
