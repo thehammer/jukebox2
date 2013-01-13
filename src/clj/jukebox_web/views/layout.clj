@@ -1,7 +1,7 @@
 (ns jukebox-web.views.layout
   (:require [jukebox-web.models.user :as user]
             [jukebox-web.views.track-search :as track-search])
-  (:use [hiccup core page-helpers form-helpers]
+  (:use [hiccup core page form]
         [jukebox-web.views.forms]))
 
 (defn- login-form []

@@ -4,8 +4,7 @@
             [jukebox-web.models.user :as user]
             [clojure.string :as string]
             [ring.util.codec :as ring-util])
-  (:use [hiccup core page-helpers]
-        [hiccup core form-helpers]
+  (:use [hiccup core page form element]
         [jukebox-player.tags]
         [jukebox-web.util.file :only (relative-uri)]))
 

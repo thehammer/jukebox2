@@ -1,7 +1,7 @@
 (ns jukebox-web.views.users
   (:require [jukebox-web.views.layout :as layout]
             [jukebox-web.models.user :as user])
-  (:use [hiccup core page-helpers form-helpers]
+  (:use [hiccup core page form]
         [jukebox-web.views.forms]))
 
 (defn sign-up [request errors]

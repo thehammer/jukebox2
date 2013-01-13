@@ -11,8 +11,10 @@
                  [org.jaudiotagger/jaudiotagger "2.0.1"]
                  [org.apache.derby/derby "10.9.1.0"]
                  [cheshire "5.0.1"]
-                 [corroborate "0.2.0"]
-                 [compojure "1.1.3"]
+                 [corroborate "0.3.0"]
+                 [compojure "1.1.4"]
+                 [hiccup "1.0.2"]
+                 [ring/ring-jetty-adapter "1.1.5"]
                  [org.mindrot/jbcrypt "0.3m"]
                  [jaad "0.8.3"]
                  [jl "1.0.1"]
@@ -21,14 +23,15 @@
                  [mp3spi "1.9.5"]
                  [tritonus_share "0.3.6"]
                  [vorbisspi "1.0.3"]
-                 [fs "1.1.2"]
-                 [lein-ring "0.4.5"]]
+                 [fs "1.1.2"]]
   :plugins [[lein-cljsbuild "0.2.10"]
-            [lein-haml-sass "0.2.4"]]
+            [lein-ring "0.8.0"]]
   :source-paths ["src/clj"]
   :test-paths ["test"]
   :main jukebox-web.core
-  :ring {:handler jukebox-web.core/app}
+  :ring {:handler jukebox-web.core/app
+         :init jukebox-web.core/run-player}
+  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}}
   :cljsbuild {:builds [{:source-path "src/cljs"
                         :compiler {:output-to "resources/public/js/jukebox-cljs.js"
                                    :optimizations :whitespace

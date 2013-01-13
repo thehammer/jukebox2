@@ -1,5 +1,5 @@
 (ns jukebox-web.views.track-search
-  (:use [hiccup core page-helpers]))
+  (:use [hiccup core page]))
 
 (defn results [request]
   [:script#track-result-template {:type "text/example"}
