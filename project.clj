@@ -2,7 +2,7 @@
   jukebox "1.0.0-SNAPSHOT"
   :description "Jukebox"
   :repositories {"local" ~(str (.toURI (java.io.File. "maven_repository")))}
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/tools.cli "0.2.2"]
                  [org.clojure/java.jdbc "0.2.3"]
                  [clj-http "0.6.3"]
