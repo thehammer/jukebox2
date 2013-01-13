@@ -5,7 +5,7 @@
 (def ^:dynamic *db*)
 
 (defn connect! [db]
-  (defonce *db* db))
+  (defonce ^:dynamic *db* db))
 
 (defn keys-to-keywords [record]
   (reduce #(conj %1 [(keyword (first %2)) (nth %2 1)]) {} record))
