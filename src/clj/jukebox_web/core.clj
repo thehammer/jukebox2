@@ -5,7 +5,6 @@
             [compojure.route :as route]
             [compojure.handler :as handler]
             [ring.middleware.flash :as flash]
-            ;[ring.middleware.cors :as cors]
             [ring.adapter.jetty :as adapter]
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
@@ -55,6 +54,7 @@
   (db/migrate!))
 
 (defn run-player []
+  (println "starting player thread")
   (.start (Thread. (fn []
                      (sql/with-connection db/*db*
                         (player/start-player (playlist/playlist-seq)))))))

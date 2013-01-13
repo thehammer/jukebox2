@@ -2,7 +2,7 @@
   (:require [jukebox-web.views.layout :as layout]
             [jukebox-web.models.user :as user]
             [clojure.string :as string])
-  (:use [hiccup core page-helpers form-helpers]))
+  (:use [hiccup core page form]))
 
 (defn- nice-track-name [track]
   (string/replace track #"^music/" ""))

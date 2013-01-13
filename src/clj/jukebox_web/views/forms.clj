@@ -1,5 +1,5 @@
 (ns jukebox-web.views.forms
-(:use [hiccup core form-helpers]))
+(:use [hiccup core form]))
 
 (defn labeled-field
   ([field-type id label-text errors]

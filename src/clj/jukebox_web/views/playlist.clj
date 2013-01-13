@@ -4,7 +4,7 @@
             [jukebox-web.models.library :as library]
             [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user])
-  (:use [hiccup core page-helpers]
+  (:use [hiccup core page]
         [jukebox-player.tags]))
 
 (defn- build-avatar [current-song user]
