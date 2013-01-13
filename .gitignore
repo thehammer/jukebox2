@@ -2,6 +2,7 @@
 /lib
 /music
 /data
+/target
 /.sass-cache
 .DS_Store
 .lein-failures
