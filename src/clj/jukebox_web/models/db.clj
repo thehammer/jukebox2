@@ -16,6 +16,18 @@
                                   (.getMetaData)
                                   (.getTables nil "APP" "%", nil)))]
 
+    (when (empty? (filter #(= "TRACK_METADATA" (:table_name %)) tables))
+      (sql/create-table
+        :track_metadata
+        [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
+        [:album "VARCHAR(255)"]
+        [:artist "VARCHAR(255)"]
+        [:title "VARCHAR(255)"]
+        [:location "VARCHAR(255)" "NOT NULL"]
+        [:tempfile_location "VARCHAR(255)"]
+        [:skip_count "INTEGER" "DEFAULT 0"]
+        [:play_count "INTEGER" "DEFAULT 0"]))
+
     (when (empty? (filter #(= "PLAY_COUNTS" (:table_name %)) tables))
       (sql/create-table
         :play_counts

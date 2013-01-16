@@ -23,8 +23,30 @@
 (def play-counts-model :play_counts)
 (def skip-counts-model :skip_counts)
 
+
+(defn nested-location [file-name]
+  (str (apply str (interpose File/separator (take 5 file-name)))
+       File/separator
+       file-name))
+
 (defn extension [filename]
   (last (string/split (str filename) #"\.")))
+
+(defn find-by-id [id]
+  (first (db/find-by-field :track_metadata :id id)))
+
+(defn save-file! [tempfile owner]
+  (let [{:keys [artist album title]} (extract-tags tempfile)
+        location (nested-location (str (UUID/randomUUID) "." (extension tempfile)))]
+    (.mkdirs (.getParentFile (io/file *music-library* location)))
+    (io/copy (io/as-file tempfile) (io/file *music-library* location))
+    (db/insert :track_metadata {:tempfile_location tempfile
+                                :artist artist
+                                :album album
+                                :title title
+                                :location location
+                                :play_count 0
+                                :skip_count 0})))
 
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)
