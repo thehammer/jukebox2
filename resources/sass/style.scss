@@ -1,259 +1,259 @@
 /* Override some defaults */
 html, body {
-  background-color: #eee;
+  background-color: pink;
 }
-body {
-  padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
-}
-.container > footer p {
-  text-align: center; /* center align it with the container */
-}
-.container {
-  width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: franklin-gothic-urw,sans-serif;
-}
-/* The white background content wrapper */
-.content {
-  background-color: #fff;
-  padding: 20px;
-  margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
-  -webkit-border-radius: 0 0 6px 6px;
-     -moz-border-radius: 0 0 6px 6px;
-          border-radius: 0 0 6px 6px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
-          box-shadow: 0 1px 2px rgba(0,0,0,.15);
-}
-
-/* Page header tweaks */
-.page-header {
-  background-color: #f5f5f5;
-  padding: 20px 20px 10px;
-  margin: -20px -20px 20px;
-}
-
-/* Styles you shouldn't keep as they are for displaying this base example only */
-.content .span10,
-.content .span4 {
-  min-height: 500px;
-}
-/* Give a quick and non-cross-browser friendly divider */
-.content .span4 {
-  margin-left: 0;
-  padding-left: 19px;
-  border-left: 1px solid #eee;
-}
-
-.topbar .btn {
-  border: 0;
-}
-
-.topbar .logged-in p {
-  float: left;
-  padding: 0 1em;
-  color: #bfbfbf;
-}
-
-.topbar .logged-in img {
-  vertical-align: middle;
-  float: right;
-}
-
-.topbar .logged-in form {
-  width: 100%;
-}
-
-.topbar .logged-in form input {
-  margin: 0.5em;
-  width: 93%;
-}
-
-.topbar .login {
-  width: 100%;
-}
-
-.topbar .login input[type="submit"] {
-  margin: 0.5em;
-  width: 92%;
-}
-.topbar .login input {
-  margin: 0.5em;
-  width: 80%;
-}
-
-
-#notifications {
-  position:absolute;
-  right: 15px;
-  top: 50px;
-  list-style:none;
-
-  li {
-    padding:20px;
-    margin:25px 0;
-    width:300px;
-
-    .progress-wrapper {
-      width:200px;
-      height:3px;
-      background:white;
-      border:1px solid gray;
-      position:relative;
-
-      .progress-bar {
-        position:absolute;
-        top:0;
-        left:0;
-        background:gray;
-        padding:0;
-        margin:0;
-        height:3px;
-        width:0%;
-      }
-    }
-  }
-}
-
-#playlist {
-  list-style-position:inside;
-
-  li {
-    margin:10px 0;
-    padding:5px 0;
-    border-bottom:1px solid lightgray;
-    position: relative;
-    clear:right;
-
-    .title, .artist, .album {
-      color: gray;
-      display:inline;
-      padding:3px;
-    }
-
-    .title {
-      font-size: 14px;
-      text-transform:none;
-      line-height:20px;
-    }
-
-    .artist, .album { font-size:12px; }
-
-    .requester, .owner {
-      font-size: 11px;
-      color: #aaa;
-      padding: 0 5px;
-      float: right;
-    }
-
-  }
-}
-
-div.song {
-
-  a {cursor:default;}
-
-  .meta-data {
-    float:left;
-    padding-left: 20px;
-
-    .title {
-      width: 600px;
-    }
-  }
-
-  .play-count, .skip-count, .owner, .requester {
-    margin: 0;
-    color: #aaa;
-    float: right;
-    clear: right;
-  }
-
-  .artist, .album {
-    font-size:16px;
-  }
-
-  .remaining {
-    font-size:14px;
-  }
-}
-
-div.row {
-  margin-left:0;
-}
-
-p.random {
-  padding-left:20px;
-  color:gray;
-}
-
-div#current_track {
-  img {
-    margin: 3px;
-    max-width: 200px;
-  }
-
-  img.current {
-    margin: 0px;
-    border-style: solid;
-    border-width: 3px;
-    border-color: orange;
-  }
-}
-
-#search {
-  position:relative;
-  left:0;
-  top:0;
-
-  #track-search-results {
-    position:absolute;
-    top:35px;
-    left:5px;
-    width:210px;
-    background-color:#333;
-    list-style:none;
-    margin:0;
-    padding:0 5px;
-
-    li {
-      padding:10px 5px;
-      border-bottom:1px solid black;
-
-      a { outline:0; }
-
-      a:focus {
-        color:#FFF;
-      }
-
-      p.update-playlist {
-        color:#BFBFBF;
-        text-shadow:0 -1px 0px rgba(0, 0, 0, 0.25);
-      }
-
-      p.artist {
-        font-size:12px;
-        padding:0;
-        margin:0;
-        line-height:14px;
-      }
-    }
-  }
-
-}
-
-#enable-notifications {
-  margin:6px;
-  padding:4px 9px;
-  width:148px;
-}
-
-form label {
-  padding: 0 1em 1em 0;
-}
-
-form input {
-  padding: 0 0 1em 1em;
-}
+// body {
+//   padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+// }
+// .container > footer p {
+//   text-align: center; /* center align it with the container */
+// }
+// .container {
+//   width: 820px; /* downsize our container to make the content feel a bit tighter and more cohesive. NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+// }
+// 
+// h1, h2, h3, h4, h5, h6 {
+//   font-family: franklin-gothic-urw,sans-serif;
+// }
+// /* The white background content wrapper */
+// .content {
+//   background-color: #fff;
+//   padding: 20px;
+//   margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+//   -webkit-border-radius: 0 0 6px 6px;
+//      -moz-border-radius: 0 0 6px 6px;
+//           border-radius: 0 0 6px 6px;
+//   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+//      -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+//           box-shadow: 0 1px 2px rgba(0,0,0,.15);
+// }
+// 
+// /* Page header tweaks */
+// .page-header {
+//   background-color: #f5f5f5;
+//   padding: 20px 20px 10px;
+//   margin: -20px -20px 20px;
+// }
+// 
+// /* Styles you shouldn't keep as they are for displaying this base example only */
+// .content .span10,
+// .content .span4 {
+//   min-height: 500px;
+// }
+// /* Give a quick and non-cross-browser friendly divider */
+// .content .span4 {
+//   margin-left: 0;
+//   padding-left: 19px;
+//   border-left: 1px solid #eee;
+// }
+// 
+// .topbar .btn {
+//   border: 0;
+// }
+// 
+// .topbar .logged-in p {
+//   float: left;
+//   padding: 0 1em;
+//   color: #bfbfbf;
+// }
+// 
+// .topbar .logged-in img {
+//   vertical-align: middle;
+//   float: right;
+// }
+// 
+// .topbar .logged-in form {
+//   width: 100%;
+// }
+// 
+// .topbar .logged-in form input {
+//   margin: 0.5em;
+//   width: 93%;
+// }
+// 
+// .topbar .login {
+//   width: 100%;
+// }
+// 
+// .topbar .login input[type="submit"] {
+//   margin: 0.5em;
+//   width: 92%;
+// }
+// .topbar .login input {
+//   margin: 0.5em;
+//   width: 80%;
+// }
+// 
+// 
+// #notifications {
+//   position:absolute;
+//   right: 15px;
+//   top: 50px;
+//   list-style:none;
+// 
+//   li {
+//     padding:20px;
+//     margin:25px 0;
+//     width:300px;
+// 
+//     .progress-wrapper {
+//       width:200px;
+//       height:3px;
+//       background:white;
+//       border:1px solid gray;
+//       position:relative;
+// 
+//       .progress-bar {
+//         position:absolute;
+//         top:0;
+//         left:0;
+//         background:gray;
+//         padding:0;
+//         margin:0;
+//         height:3px;
+//         width:0%;
+//       }
+//     }
+//   }
+// }
+// 
+// #playlist {
+//   list-style-position:inside;
+// 
+//   li {
+//     margin:10px 0;
+//     padding:5px 0;
+//     border-bottom:1px solid lightgray;
+//     position: relative;
+//     clear:right;
+// 
+//     .title, .artist, .album {
+//       color: gray;
+//       display:inline;
+//       padding:3px;
+//     }
+// 
+//     .title {
+//       font-size: 14px;
+//       text-transform:none;
+//       line-height:20px;
+//     }
+// 
+//     .artist, .album { font-size:12px; }
+// 
+//     .requester, .owner {
+//       font-size: 11px;
+//       color: #aaa;
+//       padding: 0 5px;
+//       float: right;
+//     }
+// 
+//   }
+// }
+// 
+// div.song {
+// 
+//   a {cursor:default;}
+// 
+//   .meta-data {
+//     float:left;
+//     padding-left: 20px;
+// 
+//     .title {
+//       width: 600px;
+//     }
+//   }
+// 
+//   .play-count, .skip-count, .owner, .requester {
+//     margin: 0;
+//     color: #aaa;
+//     float: right;
+//     clear: right;
+//   }
+// 
+//   .artist, .album {
+//     font-size:16px;
+//   }
+// 
+//   .remaining {
+//     font-size:14px;
+//   }
+// }
+// 
+// div.row {
+//   margin-left:0;
+// }
+// 
+// p.random {
+//   padding-left:20px;
+//   color:gray;
+// }
+// 
+// div#current_track {
+//   img {
+//     margin: 3px;
+//     max-width: 200px;
+//   }
+// 
+//   img.current {
+//     margin: 0px;
+//     border-style: solid;
+//     border-width: 3px;
+//     border-color: orange;
+//   }
+// }
+// 
+// #search {
+//   position:relative;
+//   left:0;
+//   top:0;
+// 
+//   #track-search-results {
+//     position:absolute;
+//     top:35px;
+//     left:5px;
+//     width:210px;
+//     background-color:#333;
+//     list-style:none;
+//     margin:0;
+//     padding:0 5px;
+// 
+//     li {
+//       padding:10px 5px;
+//       border-bottom:1px solid black;
+// 
+//       a { outline:0; }
+// 
+//       a:focus {
+//         color:#FFF;
+//       }
+// 
+//       p.update-playlist {
+//         color:#BFBFBF;
+//         text-shadow:0 -1px 0px rgba(0, 0, 0, 0.25);
+//       }
+// 
+//       p.artist {
+//         font-size:12px;
+//         padding:0;
+//         margin:0;
+//         line-height:14px;
+//       }
+//     }
+//   }
+// 
+// }
+// 
+// #enable-notifications {
+//   margin:6px;
+//   padding:4px 9px;
+//   width:148px;
+// }
+// 
+// form label {
+//   padding: 0 1em 1em 0;
+// }
+// 
+// form input {
+//   padding: 0 0 1em 1em;
+// }

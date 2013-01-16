@@ -1,6 +1,7 @@
 (ns jukebox-web.controllers.playlist
   (:use [jukebox-web.util.encoding :only [sha256]])
-  (:require [jukebox-player.core :as player]
+  (:require [net.cgrand.enlive-html :as html]
+            [jukebox-player.core :as player]
             [jukebox-web.util.json :as json]
             [jukebox-web.views.playlist :as view]
             [jukebox-web.models.playlist :as playlist]
@@ -19,9 +20,12 @@
   (user/find-by-login (-> request :session :current-user)))
 
 (defn index [request]
-  (if (json/request? ((:headers request) "accept"))
-      (json/response (build-playlist (current-user request)))
-      (view/index request (playlist/current-song) (current-user request) (playlist/queued-songs))))
+  (view/index))
+
+;(defn index [request]
+;  (if (json/request? ((:headers request) "accept"))
+;      (json/response (build-playlist (current-user request)))
+;      (view/index request (playlist/current-song) (current-user request) (playlist/queued-songs))))
 
 (defn current-track [request]
   (let [track (playlist/current-song)

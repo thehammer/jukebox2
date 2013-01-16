@@ -18,7 +18,7 @@
 
 (defroutes main-routes
   (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
-  (GET "/playlist" [] playlist-controller/index)
+  (GET "/playlist" [] (apply str (playlist-controller/index {})))
   (GET "/playlist/current-track" [] playlist-controller/current-track)
   (GET "/playlist/add-one" [] playlist-controller/add-one)
   (POST "/playlist/add" [] playlist-controller/add)

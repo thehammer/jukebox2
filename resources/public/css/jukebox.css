@@ -1,0 +1,15 @@
+/*
+ dark: #2B2B2B
+ red: #DE1B1B
+ light gray: #F6F6F6
+ mustard #E9E581
+*/
+body {
+  background-color: #2B2B2B;
+  /* color: #E9E581; */
+  color: #F6F6F6;
+}
+
+div.template {
+  display: none;
+}

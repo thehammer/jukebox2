@@ -63,8 +63,38 @@
         (map #(vector :li (playlist % user)) queued-songs)
         [:li.random "Choosing random tracks"])]]))
 
-(defn index [request current-song user queued-songs]
-  (let [tags (extract-tags (:song current-song))]
-    (layout/main request (str (:title tags) " - " (:artist tags))
-       [:div#current_track
-         (current-track request current-song user queued-songs)])))
+(def now-playing-template
+  [:div#now-playing-template.template
+    [:div [:img {:src "{{ artwork.extra-large }}"}]]
+    [:div "Title: {{ title }}"]
+    [:div "Artist: {{ artist }}"]
+    [:div "Album:  {{ album }}"]])
+
+(defn index []
+  (html5
+    [:head
+      [:meta {:charset "utf-8"}]
+      [:title "Jukebox2"]
+      [:meta {:name "viewport" :content ":width device-width, initial-:scale 1.0"}]
+      [:meta {:name "description" :content ""}]
+      [:meta {:name "author" :content ""}]
+
+      [:link {:href "/css/v/bootstrap.css" :rel "stylesheet"}]
+      [:link {:href "/css/jukebox.css" :rel "stylesheet"}]
+      [:link {:href "/css/v/bootstrap-responsive.css" :rel "stylesheet"}]
+
+      "<!--[if lt IE 9]>"
+        [:script {:src "http://html5shim.googlecode.com/svn/trunk/html5.js"}]
+      "<![endif]-->"]
+
+    [:body
+      [:div.container-fluid
+        [:div.row-fluid
+          [:div.span2 "Upload Files Here"]
+          [:div.span10 "Content Here"
+            [:div#now-playing]]]]
+
+      now-playing-template
+      [:script {:src "/js/v/bootstrap.js"}]
+      [:script {:src "/js/v/mustache.js"}]
+      [:script {:src "/js/jukebox.js"}]]))
