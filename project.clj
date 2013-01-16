@@ -3,7 +3,7 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :repositories {"local" ~(str (.toURI (java.io.File. "maven_repository")))}
+  :repositories {"local" "file:repo"}
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/tools.cli "0.2.2"]
                  [org.clojure/java.jdbc "0.2.3"]
