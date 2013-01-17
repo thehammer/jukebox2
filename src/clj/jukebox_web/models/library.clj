@@ -23,6 +23,7 @@
 (def play-counts-model :play_counts)
 (def skip-counts-model :skip_counts)
 
+(def tracks-users-type-owner "OWNER")
 
 (defn nested-location [file-name]
   (str (apply str (interpose File/separator (take 5 file-name)))
@@ -33,20 +34,31 @@
   (last (string/split (str filename) #"\.")))
 
 (defn find-by-id [id]
-  (first (db/find-by-field :track_metadata :id id)))
+  (first (db/find-by-field :tracks :id id)))
 
 (defn save-file! [tempfile owner]
   (let [{:keys [artist album title]} (extract-tags tempfile)
         location (nested-location (str (UUID/randomUUID) "." (extension tempfile)))]
     (.mkdirs (.getParentFile (io/file *music-library* location)))
     (io/copy (io/as-file tempfile) (io/file *music-library* location))
-    (db/insert :track_metadata {:tempfile_location tempfile
-                                :artist artist
-                                :album album
-                                :title title
-                                :location location
-                                :play_count 0
-                                :skip_count 0})))
+    (let [track (db/insert :tracks {:tempfile_location tempfile
+                                    :artist artist
+                                    :album album
+                                    :title title
+                                    :location location
+                                    :play_count 0
+                                    :skip_count 0})]
+      (db/insert :tracks_users {:track_id (:id track)
+                                :user_id (:id owner)
+                                :type tracks-users-type-owner})
+      track)))
+
+(defn owner-md [track]
+  (db/find-first [(str "SELECT u.* "
+                       "FROM users u "
+                       "INNER JOIN tracks_users tu ON tu.user_id = u.id "
+                       "WHERE tu.track_id = ?") (:id track)]))
+  
 
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)

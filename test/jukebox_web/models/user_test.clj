@@ -13,8 +13,10 @@
   (let [[user errors] (user/sign-up! (factory/user {:login "hammer" :avatar "http://gravitar.org/somepic"}))
         hammer (user/find-by-login "hammer")]
     (is (empty? errors))
+    (is (not (nil? (:id user))))
+    (is (= (:id user) (:id hammer)))
     (is (= "http://gravitar.org/somepic" (:avatar hammer)))))
-;
+
 (deftest sign-up-encrypts-password-before-storing
   (let [[hammer errors] (user/sign-up! (factory/user {:password "pass" :password-confirmation "pass"}))
         hashed-password (:password hammer)]

@@ -18,7 +18,7 @@
 
     (when (empty? (filter #(= "TRACKS" (:table_name %)) tables))
       (sql/create-table
-        :track_metadata
+        :tracks
         [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
         [:album "VARCHAR(255)"]
         [:artist "VARCHAR(255)"]
@@ -27,6 +27,15 @@
         [:tempfile_location "VARCHAR(255)"]
         [:skip_count "INTEGER" "DEFAULT 0"]
         [:play_count "INTEGER" "DEFAULT 0"]))
+
+    (when (empty? (filter #(= "TRACKS_USERS" (:table_name %)) tables))
+      (sql/create-table
+        :tracks_users
+        [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
+        [:track_id "INTEGER" "NOT NULL"]
+        [:user_id "INTEGER" "NOT NULL"]
+        [:type "VARCHAR(255)" "NOT NULL"]
+        [:count "INTEGER" "DEFAULT 1"]))
 
     (when (empty? (filter #(= "PLAY_COUNTS" (:table_name %)) tables))
       (sql/create-table

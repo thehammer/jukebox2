@@ -11,7 +11,7 @@
 
 (deftest uploading-files-saves-metadata
   (let [file "test/music/jukebox2.mp3"
-        user (user/sign-up! (factory/user {:login "test"}))
+        [user _] (user/sign-up! (factory/user {:login "test"}))
         track (library/save-file! file user)]
     (testing "returns saved track metadata"
       (is (= track (library/find-by-id (:id track)))))
@@ -23,9 +23,15 @@
       (is (zero? (:play_count track)))
       (is (zero? (:skip_count track))))))
 
+(deftest uploading-files-makes-the-user-the-owner
+  (let [file "test/music/jukebox2.mp3"
+        [user _] (user/sign-up! (factory/user {:login "test"}))
+        track (library/save-file! file user)]
+    (is (= user (library/owner-md track)))))
+
 (deftest uploading-files-stores-in-pool
   (let [file "test/music/jukebox2.mp3"
-        user (user/sign-up! (factory/user {:login "test"}))
+        [user _] (user/sign-up! (factory/user {:login "test"}))
         track (library/save-file! file user)]
     (testing "copies file to the pool"
       (is (not (= file (:location track))))
