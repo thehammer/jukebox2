@@ -16,7 +16,7 @@
                                   (.getMetaData)
                                   (.getTables nil "APP" "%", nil)))]
 
-    (when (empty? (filter #(= "TRACK_METADATA" (:table_name %)) tables))
+    (when (empty? (filter #(= "TRACKS" (:table_name %)) tables))
       (sql/create-table
         :track_metadata
         [:id "INTEGER" "NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)"]
@@ -60,6 +60,10 @@
     (if-let [results (doall result-seq)]
       results
       [])))
+
+(defn find-first [query-with-bindings]
+  (sql/with-query-results result-seq query-with-bindings
+    (first result-seq)))
 
 (defn insert [model record]
   (sql/insert-records model record)

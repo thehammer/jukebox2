@@ -27,9 +27,13 @@
     (update :people {:name "Jason"} :id id))
   (is (= "Jason" (:name (first (find-all ["select * from people"]))))))
 
-(deftest can-find-records-by-arbitrary-sql
+(deftest can-find-all-records-by-arbitrary-sql
   (let [{:keys [id]} (insert :people {:name "Hammer"})]
     (is (= [{:id id}] (find-all ["SELECT id FROM people WHERE name = ?" "Hammer"])))))
+
+(deftest can-find-first-record-by-arbitrary-sql
+  (let [{:keys [id]} (insert :people {:name "Hammer"})]
+    (is (= {:id id} (find-first ["SELECT id FROM people WHERE name = ?" "Hammer"])))))
 
 (deftest can-find-by-field
   (let [{:keys [id]} (insert :people {:name "Hammer"})]
