@@ -37,6 +37,7 @@
   (GET "/users/:id/edit" [] users-controller/edit)
   (POST "/users/:id/update" [] users-controller/update)
   (POST "/library/upload" [] library-controller/upload)
+  (GET "/library/artists" [] library-controller/artists)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET "/library/search" [] track-search-controller/index)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
@@ -68,7 +69,8 @@
   (-> (handler/site main-routes {:session {:cookie-attrs {:max-age 28800} :cookie-name "jukebox"}})
 ;    (cors/wrap-cors :access-control-allow-origin #".*")
     flash/wrap-flash
-    wrap-db-connection))
+    ;wrap-db-connection
+    ))
 
 (defn -main [& args]
   (let [[options _] (cli args

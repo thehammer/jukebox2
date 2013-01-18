@@ -3,9 +3,11 @@
             [clojure.java.io :as io]
             [fs.core :as fs]
             [jukebox-web.models.db :as db]
+            [jukebox-web.models.factory :as factory]
             [jukebox-web.models.library :as library]
             [jukebox-web.models.artwork :as artwork]
-            [jukebox-web.models.playlist :as playlist]))
+            [jukebox-web.models.playlist :as playlist]
+            [jukebox-web.models.user :as user]))
 
 (def test-db "/tmp/jukebox-test.db")
 
@@ -37,10 +39,16 @@
         (spec)
         (sql/set-rollback-only)))))
 
+(defn create-library-for-user [login fixture-path]
+  (let [[user _] (user/sign-up! (factory/user {:login login}))]
+    (doseq [file (filter #(. % isFile) (file-seq (io/as-file fixture-path)))]
+      (library/save-file! (str file) user))))
+
 (defn with-test-music-library [spec]
   (binding [library/*music-library* "test/music"]
     (fs/delete-dir "test/music")
-    (fs/copy-dir "test/fixtures/music" "test/music")
+    (create-library-for-user "user" "test/fixtures/music/user")
+    (create-library-for-user "user2" "test/fixtures/music/user2")
     (spec)))
 
 (defn with-smaller-weight-threshold [spec]

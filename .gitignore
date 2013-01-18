@@ -3,6 +3,7 @@
 /music
 /data
 /target
+/test/music
 /.sass-cache
 .DS_Store
 .lein-failures

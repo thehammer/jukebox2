@@ -31,7 +31,9 @@
   :main jukebox-web.core
   :ring {:handler jukebox-web.core/app
          :init jukebox-web.core/run-player}
-  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]]}}
+  :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
+                                  [peridot "0.0.8"]
+                                  [enlive "1.0.1"]]}}
   :cljsbuild {:builds [{:source-path "src/cljs"
                         :compiler {:output-to "resources/public/js/jukebox-cljs.js"
                                    :optimizations :whitespace

@@ -2,7 +2,7 @@
   (:import [java.io File]
            [java.util UUID])
   (:require [clojure.java.io :as io]
-            [clojure.string :as string]
+            [clojure.string :as cstr]
             [clojure.java.jdbc :as sql]
             [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
@@ -31,7 +31,7 @@
        file-name))
 
 (defn extension [filename]
-  (last (string/split (str filename) #"\.")))
+  (last (cstr/split (str filename) #"\.")))
 
 (defn find-by-id [id]
   (first (db/find-by-field :tracks :id id)))
@@ -73,7 +73,7 @@
     (rename-with-tags user file-with-ext)))
 
 (defn parent-directory [path]
-  (if (string/blank? path)
+  (if (cstr/blank? path)
     nil
     (relative-uri (relativize *music-library* (.getParent (io/file *music-library* path))))))
 
@@ -90,17 +90,26 @@
 (defn track? [relative-path]
   (.isFile (file-on-disk relative-path)))
 
-(defn all-tracks
+(defn all-tracks ; FIXME: API should not reflect file system and this function is nuts
   ([] (all-tracks ""))
   ([path]
-   (let [contents (file-seq (io/file *music-library* path))]
-     (->> contents
-       (filter #(has-known-extension? %))
-       (map #(relativize *music-library* %))))))
+   (let [[owner-login artist album] (cstr/split path #"/")
+         scope-by-owner #(if (cstr/blank? owner-login)
+                           %
+                           [(str (first %)
+                                 "INNER JOIN tracks_users tu ON tu.track_id = t.id "
+                                 "INNER JOIN users u ON u.id = tu.user_id "
+                                 "WHERE tu.type = ? "
+                                 "AND u.login = ? ")
+                            (rest %) tracks-users-type-owner owner-login])
+         scope-by-artist #(if (cstr/blank? artist) % [(str (first %) "AND t.artist = ? ") (rest %) artist])
+         scope-by-album #(if (cstr/blank? album) % [(str (first %) "AND t.album = ? ") (rest %) album])
+         query (-> ["SELECT t.* FROM tracks t "] scope-by-owner scope-by-artist scope-by-album)]
+     (map #(comp file-on-disk :location) (db/find-all (vec (flatten query)))))))
 
 (defn owner [song]
   (let [path (.getPath (relativize *music-library* song))
-        filename-parts (string/split path #"/")]
+        filename-parts (cstr/split path #"/")]
     (when (> (count filename-parts) 1)
       (first filename-parts))))
 
@@ -127,8 +136,8 @@
                       "WHERE rownum <= 20 ")]))
 
 (defn artist [track]
-  (let [relative-file-name (string/replace (.getPath track) (str *music-library* "/") "")
-        filename-parts (string/split relative-file-name #"/")]
+  (let [relative-file-name (cstr/replace (.getPath track) (str *music-library* "/") "")
+        filename-parts (cstr/split relative-file-name #"/")]
     (when (> (count filename-parts) 2)
       (second filename-parts))))
 
