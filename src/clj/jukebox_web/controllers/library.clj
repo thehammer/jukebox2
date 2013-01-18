@@ -18,4 +18,4 @@
     (view/browse request path files)))
 
 (defn artists [request]
-  (view/artists request library/*music-library-title* (library/artists)))
+  (view/artists request library/*music-library-title* (library/all-artists)))

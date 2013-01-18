@@ -58,7 +58,9 @@
                        "FROM users u "
                        "INNER JOIN tracks_users tu ON tu.user_id = u.id "
                        "WHERE tu.track_id = ?") (:id track)]))
-  
+
+(defn all-artists []
+  (db/find-all ["SELECT DISTINCT artist FROM tracks"]))
 
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)

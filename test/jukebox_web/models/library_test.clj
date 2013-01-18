@@ -75,21 +75,12 @@
 ;  (testing "returns url encoded values correctly for subdirectories"
 ;    (is (= "user%2Fdaft%20punk" (library/parent-directory "user/daft punk/discovery")))))
 ;
-(deftest finding-all-tracks
-  (testing "returns files matching .mp3 and m4a"
-    (let [tracks (library/all-tracks)]
-      (is (not (some (partial = "jukebox2.ogg") (map #(.getName %) tracks))))
-      (is (some (partial = "jukebox2.m4a") (map #(.getName %) tracks) ))
-      (is (some (partial = "jukebox2.mp3") (map #(.getName %) tracks) ))))
 
-  (testing "does not return dotfiles"
-    (let [tracks (library/all-tracks)]
-      (is (not (some (partial = ".gitkeep") (map #(.getName %) tracks))))))
 
-  (testing "allows scoping by subdirectory"
-    (let [tracks (library/all-tracks "user")]
-      (is (some (partial = "track.mp3") (map #(.getName %) tracks) ))
-      (is (not (some (partial = "jukebox.mp3") (map #(.getName %) tracks)))))))
+(deftest finding-all-artists
+  (testing "returns all artists"
+    (let [artists (library/all-artists)]
+      (is (some (partial = "Hammer") (map :artist artists))))))
 
 ;(deftest find-random-song
 ;  (testing "returns a random song with no prefix when no argument is provided"

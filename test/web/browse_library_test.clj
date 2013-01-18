@@ -13,8 +13,7 @@
                           (html/select pattern)))
 
 (deftest can-browse-artists
-  (let [resp (-> (session jukebox/app)
+  (let [resp (-> (session jukebox/test-app)
                  (request "/library/artists"))]
     (is (= 200 (-> resp :response :status)))
     (is ((set (map html/text (find-tags resp [:ul.entries :li]))) "Hammer"))))
-      

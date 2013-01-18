@@ -9,6 +9,7 @@
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.models.user :as user]))
 
+
 (def test-db "/tmp/jukebox-test.db")
 
 (defn delete-file

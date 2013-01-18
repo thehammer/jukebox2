@@ -67,9 +67,15 @@
 
 (def app
   (-> (handler/site main-routes {:session {:cookie-attrs {:max-age 28800} :cookie-name "jukebox"}})
+    flash/wrap-flash
+    wrap-db-connection
+    ))
+
+(def test-app
+  (-> (handler/site main-routes {:session {:cookie-attrs {:max-age 28800} :cookie-name "jukebox"}})
 ;    (cors/wrap-cors :access-control-allow-origin #".*")
     flash/wrap-flash
-    ;wrap-db-connection
+;    wrap-db-connection
     ))
 
 (defn -main [& args]
@@ -77,4 +83,3 @@
                          ["-p" "--port" "Listen on this port" :default "3000"])]
     (run-player)
     (adapter/run-jetty app {:port (read-string (:port options))})))
-

@@ -34,7 +34,7 @@
     [:ul.dropdown-menu
      (when (user/canAdd? user)
        [:li [:a#random.update-playlist {:href "/playlist/add-one" :data-remote "true"} "Random"]])
-     [:li [:a {:href "/library/browse"} "Browse Library"]]]]
+     [:li [:a {:href "/library/artists"} "Browse Library"]]]]
    [:li [:a {:href "/stats"} "Stats"]]
    [:li [:a {:href "/users"} "Users"]]
    (when (nil? user) [:li [:a {:href "/users/sign-up"} [:span.label.success "Sign Up"]]])])
