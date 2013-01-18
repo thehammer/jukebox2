@@ -19,3 +19,6 @@
 
 (defn artists [request]
   (view/artists request library/*music-library-title* (library/all-artists)))
+
+(defn albums-for-artist [request]
+  (view/albums request  "foo" (library/albums-for-artist (-> request :params :artist))))

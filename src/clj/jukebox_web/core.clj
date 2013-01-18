@@ -38,6 +38,7 @@
   (POST "/users/:id/update" [] users-controller/update)
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/artists" [] library-controller/artists)
+  (GET "/library/artists/:artist" [] library-controller/albums-for-artist)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET "/library/search" [] track-search-controller/index)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)
@@ -46,19 +47,25 @@
   (route/resources "/")
   (route/not-found "Page not found"))
 
-(db/connect! {:classname "org.apache.derby.jdbc.EmbeddedDriver"
-              :subprotocol "derby"
-              :subname "data/jukebox.db"
-              :create true})
 
-(sql/with-connection db/*db*
-  (db/migrate!))
+
+
 
 (defn run-player []
   (println "starting player thread")
+  (sql/with-connection db/*db*
+    (take 1 (playlist/playlist-seq)))
   (.start (Thread. (fn []
                      (sql/with-connection db/*db*
                         (player/start-player (playlist/playlist-seq)))))))
+
+(defn initialize []
+  (db/connect! {:classname "org.apache.derby.jdbc.EmbeddedDriver"
+                :subprotocol "derby"
+                :subname "data/jukebox.db"
+                :create true})
+  (sql/with-connection db/*db* (db/migrate!))
+(run-player))
 
 (defn wrap-db-connection [app]
   (fn [request]
@@ -81,5 +88,5 @@
 (defn -main [& args]
   (let [[options _] (cli args
                          ["-p" "--port" "Listen on this port" :default "3000"])]
-    (run-player)
+    (initialize)
     (adapter/run-jetty app {:port (read-string (:port options))})))

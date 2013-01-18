@@ -62,6 +62,9 @@
 (defn all-artists []
   (db/find-all ["SELECT DISTINCT artist FROM tracks"]))
 
+(defn albums-for-artist [artist]
+  (db/find-all ["SELECT DISTINCT album FROM tracks WHERE artist = ?" artist]))
+
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)
         dir (file-path *music-library* user (strip-slashes artist) (strip-slashes album))
@@ -92,22 +95,13 @@
 (defn track? [relative-path]
   (.isFile (file-on-disk relative-path)))
 
-(defn all-tracks ; FIXME: API should not reflect file system and this function is nuts
+(defn all-tracks
   ([] (all-tracks ""))
   ([path]
-   (let [[owner-login artist album] (cstr/split path #"/")
-         scope-by-owner #(if (cstr/blank? owner-login)
-                           %
-                           [(str (first %)
-                                 "INNER JOIN tracks_users tu ON tu.track_id = t.id "
-                                 "INNER JOIN users u ON u.id = tu.user_id "
-                                 "WHERE tu.type = ? "
-                                 "AND u.login = ? ")
-                            (rest %) tracks-users-type-owner owner-login])
-         scope-by-artist #(if (cstr/blank? artist) % [(str (first %) "AND t.artist = ? ") (rest %) artist])
-         scope-by-album #(if (cstr/blank? album) % [(str (first %) "AND t.album = ? ") (rest %) album])
-         query (-> ["SELECT t.* FROM tracks t "] scope-by-owner scope-by-artist scope-by-album)]
-     (map #(comp file-on-disk :location) (db/find-all (vec (flatten query)))))))
+     (let [contents (file-seq (io/file *music-library* path))]
+       (->> contents
+            (filter #(has-known-extension? %))
+            (map #(relativize *music-library* %))))))
 
 (defn owner [song]
   (let [path (.getPath (relativize *music-library* song))

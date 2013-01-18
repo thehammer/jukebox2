@@ -16,4 +16,12 @@
   (let [resp (-> (session jukebox/test-app)
                  (request "/library/artists"))]
     (is (= 200 (-> resp :response :status)))
-    (is ((set (map html/text (find-tags resp [:ul.entries :li]))) "Hammer"))))
+    (is ((set (map html/text (find-tags resp [:ul.entries :li :a]))) "Hammer"))
+    (is ((set (map (fn [tag] (-> tag :attrs :href)) (find-tags resp [:ul.entries :li :a]))) "/library/artists/Hammer"))
+    ))
+
+(deftest can-browse-albums
+  (let [resp (-> (session jukebox/test-app)
+                 (request "/library/artists/Hammer"))]
+    (is (= 200 (-> resp :response :status)))
+    (is ((set (map html/text (find-tags resp [:ul.entries :li]))) "Hammer's Album"))))

@@ -37,8 +37,18 @@
                   (if-not (nil? parent-path) [:li (link-to (str "/library/browse/" parent-path) "..")])
                   (map #(vector :li (display-file % request)) (sort files))])))
 
+(defn albums-link [{:keys [artist]}]
+  [:a {:href (str "/library/artists/" artist)} artist])
+
 (defn artists [request path artists]
   (layout/main request "browse artists"
                [:h3 "Artists"]
                [:ul.entries
-                (map (fn [artist] (vector :li (:artist artist))) artists)] ))
+                (map (fn [artist] [:li (albums-link artist)]) artists)] ))
+
+(defn albums [request path albums]
+  (let [artist (-> request :params :artist)]
+    (layout/main request (str "browse albums for " artist)
+                 [:h3 (str "Albums of " artist)]
+                 [:ul.entries
+                  (map (fn [album] [:li (:album album)]) albums)])))
