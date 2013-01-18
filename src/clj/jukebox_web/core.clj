@@ -39,6 +39,7 @@
   (POST "/library/upload" [] library-controller/upload)
   (GET "/library/artists" [] library-controller/artists)
   (GET "/library/artists/:artist" [] library-controller/albums-for-artist)
+  (GET "/library/artists/:artist/albums/:album" [] library-controller/tracks-for-album)
   (GET "/library/browse" [] library-controller/browse-root)
   (GET "/library/search" [] track-search-controller/index)
   (GET ["/library/browse/:path", :path #".*"] [] library-controller/browse)

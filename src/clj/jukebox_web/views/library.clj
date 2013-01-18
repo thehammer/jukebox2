@@ -46,9 +46,20 @@
                [:ul.entries
                 (map (fn [artist] [:li (albums-link artist)]) artists)] ))
 
+(defn tracks-link [artist {:keys [album]}]
+  [:a {:href (str "/library/artists/"  (ring-util/url-encode artist) "/albums/" (ring-util/url-encode album))} album])
+
 (defn albums [request path albums]
   (let [artist (-> request :params :artist)]
     (layout/main request (str "browse albums for " artist)
                  [:h3 (str "Albums of " artist)]
                  [:ul.entries
-                  (map (fn [album] [:li (:album album)]) albums)])))
+                  (map (fn [album] [:li (tracks-link artist album)]) albums)])))
+
+(defn tracks [request tracks]
+  (let [artist (-> request :params :artist)
+        album (-> request :params :album)]
+    (layout/main request (str "Browse Tracks for " artist " - " album)
+                 [:h3 (str "Browse Tracks for " artist " - " album)]
+                 [:ul.entries
+                  (map (fn [track] [:li (:title track)]) tracks)])))

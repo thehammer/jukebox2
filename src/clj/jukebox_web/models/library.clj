@@ -65,6 +65,9 @@
 (defn albums-for-artist [artist]
   (db/find-all ["SELECT DISTINCT album FROM tracks WHERE artist = ?" artist]))
 
+(defn tracks-for-artists-album [artist album]
+  (db/find-all ["SELECT title FROM tracks WHERE artist = ? and album = ?" artist album]))
+
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)
         dir (file-path *music-library* user (strip-slashes artist) (strip-slashes album))

@@ -87,6 +87,11 @@
     (let [albums (library/albums-for-artist "Hammer")]
       (is (some (partial = "Hammer's Album") (map :album albums))))))
 
+(deftest finding-all-tracks-for-artists-album
+  (testing "returns all track for a given artist's album"
+    (let [tracks (library/tracks-for-artists-album "Hammer" "Hammer's Album")]
+      (is (some (partial = "jukebox2") (map :title tracks))))))
+
 ;(deftest find-random-song
 ;  (testing "returns a random song with no prefix when no argument is provided"
 ;    (is (not (nil? (library/random-song)))))

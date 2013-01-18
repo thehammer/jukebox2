@@ -1,7 +1,8 @@
 (ns web.browse-library-test
   (:import [java.io ByteArrayInputStream])
   (:require [jukebox-web.core :as jukebox]
-            [net.cgrand.enlive-html :as html])
+            [net.cgrand.enlive-html :as html]
+            [ring.util.codec :as encode])
   (:use [clojure.test]
         [peridot.core]
         [jukebox-web.test-helper]))
@@ -24,4 +25,13 @@
   (let [resp (-> (session jukebox/test-app)
                  (request "/library/artists/Hammer"))]
     (is (= 200 (-> resp :response :status)))
-    (is ((set (map html/text (find-tags resp [:ul.entries :li]))) "Hammer's Album"))))
+    (is ((set (map html/text (find-tags resp [:ul.entries :li :a]))) "Hammer's Album"))
+    (is ((set (map (fn [tag] (-> tag :attrs :href)) (find-tags resp [:ul.entries :li :a]))) "/library/artists/Hammer/albums/Hammer%27s%20Album"))
+    ))
+
+(deftest can-browse-tracks
+  (let [resp (-> (session jukebox/test-app)
+                 (request "/library/artists/Hammer/albums/Hammer%27s%20Album"))]
+    (is (= 200 (-> resp :response :status)))
+    (is ((set (map html/text (find-tags resp [:ul.entries :li]))) "jukebox2"))
+    ))

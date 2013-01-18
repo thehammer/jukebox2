@@ -22,3 +22,7 @@
 
 (defn albums-for-artist [request]
   (view/albums request  "foo" (library/albums-for-artist (-> request :params :artist))))
+
+(defn tracks-for-album [request]
+  (view/tracks request (library/tracks-for-artists-album (-> request :params :artist)
+                                                         (-> request :params :album))))
