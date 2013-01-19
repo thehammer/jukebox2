@@ -9,42 +9,42 @@
 
 (use-fixtures :each with-database-connection with-test-music-library)
 
-;(deftest uploading-files-saves-metadata
-;  (let [file "test/fixtures/music/jukebox2.mp3"
-;        [user _] (user/sign-up! (factory/user {:login "test"}))
-;        track (library/save-file! file user)]
-;    (testing "returns saved track metadata"
-;      (is (= track (library/find-by-id (:id track)))))
-;    (testing "metadata has tags"
-;      (is (= "Hammer" (:artist track)))
-;      (is (= "Hammer's Album" (:album track)))
-;      (is (= "jukebox2" (:title track))))
-;    (testing "metadata defaults counts"
-;      (is (zero? (:play_count track)))
-;      (is (zero? (:skip_count track))))))
-;
-;(deftest uploading-files-makes-the-user-the-owner
-;  (let [file "test/fixtures/music/jukebox2.mp3"
-;        [user _] (user/sign-up! (factory/user {:login "test"}))
-;        track (library/save-file! file user)]
-;    (is (= user (library/owner-md track)))))
-;
-;(deftest uploading-files-stores-in-pool
-;  (let [file "test/fixtures/music/jukebox2.mp3"
-;        [user _] (user/sign-up! (factory/user {:login "test"}))
-;        track (library/save-file! file user)]
-;    (testing "copies file to the pool"
-;      (is (not (= file (:location track))))
-;      (is (= (enc/sha256 (slurp file))
-;             (enc/sha256 (slurp (library/file-on-disk (:location track)))))))
-;    (testing "pool is in the *music-library* with the right extension"
-;      (is (.exists (library/file-on-disk (:location track))))
-;      (is (.endsWith (:location track) ".mp3")))))
-;
-;(deftest nested-location-keeps-too-many-files-from-being-in-one-directory
-;  (is (= "a/b/c/d/e/abcdefg"
-;         (library/nested-location "abcdefg"))))
-;
+(deftest uploading-files-saves-metadata
+  (let [file "test/fixtures/music/jukebox2.mp3"
+        [user _] (user/sign-up! (factory/user {:login "test"}))
+        track (library/save-file! file user)]
+    (testing "returns saved track metadata"
+      (is (= track (library/find-by-id (:id track)))))
+    (testing "metadata has tags"
+      (is (= "Hammer" (:artist track)))
+      (is (= "Hammer's Album" (:album track)))
+      (is (= "jukebox2" (:title track))))
+    (testing "metadata defaults counts"
+      (is (zero? (:play_count track)))
+      (is (zero? (:skip_count track))))))
+
+(deftest uploading-files-makes-the-user-the-owner
+  (let [file "test/fixtures/music/jukebox2.mp3"
+        [user _] (user/sign-up! (factory/user {:login "test"}))
+        track (library/save-file! file user)]
+    (is (= user (library/owner-md track)))))
+
+(deftest uploading-files-stores-in-pool
+  (let [file "test/fixtures/music/jukebox2.mp3"
+        [user _] (user/sign-up! (factory/user {:login "test"}))
+        track (library/save-file! file user)]
+    (testing "copies file to the pool"
+      (is (not (= file (:location track))))
+      (is (= (enc/sha256 (slurp file))
+             (enc/sha256 (slurp (library/file-on-disk (:location track)))))))
+    (testing "pool is in the *music-library* with the right extension"
+      (is (.exists (library/file-on-disk (:location track))))
+      (is (.endsWith (:location track) ".mp3")))))
+
+(deftest nested-location-keeps-too-many-files-from-being-in-one-directory
+  (is (= "a/b/c/d/e/abcdefg"
+         (library/nested-location "abcdefg"))))
+
 ;(deftest listing-a-directory
 ;  (testing "returns a seq with the files contained in the root path with no arguments"
 ;    (let [files (map #(.getPath %) (library/list-directory))]
@@ -92,14 +92,24 @@
     (let [tracks (library/tracks-for-artists-album "Hammer" "Hammer's Album")]
       (is (some (partial = "jukebox2") (map :title tracks))))))
 
-;(deftest find-random-song
-;  (testing "returns a random song with no prefix when no argument is provided"
-;    (is (not (nil? (library/random-song)))))
-;
-;  (testing "returns a random song from the given path"
-;    (let [selections (take 10 (map library/random-song (repeat "user")))]
-;      (is (not (some (partial = "jukebox.mp3") (map #(.getName %) selections)))))))
-;
+(deftest counting-tracks-in-library
+  (is (= 4 (library/count-tracks))))
+
+(deftest counting-tracks-owned-by-user
+  (is (= 3 (library/count-tracks-owned-by (user/find-by-login "user"))))
+  (is (= 1 (library/count-tracks-owned-by (user/find-by-login "user2"))))
+  (is (= 0 (library/count-tracks-owned-by (user/find-by-login "missing")))))
+
+(deftest find-random-song
+  (testing "returns a random song for any user"
+    (is (not (nil? (library/random-song)))))
+
+  (testing "returns a randome song for the given user"
+    (let [user (user/find-by-login "user")
+          selections (take 10 (map library/random-song (repeat user)))]
+      (is (not (some (partial = "test/fixtures/music/user2/artist2/album/track.mp3")
+                     (map :tempfile_location selections)))))))
+
 ;(deftest owners
 ;  (testing "returns nil for a path without a user"
 ;    (let [track (io/file library/*music-library* "jukebox2.mp3")]

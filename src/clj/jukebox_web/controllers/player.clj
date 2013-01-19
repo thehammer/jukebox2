@@ -12,7 +12,7 @@
   (let [track (playlist/current-song)
         user (user/find-by-login (-> request :session :current-user))]
   (if (json/request? ((:headers request) "accept"))
-    (json/response (playlist-track/metadata track user))
+    (json/response track)
     {:status 302 :headers {"Location" "/playlist"}})))
 
 (defn play [request]

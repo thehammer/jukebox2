@@ -6,8 +6,8 @@
 (defn upload [request]
   (when-let [current-user (-> request :session :current-user)]
     (let [{:keys [tempfile filename]} (-> request :params :file)]
-    (library/save-file tempfile current-user (library/extension filename)))
-  "upload complete"))
+    (library/save-file! tempfile (user/find-by-login current-user))
+  "upload complete")))
 
 (defn browse-root [request]
   (view/browse request library/*music-library-title* (library/list-directory)))

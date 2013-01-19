@@ -33,6 +33,9 @@
 (defn extension [filename]
   (last (cstr/split (str filename) #"\.")))
 
+(defn find-all []
+  (db/find-all ["SELECT * FROM tracks"]))
+
 (defn find-by-id [id]
   (first (db/find-by-field :tracks :id id)))
 
@@ -66,7 +69,7 @@
   (db/find-all ["SELECT DISTINCT album FROM tracks WHERE artist = ?" artist]))
 
 (defn tracks-for-artists-album [artist album]
-  (db/find-all ["SELECT title FROM tracks WHERE artist = ? and album = ?" artist album]))
+  (db/find-all ["SELECT * FROM tracks WHERE artist = ? and album = ?" artist album]))
 
 (defn- rename-with-tags [user file]
   (let [{:keys [artist album title]} (extract-tags file)
@@ -92,8 +95,8 @@
 (defn list-music [path]
   (ls *music-library* path #(and (not-dotfiles %) (has-known-extension? %))))
 
-(defn file-on-disk [relative-path]
-  (io/file *music-library* relative-path))
+(defn file-on-disk [{:keys [location]}]
+  (io/file *music-library* location))
 
 (defn track? [relative-path]
   (.isFile (file-on-disk relative-path)))
@@ -112,11 +115,40 @@
     (when (> (count filename-parts) 1)
       (first filename-parts))))
 
+(defn count-tracks-owned-by [{:keys [id]}]
+  (:count (db/find-first [(str "SELECT count(*) AS count "
+                               "FROM tracks t "
+                               "INNER JOIN tracks_users tu ON t.id = tu.track_id "
+                               "WHERE tu.user_id = ?")
+                          id])))
+
+(defn random-track-owned-by [user]
+  (let [offset (inc (rand-int (dec (count-tracks-owned-by user))))]
+    (db/find-first [(str "SELECT * FROM ( "
+                         "  SELECT ROW_NUMBER() OVER() AS rownum, t.* "
+                         "  FROM tracks t "
+                         "  INNER JOIN tracks_users tu ON t.id = tu.track_id "
+                         "  WHERE tu.user_id = ? "
+                         ") AS tmp "
+                         "WHERE rownum = ?")
+                    (:id user)
+                    offset])))
+
+(defn count-tracks []
+  (:count (db/find-first ["SELECT count(*) AS count FROM tracks"])))
+
+(defn random-track []
+  (let [offset (inc (rand-int (dec (count-tracks))))]
+    (db/find-first [(str "SELECT * FROM ( "
+                         "  SELECT ROW_NUMBER() OVER() AS rownum, t.* "
+                         "  FROM tracks t "
+                         ") AS tmp "
+                         "WHERE rownum = ?")
+                    offset])))
+
 (defn random-song
-  ([] (random-song ""))
-  ([path]
-    (let [tracks (all-tracks path)]
-      (if-not (empty? tracks) (rand-nth (shuffle tracks)) nil))))
+  ([] (random-track))
+  ([user] (random-track-owned-by user)))
 
 (defn play-count [track]
   (let [play-count-row (first (db/find-by-field play-counts-model "track" (str track)))]

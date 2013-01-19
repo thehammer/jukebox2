@@ -13,22 +13,12 @@
 (def ^{:dynamic true} *recent-songs-factor* 0.25)
 (def ^{:dynamic true} *weight-threshold* 35)
 
-(defn- enabled-with-counts []
-  (let [users (user/find-enabled)
-        users-with-counts (map #(vector (:login %) (user/count-songs %)) users)]
-    users-with-counts))
-
-(defn- threshold [songs]
-  (if (>= songs *weight-threshold*) 5 1))
+(defn- expand-by-weight [user]
+  (let [weight (if (>= (library/count-tracks-owned-by user) *weight-threshold*) 5 1)]
+    (take weight (repeat user))))
 
 (defn weighted-users []
-  (let [expanded-set (atom [])]
-    (doseq [user (enabled-with-counts)]
-      (let [songs (get user 1)
-            login (get user 0)]
-        (dotimes [n (threshold songs)]
-          (swap! expanded-set conj login))))
-  @expanded-set))
+  (flatten (map expand-by-weight (user/find-enabled))))
 
 (defn- random-song-for-enabled-user []
   (let [users (user/find-enabled)]
@@ -50,29 +40,31 @@
 (defn- recent-songs-to-keep []
   (* (count (library/all-tracks)) *recent-songs-factor*))
 
-(defn add-song! [song & [user]]
-  (let [uuid (.toString (UUID/randomUUID))
-        track (playlist-track/new-playlist-track (library/file-on-disk song) user uuid)]
-    (swap! queued-songs-atom conj track)
-    (swap! recent-songs-atom conj track)
+(defn add-song! [track & [user]]
+  (let [playlist-track (assoc track :playlist-id (str (UUID/randomUUID)))]
+    (swap! queued-songs-atom conj playlist-track)
+    (swap! recent-songs-atom conj playlist-track)
     (if (< (recent-songs-to-keep) (count @recent-songs-atom))
       (swap! recent-songs-atom pop))))
 
-(defn add-album! [album-directory & [user]]
-  (let [album-songs (library/list-music album-directory)]
-    (doseq [song album-songs] (add-song! song user))))
+(defn add-album! [artist album & [requester]]
+  (doseq [track (library/tracks-for-artists-album artist album)]
+    (add-song! track requester)))
+
+(defn- recent? [track]
+  (some #(= (:id track) (:id %)) @recent-songs-atom))
 
 (defn add-random-song! []
-  (loop [song (random-song) attempts 0]
-    (if (or (nil? song) (.contains @recent-songs-atom song))
-      (recur (random-song) (inc attempts))
+  (loop [song (random-song-for-enabled-user) attempts 0]
+    (if (recent? song)
+      (recur (random-song-for-enabled-user) (inc attempts))
       (add-song! song {:login "(randomizer)"}))))
 
-(defn queued-song [id]
-  (first (filter #(= (:id %) id) (queued-songs))))
+(defn queued-song [playlist-id]
+  (first (filter #(= (:playlist-id %) playlist-id) (queued-songs))))
 
-(defn delete-song! [id]
-  (let [filter-func (fn [queue] (filter #(not (= (:id %) id)) (queued-songs)))]
+(defn delete-song! [playlist-id]
+  (let [filter-func (fn [queue] (filter #(not (= (:playlist-id %) playlist-id)) queue))]
     (swap! queued-songs-atom (comp vec filter-func))))
 
 (defn reset-state! []
@@ -82,14 +74,14 @@
 
 (defn- move-to-next-track! []
   (reset! current-song-atom (first @queued-songs-atom))
-  (library/increment-play-count! (:song @current-song-atom))
+  (library/increment-play-count! (:id @current-song-atom))
   (swap! queued-songs-atom (comp vec rest)))
 
 (defn next-track [_]
   (if-let [queued (first @queued-songs-atom)]
     (move-to-next-track!)
     (do (add-random-song!) (move-to-next-track!)))
-  (:song @current-song-atom))
+  @current-song-atom)
 
 (defn playlist-seq []
-  (iterate next-track (next-track "")))
+  (iterate (comp library/file-on-disk next-track) (library/file-on-disk (next-track ""))))

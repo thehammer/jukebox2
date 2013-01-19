@@ -26,10 +26,10 @@
 (defn current-track [request]
   (let [track (playlist/current-song)
         user (current-user request)
-        html (view/current-track request track user (playlist/queued-songs))
+        html (view/display-current-track request track user (playlist/queued-songs))
         etag (sha256 html)]
     (if (json/request? ((:headers request) "accept"))
-      (json/response (playlist-track/metadata track user))
+      (json/response track)
       {:status 200 :headers {"E-Tag" etag} :body html})))
 
 (defn delete [request]

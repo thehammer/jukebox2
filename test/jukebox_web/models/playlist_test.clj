@@ -8,16 +8,16 @@
         [jukebox-web.test-helper]))
 
 (use-fixtures :each
-              with-test-music-library
               with-database-connection
+              with-test-music-library
               with-smaller-weight-threshold
               (fn [f] (playlist/reset-state!) (f)))
 
-(deftest adds-a-random-song
-  (playlist/reset-state!)
-  (is (empty? (playlist/queued-songs)))
-  (playlist/add-random-song!)
-  (is (= 1 (count (playlist/queued-songs)))))
+;(deftest adds-a-random-song
+;  (playlist/reset-state!)
+;  (is (empty? (playlist/queued-songs)))
+;  (playlist/add-random-song!)
+;  (is (= 1 (count (playlist/queued-songs)))))
 
 (deftest gives-users-with-lots-of-songs-higher-chance-of-being-chosen
   (user/sign-up! (factory/user {:login "user"}))
@@ -25,31 +25,33 @@
   (playlist/reset-state!)
 
   (is (= ["user" "user" "user" "user" "user" "user2"]
-         (playlist/weighted-users))))
+         (map :login (playlist/weighted-users)))))
 
 (deftest adding-songs
-  (is (empty? (playlist/queued-songs)))
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (is (= 1 (count (playlist/queued-songs))))
+  (let [track-to-add (library/random-track)]
+    (is (empty? (playlist/queued-songs)))
+    (playlist/add-song! track-to-add)
+    (is (= 1 (count (playlist/queued-songs))))
 
-  (testing "adds the given song to the queued songs"
-    (is (= (library/file-on-disk "user/artist/album/track.mp3")
-           (:song (first (playlist/queued-songs))))))
-  (testing "adds the song with a unique id"
-    (is (not (nil? (:id (first (playlist/queued-songs))))))))
+    (testing "adds the given song to the queued songs"
+      (is (= (:id track-to-add)
+             (:id (first (playlist/queued-songs))))))
+
+    (testing "adds the song with a unique id"
+      (is (not (nil? (:playlist-id (first (playlist/queued-songs)))))))))
 
 (deftest adds-songs-to-end-of-queue
-  (playlist/add-song! "user/artist/album/track.mp3")
+  (playlist/add-song! (library/find-by-id 1))
   (let [first-value (first (playlist/queued-songs))]
-    (playlist/add-song! "user/artist/album/track2.mp3")
+    (playlist/add-song! (library/find-by-id 2))
     (is (= first-value (first (playlist/queued-songs))))))
 
 (deftest add-album-adds-all-songs-in-album-to-queue
-  (playlist/add-album! "user/artist/album")
+  (playlist/add-album! "artist" "album")
   (is (= 2 (count (playlist/queued-songs))))
-  (is (= #{(library/file-on-disk "user/artist/album/track.mp3")
-           (library/file-on-disk "user/artist/album/track2.mp3")}
-         (set (map :song (playlist/queued-songs))))))
+  (is (= #{"test/fixtures/music/user/artist/album/track.mp3"
+           "test/fixtures/music/user/artist/album/track2.mp3"}
+         (set (map :tempfile_location (playlist/queued-songs))))))
 
 (deftest can-add-random-song
   (is (empty? (playlist/queued-songs)))
@@ -63,17 +65,14 @@
     (is (= first-value (first (playlist/queued-songs))))))
 
 (deftest only-adds-random-songs-from-enabled-users
-  (user/sign-up! (factory/user {:login "user"}))
-  (user/sign-up! (factory/user {:login "user2"}))
   (user/toggle-enabled! "user")
   (playlist/add-random-song!)
-  (let [next-track (first (playlist/queued-songs))]
-    (is (= "user2" (library/owner (:song next-track))))))
+  (is (= "user2" (:login (library/owner-md (first (playlist/queued-songs)))))))
 
 (deftest does-not-add-recently-played-random-songs
   (loop [count 0]
     (playlist/reset-state!)
-    (playlist/add-song! "user/artist/album/track.mp3")
+    (playlist/add-song! (library/find-by-id 1))
     (playlist/add-random-song!)
     (is (not (= (first (playlist/queued-songs))
                 (last (playlist/queued-songs)))))
@@ -81,76 +80,74 @@
 
 (deftest has-a-limit-for-history-of-recently-played-songs
   (playlist/reset-state!)
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track2.mp3")
-  (playlist/add-song! "user/artist/album2/track.mp3")
-  (playlist/add-song! "jukebox2.mp3")
-  (playlist/add-song! "jukebox2.ogg")
+  (doseq [track (library/find-all)]
+    (playlist/add-song! track))
   (playlist/add-random-song!)
   (playlist/add-random-song!)
-  (is (= 7 (count (playlist/queued-songs)))))
+  (is (= 6 (count (playlist/queued-songs)))))
 
-(deftest queued-song-found-by-id
+(deftest queued-song-found-by-playlist-id
   (playlist/reset-state!)
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (let [uuid (:id (first (playlist/queued-songs)))
+  (playlist/add-song! (library/find-by-id 1))
+  (playlist/add-song! (library/find-by-id 2))
+  (let [uuid (:playlist-id (first (playlist/queued-songs)))
         song (playlist/queued-song uuid)]
     (is (= (:id (first (playlist/queued-songs))) (:id song)))))
 
 (deftest queued-songs-returns-nil-if-not-queued
   (playlist/reset-state!)
-  (playlist/add-song! "user/artist/album/track.mp3")
+  (playlist/add-song! (library/find-by-id 1))
   (is (nil? (playlist/queued-song "0"))))
 
 (deftest can-delete-a-song-by-id
   (playlist/reset-state!)
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (let [uuid (:id (first (playlist/queued-songs)))]
+  (playlist/add-song! (library/find-by-id 1))
+  (playlist/add-song! (library/find-by-id 2))
+  (let [uuid (:playlist-id (first (playlist/queued-songs)))]
     (playlist/delete-song! uuid)
     (is (= 1 (count (playlist/queued-songs))))
-    (is (not (= (:id (first (playlist/queued-songs))) uuid)))))
+    (is (not (= (:playlist-id (first (playlist/queued-songs)))
+                uuid)))))
 
 (deftest deleting-adds-another-song-to-queue
   (playlist/reset-state!)
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (let [uuid (:id (first (playlist/queued-songs)))
-        last-uuid (:id (last (playlist/queued-songs)))]
+  (playlist/add-song! (library/find-by-id 1))
+  (playlist/add-song! (library/find-by-id 2))
+  (let [uuid (:playlist-id (first (playlist/queued-songs)))
+        last-uuid (:playlist-id (last (playlist/queued-songs)))]
     (playlist/delete-song! uuid)
-    (playlist/add-song! "user/artist/album/track.mp3")
-    (is (= (:id (first (playlist/queued-songs))) last-uuid))))
+    (playlist/add-song! (library/find-by-id 3))
+    (is (= (:playlist-id (first (playlist/queued-songs)))
+           last-uuid))))
 
 (deftest delete-does-nothing-if-id-is-not-found
   (playlist/reset-state!)
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (let [uuid (:id (first (playlist/queued-songs)))]
+  (playlist/add-song! (library/find-by-id 1))
+  (playlist/add-song! (library/find-by-id 2))
+  (let [uuid (:playlist-id (first (playlist/queued-songs)))]
     (playlist/delete-song! "0")
     (is (= 2 (count (playlist/queued-songs))))
-    (is (= (:id (first (playlist/queued-songs))) uuid))))
+    (is (= (:playlist-id (first (playlist/queued-songs)))
+           uuid))))
 
 (deftest next-track-returns-the-next-track-on-the-queue
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track2.mp3")
-  (playlist/add-song! "user/artist/album/track2.mp3")
+  (playlist/add-song! (library/find-by-id 1))
+  (playlist/add-song! (library/find-by-id 2))
+  (playlist/add-song! (library/find-by-id 3))
   (let [next-track (playlist/next-track "")]
-    (playlist/add-song! "user/artist/album/track2.mp3")
-    (is (= (library/file-on-disk "user/artist/album/track.mp3") next-track))
-    (is (= (library/file-on-disk "user/artist/album/track2.mp3")
-           (:song (first (playlist/queued-songs)))))
-    (is (= (map library/file-on-disk ["user/artist/album/track2.mp3" "user/artist/album/track2.mp3"])
-           (map :song (rest (playlist/queued-songs)))))))
+    (playlist/add-song! (library/find-by-id 4))
+    (is (= 1 (:id next-track)))
+    (is (= 2 (:id (first (playlist/queued-songs)))))
+    (is (= [3 4] (map :id (rest (playlist/queued-songs)))))))
 
 (deftest next-track-increments-play-count
-  (playlist/add-song! "user/artist/album/track.mp3")
-  (playlist/add-song! "user/artist/album/track2.mp3")
+  (playlist/add-song! (library/find-by-id 1))
+  (playlist/add-song! (library/find-by-id 2))
   (let [next-track (playlist/next-track "")]
-    (is (= 1 (library/play-count (library/file-on-disk "user/artist/album/track.mp3"))))
-    (is (= 0 (library/play-count (library/file-on-disk "user/artist/album/track2.mp3"))))
+    (is (= 1 (library/play-count 1)))
+    (is (= 0 (library/play-count 2)))
     (playlist/next-track "")
-    (is (= 1 (library/play-count (library/file-on-disk "user/artist/album/track2.mp3"))))))
+    (is (= 1 (library/play-count 2)))))
 
 (deftest playlist-seq-returns-random-track-if-no-tracks-in-queue
   (is (empty? (playlist/queued-songs)))
@@ -158,8 +155,8 @@
 
 (deftest playlist-seq-returns-first-queued-song
   (playlist/add-random-song!)
-  (let [expected (:song (first (playlist/queued-songs)))]
-    (is (= expected (first (playlist/playlist-seq))))))
+  (is (= (library/file-on-disk (first (playlist/queued-songs)))
+         (first (playlist/playlist-seq)))))
 
 (deftest playlist-seq-returns-random-tracks-indefinitely
-  (is (not (nil?  (first (drop 10 (playlist/playlist-seq)))))))
+  (is (not (nil? (first (drop 10 (playlist/playlist-seq)))))))

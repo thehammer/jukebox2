@@ -9,6 +9,8 @@
             [jukebox-player.core :as player]
             [jukebox-web.models.db :as db]
             [jukebox-web.models.playlist :as playlist]
+            [jukebox-web.models.library :as library]
+            [jukebox-web.models.user :as user]
             [jukebox-web.controllers.library :as library-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
             [jukebox-web.controllers.player :as player-controller]
@@ -54,8 +56,6 @@
 
 (defn run-player []
   (println "starting player thread")
-  (sql/with-connection db/*db*
-    (take 1 (playlist/playlist-seq)))
   (.start (Thread. (fn []
                      (sql/with-connection db/*db*
                         (player/start-player (playlist/playlist-seq)))))))
@@ -65,8 +65,13 @@
                 :subprotocol "derby"
                 :subname "data/jukebox.db"
                 :create true})
-  (sql/with-connection db/*db* (db/migrate!))
-(run-player))
+  (sql/with-connection db/*db*
+    (db/migrate!)
+    (when-not (user/find-by-login "randomizer")
+      (let [[randomizer errors] (user/sign-up! {:login "randomizer" :password "p" :password-confirmation "p"})]
+        (prn errors)
+        (library/save-file! "music/jukebox2.mp3" randomizer))))
+  (run-player))
 
 (defn wrap-db-connection [app]
   (fn [request]

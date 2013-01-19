@@ -12,7 +12,7 @@
               with-test-music-library
               (fn [f]
                       (playlist/reset-state!)
-                      (playlist/add-song! "user/artist/album/track.mp3")
+                      (playlist/add-song! (library/random-track))
                       (playlist/next-track nil)
                       (f)))
 
