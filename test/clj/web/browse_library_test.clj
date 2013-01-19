@@ -35,3 +35,14 @@
     (is (= 200 (-> resp :response :status)))
     (is ((set (map html/text (find-tags resp [:ul.entries :li]))) "jukebox2"))
     ))
+
+(deftest logged-in-user-can-add-track
+  (let [resp (-> (session jukebox/test-app)
+                 (request "/users/authenticate"
+                          :request-method :post
+                          :params { :login "user"
+                                    :password "secret" })
+                 (request "/library/artists/Hammer/albums/Hammer%27s%20Album"))]
+    (is (= 200 (-> resp :response :status)))
+    (is ((set (map html/text (find-tags resp [:ul.entries :li :a]))) "jukebox2"))
+    (is ((set (map (fn [tag] (-> tag :attrs :href)) (find-tags resp [:ul.entries :li :a]))) "/playlist/add/jukebox2"))))
