@@ -26,11 +26,6 @@
       (library/random-song (rand-nth (shuffle (weighted-users))))
       (library/random-song))))
 
-(defn- random-song []
-  (let [song (random-song-for-enabled-user)]
-    (if-not (nil? song)
-      (.getPath song))))
-
 (defn current-song []
   @current-song-atom)
 
@@ -42,7 +37,8 @@
 
 (defn add-song! [track & [login]]
   (let [playlist-track (assoc track :playlist-id (str (UUID/randomUUID))
-                                    :requester (or login "randomizer"))]
+                                    :requester (or login "randomizer")
+                                    :owner (:login (library/owner-md track)))]
     (swap! queued-songs-atom conj playlist-track)
     (swap! recent-songs-atom conj playlist-track)
     (if (< (recent-songs-to-keep) (count @recent-songs-atom))

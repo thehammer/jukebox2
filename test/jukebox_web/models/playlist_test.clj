@@ -37,6 +37,10 @@
   (playlist/add-song! (library/random-track) "user")
   (is (= "user" (:requester (first (playlist/queued-songs))))))
 
+(deftest adding-songs-saves-owner
+  (playlist/add-song! (library/find-by-id 1) "user")
+  (is (= "user" (:owner (first (playlist/queued-songs))))))
+
 (deftest adds-songs-to-end-of-queue
   (playlist/add-song! (library/find-by-id 1))
   (let [first-value (first (playlist/queued-songs))]
