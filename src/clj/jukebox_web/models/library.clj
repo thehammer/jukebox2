@@ -4,6 +4,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as cstr]
             [clojure.java.jdbc :as sql]
+            [jukebox-web.models.artwork :as artwork]
             [jukebox-web.models.db :as db])
   (:use [jukebox-player.tags]
         [jukebox-web.util.file :only (strip-slashes
@@ -41,6 +42,7 @@
 
 (defn save-file! [tempfile owner]
   (let [{:keys [artist album title]} (extract-tags tempfile)
+        {:keys [large extra-large]} (artwork/album-cover album artist)
         location (nested-location (str (UUID/randomUUID) "." (extension tempfile)))]
     (.mkdirs (.getParentFile (io/file *music-library* location)))
     (io/copy (io/as-file tempfile) (io/file *music-library* location))
@@ -48,6 +50,8 @@
                                     :artist artist
                                     :album album
                                     :title title
+                                    :large_image large
+                                    :xlarge_image extra-large
                                     :location location
                                     :play_count 0
                                     :skip_count 0})]

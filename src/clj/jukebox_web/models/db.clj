@@ -24,6 +24,8 @@
         [:artist "VARCHAR(255)"]
         [:title "VARCHAR(255)"]
         [:location "VARCHAR(255)" "NOT NULL"]
+        [:large_image "VARCHAR(255)" "NOT NULL"]
+        [:xlarge_image "VARCHAR(255)" "NOT NULL"]
         [:tempfile_location "VARCHAR(255)"]
         [:skip_count "INTEGER" "DEFAULT 0"]
         [:play_count "INTEGER" "DEFAULT 0"]))

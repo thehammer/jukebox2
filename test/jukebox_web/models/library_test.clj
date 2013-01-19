@@ -21,7 +21,10 @@
       (is (= "jukebox2" (:title track))))
     (testing "metadata defaults counts"
       (is (zero? (:play_count track)))
-      (is (zero? (:skip_count track))))))
+      (is (zero? (:skip_count track))))
+    (testing "looks up album art"
+      (is (= "/img/no_art_lrg.png" (:large_image track)))
+      (is (= "/img/no_art_lrg.png" (:xlarge_image track))))))
 
 (deftest uploading-files-makes-the-user-the-owner
   (let [file "test/fixtures/music/jukebox2.mp3"

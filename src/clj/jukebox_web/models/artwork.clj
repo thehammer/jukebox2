@@ -2,8 +2,7 @@
   (:require [clj-http.client :as client]
             [cheshire.core :as json]
             [ring.util.codec :as codec])
-  (:use 
-        [clojure.java.io :only (reader)]))
+  (:use [clojure.java.io :only (reader)]))
 
 (def default-image-path "/img/no_art_lrg.png")
 
