@@ -1,6 +1,5 @@
 (ns jukebox-web.models.playlist-test
   (:require [jukebox-web.models.playlist :as playlist]
-            [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.library :as library]
             [jukebox-web.models.user :as user]
             [jukebox-web.models.factory :as factory])
@@ -13,12 +12,6 @@
               with-smaller-weight-threshold
               (fn [f] (playlist/reset-state!) (f)))
 
-;(deftest adds-a-random-song
-;  (playlist/reset-state!)
-;  (is (empty? (playlist/queued-songs)))
-;  (playlist/add-random-song!)
-;  (is (= 1 (count (playlist/queued-songs)))))
-
 (deftest gives-users-with-lots-of-songs-higher-chance-of-being-chosen
   (user/sign-up! (factory/user {:login "user"}))
   (user/sign-up! (factory/user {:login "user2"}))
@@ -28,17 +21,21 @@
          (map :login (playlist/weighted-users)))))
 
 (deftest adding-songs
+  (is (empty? (playlist/queued-songs)))
   (let [track-to-add (library/random-track)]
-    (is (empty? (playlist/queued-songs)))
     (playlist/add-song! track-to-add)
-    (is (= 1 (count (playlist/queued-songs))))
-
     (testing "adds the given song to the queued songs"
+      (is (= 1 (count (playlist/queued-songs))))
       (is (= (:id track-to-add)
              (:id (first (playlist/queued-songs))))))
-
     (testing "adds the song with a unique id"
-      (is (not (nil? (:playlist-id (first (playlist/queued-songs)))))))))
+      (is (not (nil? (:playlist-id (first (playlist/queued-songs)))))))
+    (testing "sets the requester to randomizer"
+      (is (= "randomizer" (:requester (first (playlist/queued-songs))))))))
+
+(deftest adding-songs-saves-requester
+  (playlist/add-song! (library/random-track) "user")
+  (is (= "user" (:requester (first (playlist/queued-songs))))))
 
 (deftest adds-songs-to-end-of-queue
   (playlist/add-song! (library/find-by-id 1))

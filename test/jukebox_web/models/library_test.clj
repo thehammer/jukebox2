@@ -36,9 +36,9 @@
     (testing "copies file to the pool"
       (is (not (= file (:location track))))
       (is (= (enc/sha256 (slurp file))
-             (enc/sha256 (slurp (library/file-on-disk (:location track)))))))
+             (enc/sha256 (slurp (library/file-on-disk track))))))
     (testing "pool is in the *music-library* with the right extension"
-      (is (.exists (library/file-on-disk (:location track))))
+      (is (.exists (library/file-on-disk track)))
       (is (.endsWith (:location track) ".mp3")))))
 
 (deftest nested-location-keeps-too-many-files-from-being-in-one-directory
@@ -80,17 +80,17 @@
 (deftest finding-all-artists
   (testing "returns all artists"
     (let [artists (library/all-artists)]
-      (is (some (partial = "Hammer") (map :artist artists))))))
+      (is (some (partial = "artist") (map :artist artists))))))
 
 (deftest finding-all-albums-for-artist
   (testing  "returns all albums for artist"
-    (let [albums (library/albums-for-artist "Hammer")]
-      (is (some (partial = "Hammer's Album") (map :album albums))))))
+    (let [albums (library/albums-for-artist "artist")]
+      (is (some (partial = "album") (map :album albums))))))
 
 (deftest finding-all-tracks-for-artists-album
   (testing "returns all track for a given artist's album"
-    (let [tracks (library/tracks-for-artists-album "Hammer" "Hammer's Album")]
-      (is (some (partial = "jukebox2") (map :title tracks))))))
+    (let [tracks (library/tracks-for-artists-album "artist" "album")]
+      (is (some (partial = "track") (map :title tracks))))))
 
 (deftest counting-tracks-in-library
   (is (= 4 (library/count-tracks))))

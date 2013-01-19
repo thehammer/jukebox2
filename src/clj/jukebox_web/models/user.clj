@@ -97,9 +97,6 @@
       (db/update model user-args :id (:id user)))
     errors))
 
-(defn count-songs [user]
-  (count (library/all-tracks (:login user))))
-
 (defn enabled? [login]
   (if-let [user (find-by-login login)]
      (.booleanValue (:enabled user))))

@@ -1,7 +1,6 @@
 (ns jukebox-web.models.user-test
   (:require [jukebox-web.models.user :as user]
             [jukebox-web.models.library :as library]
-            [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.factory :as factory])
   (:use [clojure.test]
         [jukebox-web.test-helper])
@@ -39,35 +38,6 @@
     (is (not (empty? errors)))
     (is (= ["is required"] (:login errors)))))
 
-(deftest tracks-have-request
-  (user/sign-up! (factory/user {:login "user"}))
-  (user/sign-up! (factory/user {:login "user2"}))
-  (let [user (user/find-by-login "user")
-        track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3")
-                               (:login user) "")]
-    (is (user/isRequester? track user))))
-
-(deftest user-is-requester-if-track-requested-by-randomizer ; FIXME: seems strange
-  (user/sign-up! (factory/user {:login "user"}))
-  (user/sign-up! (factory/user {:login "user2"}))
-  (let [user (user/find-by-login "user")
-        track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3") {:login "(randomizer)"} "")]
-    (is (user/isRequester? track user))))
-
-(deftest user-is-not-requester-if-not-logged-in
-  (user/sign-up! (factory/user {:login "user"}))
-  (user/sign-up! (factory/user {:login "user2"}))
-  (let [user (user/find-by-login "user")
-        track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3") {:login user} "")]
-    (is (not (user/isRequester? track nil)))))
-
-(deftest user-is-not-requester-if-someone-else-requested-track
-  (user/sign-up! (factory/user {:login "user"}))
-  (user/sign-up! (factory/user {:login "user2"}))
-  (let [user (user/find-by-login "user2")
-        track (playlist-track/new-playlist-track (library/file-on-disk "user/artist/album/track.mp3") {:login "user"} "")]
-    (is (not (user/isRequester? track user)))))
-
 (deftest validates-users
   (testing "requires a login"
     (let [errors (user/validate {:password "" :avatar "http://foo.com"})]
@@ -84,11 +54,7 @@
 (deftest validates-users-for-sign-up
   (testing "requires the password and confirmation to match"
     (let [errors (user/validate-for-sign-up (factory/user {:password-confirmation "different"}))]
-      (is (= ["does not match"] (:password-confirmation errors)))))
-
-  (testing "requires a non-reserved name"
-    (let [errors (user/validate-for-sign-up (factory/user {:login "(randomizer)"}))]
-      (is (= '("can't be a reserved name") (:login errors))))))
+      (is (= ["does not match"] (:password-confirmation errors))))))
 
 (deftest sign-up-requires-unique-login
   (user/sign-up! (factory/user {}))
@@ -142,9 +108,7 @@
       (is (= nil deleted-user)))))
 
 (deftest find-all-returns-all-the-users
-    (user/sign-up! (factory/user {}))
-    (user/sign-up! (factory/user {:login "kenny"}))
-    (is (= 2 (count (user/find-all)))))
+  (is (= 2 (count (user/find-all)))))
 
 (deftest find-enabled-returns-enabled-users
   (user/sign-up! (factory/user {:login "kyle"}))
@@ -167,14 +131,6 @@
   (is (user/enabled? "test"))
   (user/toggle-enabled! "test")
   (is (not (user/enabled? "test"))))
-
-(deftest count-songs-returns-0-for-a-new-user
-  (let [[user errors] (user/sign-up! (factory/user {:login "newuser" :enabled false}))]
-    (is (= 0 (user/count-songs user)))))
-
-(deftest count-songs-returns-3-for-a-user-with-3-songs
-  (let [[user errors] (user/sign-up! (factory/user {:login "user" :enabled false}))]
-    (is (= 3 (user/count-songs user)))))
 
 (deftest base-avatar-url-returns-the-default-url-for-user-without-avatar
   (let [user (factory/user {:avatar ""})]

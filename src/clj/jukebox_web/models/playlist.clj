@@ -40,8 +40,9 @@
 (defn- recent-songs-to-keep []
   (* (count (library/all-tracks)) *recent-songs-factor*))
 
-(defn add-song! [track & [user]]
-  (let [playlist-track (assoc track :playlist-id (str (UUID/randomUUID)))]
+(defn add-song! [track & [login]]
+  (let [playlist-track (assoc track :playlist-id (str (UUID/randomUUID))
+                                    :requester (or login "randomizer"))]
     (swap! queued-songs-atom conj playlist-track)
     (swap! recent-songs-atom conj playlist-track)
     (if (< (recent-songs-to-keep) (count @recent-songs-atom))
