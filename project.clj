@@ -30,11 +30,11 @@
   :test-paths ["test"]
   :main jukebox-web.core
   :ring {:handler jukebox-web.core/app
-         :init jukebox-web.core/run-player}
+         :init jukebox-web.core/initialize}
   :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
                                   [peridot "0.0.8"]
                                   [enlive "1.0.1"]]}}
   :cljsbuild {:builds [{:source-path "src/cljs"
-                        :compiler {:output-to "resources/public/js/jukebox-cljs.js"
+                        :compiler {:output-to "resources/public/js/application.js"
                                    :optimizations :whitespace
                                    :pretty-print true}}]})

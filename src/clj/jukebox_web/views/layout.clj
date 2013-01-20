@@ -81,6 +81,30 @@
         "<% } %>"
     "<% }); %>"]]])
 
+(defn single-page []
+  (html5
+    [:head
+      [:title "Jukebox2"]
+        [:script {:src "/js/v/bootstrap-2.2.2.min.js"}]
+        [:script {:src "/js/application.js"}]
+        (include-css "/css/v/bootstrap-2.2.2.min.css")
+        (include-css "/css/v/bootstrap-responsive-2.2.2.min.css")
+        (include-css "/css/application.css")]
+    [:body
+      [:div.container-fluid
+        [:div.row-fluid
+          [:div#gutter.span2
+            [:h3 "Jukebox 2"]
+            [:ul.nav.nav-list
+              [:li.active [:a#now-playing {:href "#"} "Now Playing"]]
+              [:li.divider]
+              [:li.nav-header "Library"]
+              [:li [:a#browse {:href "#"} "Browse"]]
+              [:li [:a#upload {:href "#"} "Upload"]]]]
+          [:div#main.span10]]]
+      (current-track-template nil)
+      (player-controls-template nil)
+      (playlist-template nil)]))
 
 (defn main [request title & content]
   (let [current-user (user/find-by-login (-> request :session :current-user))]

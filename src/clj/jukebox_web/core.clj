@@ -11,6 +11,7 @@
             [jukebox-web.models.playlist :as playlist]
             [jukebox-web.models.library :as library]
             [jukebox-web.models.user :as user]
+            [jukebox-web.controllers.application :as application-controller]
             [jukebox-web.controllers.library :as library-controller]
             [jukebox-web.controllers.now-playing :as now-playing-controller]
             [jukebox-web.controllers.playlist :as playlist-controller]
@@ -20,7 +21,7 @@
             [jukebox-web.controllers.users :as users-controller]))
 
 (defroutes main-routes
-  (GET "/" [] {:status 302 :headers {"Location" "/playlist"}})
+  (GET "/" [] application-controller/root)
   (GET "/now-playing" [] now-playing-controller/current)
   (GET "/playlist" [] playlist-controller/index)
   (GET "/playlist/current-track" [] playlist-controller/current-track)
