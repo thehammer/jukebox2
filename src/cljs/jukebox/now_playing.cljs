@@ -1,7 +1,8 @@
 (ns jukebox.now-playing
   (:require [goog.net.XhrIo :as xhr]
             [domina :as dom]
-            [dommy.template :as template]))
+            [dommy.template :as template]
+            [jukebox.player :as player]))
 
 (defn cover-flow-item [track]
   [:img.item {:src (get track "xlarge_image")
@@ -29,7 +30,9 @@
     (dom/log (cover-flow data))
     (dom/replace-children! (dom/by-id "current-track")
                            (current-track data))
-    (dom/replace-children! (dom/by-id "main")
+    (dom/log "rendering player controls")
+    (player/render data)
+    (dom/replace-children! (dom/by-id "content")
                            (cover-flow data))
     (._init (js/ContentFlow. "playlist-flow"))
     (dom/log (current-track data))))

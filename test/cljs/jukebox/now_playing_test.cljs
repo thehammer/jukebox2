@@ -20,6 +20,5 @@
                                       "queued-songs" [{"xlarge_image" "yy"}
                                                       {"xlarge_image" "zz"}]})
         images (dom/nodes (css/sel flow "img.item"))]
-    (dom/log (map #(-> % dom/attrs :src) images))
     (is (= ["xx" "yy" "zz"] (map #(-> % dom/attrs :src) images)))))
 

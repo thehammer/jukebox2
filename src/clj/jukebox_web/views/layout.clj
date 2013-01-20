@@ -96,34 +96,22 @@
         [:div.row-fluid
           [:div#gutter.span2
             [:h3 "Jukebox 2"]
-            [:ul.nav.nav-list
-              [:li.active [:a#now-playing {:href "#"} "Now Playing"]]
-              [:li.divider]
-              [:li.nav-header "Library"]
-              [:li [:a#browse {:href "#"} "Browse"]]
-              [:li [:a#upload {:href "#"} "Upload"]]]
-            [:div#current-track]]
+            [:div.well
+              [:ul.nav.nav-list
+                [:li.active [:a#now-playing {:href "#"} "Now Playing"]]
+                [:li.divider]
+                [:li.nav-header "Library"]
+                [:li [:a#browse {:href "#"} "Browse"]]
+                [:li [:a#upload {:href "#"} "Upload"]]]]]
           [:div#main.span10
-    ;[:div#contentFlow.ContentFlow
-    ;  [:div.loadIndicator [:div.indicator]]
-    ;  [:div.flow
-    ;    [:div.item
-    ;      [:img.content {:src "/img/no_art_lrg.png" :title "Hammer - Jukebox2"}]
-    ;      [:div.caption "hi"]]
-    ;    [:div.item
-    ;      [:img.content {:src "/img/no_art_lrg.png" :title "Hammer - Jukebox2"}]
-    ;      [:div.caption "hi"]]
-    ;    [:div.item
-    ;      [:img.content {:src "/img/no_art_lrg.png" :title "Hammer - Jukebox2"}]
-    ;      [:div.caption "hi"]]]
-    ;  [:div.globalCaption]
-    ;  [:div.scrollbar
-    ;    [:div.slider]
-    ;    [:div.position]]]
-           ]]]
-      (current-track-template nil)
-      (player-controls-template nil)
-      (playlist-template nil)]))
+            [:div#content]]
+         [:div#footer
+          [:div#current-track
+            [:img {:src "/img/no_art_lrg.png"}]]
+          [:div#player-controls]]]
+        (current-track-template nil)
+        (player-controls-template nil)
+        (playlist-template nil)]]))
 
 (defn main [request title & content]
   (let [current-user (user/find-by-login (-> request :session :current-user))]
