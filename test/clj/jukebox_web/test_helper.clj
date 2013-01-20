@@ -48,8 +48,8 @@
 (defn with-test-music-library [spec]
   (binding [library/*music-library* "test/music"]
     (fs/delete-dir "test/music")
-    (create-library-for-user "user" "test/fixtures/music/user")
-    (create-library-for-user "user2" "test/fixtures/music/user2")
+    (create-library-for-user "user" "test/clj/fixtures/music/user")
+    (create-library-for-user "user2" "test/clj/fixtures/music/user2")
     (spec)))
 
 (defn with-smaller-weight-threshold [spec]
