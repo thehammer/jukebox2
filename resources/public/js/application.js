@@ -28335,13 +28335,22 @@ goog.require("cljs.core");
 goog.require("dommy.template");
 goog.require("domina");
 goog.require("goog.net.XhrIo");
+jukebox.now_playing_poller.cover_flow = function cover_flow(now_playing) {
+  return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'div.#playlist-flow.ContentFlow", cljs.core.PersistentVector.fromArray(["\ufdd0'div.loadIndicator", cljs.core.PersistentVector.fromArray(["\ufdd0'div.indicator"], true)], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div.flow", cljs.core.PersistentVector.fromArray(["\ufdd0'img.item", cljs.core.ObjMap.fromObject(["\ufdd0'src", "\ufdd0'title"], {"\ufdd0'src":cljs.core.get_in.call(null, now_playing, cljs.core.PersistentVector.fromArray(["current-song", 
+  "xlarge_image"], true)), "\ufdd0'title":[cljs.core.str(cljs.core.get_in.call(null, now_playing, cljs.core.PersistentVector.fromArray(["current-song", "artist"], true))), cljs.core.str(" - "), cljs.core.str(cljs.core.get_in.call(null, now_playing, cljs.core.PersistentVector.fromArray(["current-song", "title"], true)))].join("")})], true), cljs.core.PersistentVector.fromArray(["\ufdd0'img.item", cljs.core.ObjMap.fromObject(["\ufdd0'src", "\ufdd0'title"], {"\ufdd0'src":cljs.core.get_in.call(null, 
+  now_playing, cljs.core.PersistentVector.fromArray(["current-song", "xlarge_image"], true)), "\ufdd0'title":[cljs.core.str(cljs.core.get_in.call(null, now_playing, cljs.core.PersistentVector.fromArray(["current-song", "artist"], true))), cljs.core.str(" - "), cljs.core.str(cljs.core.get_in.call(null, now_playing, cljs.core.PersistentVector.fromArray(["current-song", "title"], true)))].join("")})], true)], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div.globalCaption"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div.scrollbar", 
+  cljs.core.PersistentVector.fromArray(["\ufdd0'div.slider"], true), cljs.core.PersistentVector.fromArray(["\ufdd0'div.position"], true)], true)], true))
+};
 jukebox.now_playing_poller.current_track = function current_track(now_playing) {
   return dommy.template.node.call(null, cljs.core.PersistentVector.fromArray(["\ufdd0'img", cljs.core.ObjMap.fromObject(["\ufdd0'src"], {"\ufdd0'src":cljs.core.get_in.call(null, now_playing, cljs.core.PersistentVector.fromArray(["current-song", "large_image"], true))})], true))
 };
 jukebox.now_playing_poller.render_now_playing = function render_now_playing(response) {
   var data = cljs.core.js__GT_clj.call(null, response.target.getResponseJson());
   domina.log.call(null, data);
+  domina.log.call(null, jukebox.now_playing_poller.cover_flow.call(null, data));
   domina.replace_children_BANG_.call(null, domina.by_id.call(null, "current-track"), jukebox.now_playing_poller.current_track.call(null, data));
+  domina.replace_children_BANG_.call(null, domina.by_id.call(null, "main"), jukebox.now_playing_poller.cover_flow.call(null, data));
+  (new ContentFlow("playlist-flow"))._init();
   return domina.log.call(null, jukebox.now_playing_poller.current_track.call(null, data))
 };
 jukebox.now_playing_poller.fetch = function fetch() {

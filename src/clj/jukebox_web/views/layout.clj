@@ -88,6 +88,7 @@
 ;        [:script {:src "/js/v/bootstrap-2.2.2.min.js"}]
         [:script {:src "/js/application.js"}]
         (include-css "/css/v/bootstrap-2.2.2.min.css")
+        [:script {:src "/js/v/contentflow/contentflow.js" :type "text/javascript" :load "jukebox"}]
         (include-css "/css/v/bootstrap-responsive-2.2.2.min.css")
         (include-css "/css/application.css")]
     [:body
@@ -102,7 +103,24 @@
               [:li [:a#browse {:href "#"} "Browse"]]
               [:li [:a#upload {:href "#"} "Upload"]]]
             [:div#current-track]]
-          [:div#main.span10]]]
+          [:div#main.span10
+    ;[:div#contentFlow.ContentFlow
+    ;  [:div.loadIndicator [:div.indicator]]
+    ;  [:div.flow
+    ;    [:div.item
+    ;      [:img.content {:src "/img/no_art_lrg.png" :title "Hammer - Jukebox2"}]
+    ;      [:div.caption "hi"]]
+    ;    [:div.item
+    ;      [:img.content {:src "/img/no_art_lrg.png" :title "Hammer - Jukebox2"}]
+    ;      [:div.caption "hi"]]
+    ;    [:div.item
+    ;      [:img.content {:src "/img/no_art_lrg.png" :title "Hammer - Jukebox2"}]
+    ;      [:div.caption "hi"]]]
+    ;  [:div.globalCaption]
+    ;  [:div.scrollbar
+    ;    [:div.slider]
+    ;    [:div.position]]]
+           ]]]
       (current-track-template nil)
       (player-controls-template nil)
       (playlist-template nil)]))
