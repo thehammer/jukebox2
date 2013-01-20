@@ -56,10 +56,16 @@
                  [:ul.entries
                   (map (fn [album] [:li (tracks-link artist album)]) albums)])))
 
+(defn item-for-track [logged-in track]
+  (if logged-in
+    [:li [:a {:href (str "/playlist/add/" (ring-util/url-encode (:title track)))} (:title track)]]
+    [:li (:title track)]))
+
 (defn tracks [request tracks]
   (let [artist (-> request :params :artist)
+        logged-in (not (nil? (-> request :session :current-user)))
         album (-> request :params :album)]
     (layout/main request (str "Browse Tracks for " artist " - " album)
                  [:h3 (str "Browse Tracks for " artist " - " album)]
                  [:ul.entries
-                  (map (fn [track] [:li (:title track)]) tracks)])))
+                  (map (partial item-for-track logged-in) tracks)])))
