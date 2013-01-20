@@ -1,6 +1,5 @@
 (ns jukebox-web.models.playlist
   (:require [jukebox-web.models.library :as library]
-            [jukebox-web.models.playlist-track :as playlist-track]
             [jukebox-web.models.user :as user]
             [clojure.java.jdbc :as sql]
             [jukebox-web.models.db :as db])
