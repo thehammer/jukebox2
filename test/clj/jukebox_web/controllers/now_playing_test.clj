@@ -18,6 +18,7 @@
       (is (= 0.0 (get-in json ["player" "current-time"]))))))
 
 (deftest returns-the-current-playlist
+  (playlist/reset-state!)
   (playlist/add-song! (library/find-by-id 1))
   (playlist/add-song! (library/find-by-id 2))
   (playlist/next-track "")
