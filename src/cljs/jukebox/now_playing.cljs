@@ -1,4 +1,4 @@
-(ns jukebox.now-playing-poller
+(ns jukebox.now-playing
   (:require [goog.net.XhrIo :as xhr]
             [domina :as dom]
             [dommy.template :as template]))

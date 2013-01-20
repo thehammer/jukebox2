@@ -30,15 +30,23 @@
                  [prismatic/dommy "0.0.1"]]
   :plugins [[lein-cljsbuild "0.2.10"]
             [lein-ring "0.8.0"]]
+  :hooks [leiningen.cljsbuild]
   :source-paths ["src/clj"]
-  :test-paths ["test"]
+  :test-paths ["test/clj"]
   :main jukebox-web.core
   :ring {:handler jukebox-web.core/app
          :init jukebox-web.core/initialize}
   :profiles {:dev {:dependencies [[ring-mock "0.1.3"]
                                   [peridot "0.0.8"]
                                   [enlive "1.0.1"]]}}
-  :cljsbuild {:builds [{:source-path "src/cljs"
-                        :compiler {:output-to "resources/public/js/application.js"
-                                   :optimizations :whitespace
-                                   :pretty-print true}}]})
+  :cljsbuild {:test-commands {:unit ["phantomjs"
+                                     "test/cljs/fixtures/phantomjs/unit-test.js"
+                                     "test/cljs/fixtures/phantomjs/unit-test.html"]}
+              :builds {:dev {:source-path "src/cljs"
+                             :compiler {:output-to "resources/public/js/application.js"
+                                        :optimizations :whitespace
+                                        :pretty-print true}}
+                       :test {:source-path "test/cljs"
+                              :compiler {:output-to "target/unit-test.js"
+                                         :optimizations :whitespace
+                                         :pretty-print true}}}})
