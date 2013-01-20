@@ -17,7 +17,7 @@
   [:tr
     [:td [:img {:src (user/avatar-url user {:s 100})}]]
     [:td [:span (:login user)]]
-    [:td [:span (user/count-songs user)]]
+    [:td [:span 1]]
     [:td [:span (:skip_count user)]]
     [:td
      (form-to [:post "/users/toggle-enabled"]

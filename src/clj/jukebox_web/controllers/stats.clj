@@ -9,6 +9,6 @@
 
 (defn song-counts [request]
   (let [users (user/find-all)
-        users-with-counts (map #(vector (:login %) (user/count-songs %)) users)
+        users-with-counts (map #(vector (:login %) 0) users)
         sorted-users-with-counts (reverse (sort-by last users-with-counts))]
     (json/response sorted-users-with-counts)))
