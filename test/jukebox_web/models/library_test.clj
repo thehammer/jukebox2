@@ -19,6 +19,7 @@
       (is (= "Hammer" (:artist track)))
       (is (= "Hammer's Album" (:album track)))
       (is (= "jukebox2" (:title track))))
+      (is (= 16 (:duration_secs track)))
     (testing "metadata defaults counts"
       (is (zero? (:play_count track)))
       (is (zero? (:skip_count track))))

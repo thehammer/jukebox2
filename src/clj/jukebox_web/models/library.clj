@@ -41,7 +41,7 @@
   (first (db/find-by-field :tracks :id id)))
 
 (defn save-file! [tempfile owner]
-  (let [{:keys [artist album title]} (extract-tags tempfile)
+  (let [{:keys [artist album title duration]} (extract-tags tempfile)
         {:keys [large extra-large]} (artwork/album-cover album artist)
         location (nested-location (str (UUID/randomUUID) "." (extension tempfile)))]
     (.mkdirs (.getParentFile (io/file *music-library* location)))
@@ -50,6 +50,7 @@
                                     :artist artist
                                     :album album
                                     :title title
+                                    :duration_secs duration
                                     :large_image large
                                     :xlarge_image extra-large
                                     :location location

@@ -23,6 +23,7 @@
         [:album "VARCHAR(255)"]
         [:artist "VARCHAR(255)"]
         [:title "VARCHAR(255)"]
+        [:duration_secs "INTEGER"]
         [:location "VARCHAR(255)" "NOT NULL"]
         [:large_image "VARCHAR(255)" "NOT NULL"]
         [:xlarge_image "VARCHAR(255)" "NOT NULL"]
