@@ -1,5 +1,4 @@
-(ns jukebox.test-macros
-  (:require [goog.testing.jsunit :as jsunit]))
+(ns jukebox.test-macros)
 
 (defmacro deftest [nm & body]
   (let [testname (str "test-" (name nm))]

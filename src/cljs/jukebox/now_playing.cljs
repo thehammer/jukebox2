@@ -3,19 +3,17 @@
             [domina :as dom]
             [dommy.template :as template]))
 
+(defn cover-flow-item [track]
+  [:img.item {:src (get track "xlarge_image")
+              :title (str (get track "artist") " - " (get track "title"))}])
+
 (defn cover-flow [now-playing]
   (template/node
     [:div.#playlist-flow.ContentFlow
       [:div.loadIndicator [:div.indicator]]
       [:div.flow
-        [:img.item {:src (get-in now-playing ["current-song" "xlarge_image"])
-                    :title (str (get-in now-playing ["current-song" "artist"])
-                                " - "
-                                (get-in now-playing ["current-song" "title"]))}]
-        [:img.item {:src (get-in now-playing ["current-song" "xlarge_image"])
-                    :title (str (get-in now-playing ["current-song" "artist"])
-                                " - "
-                                (get-in now-playing ["current-song" "title"]))}]]
+        (cover-flow-item (get now-playing "current-song"))
+        (map cover-flow-item (get now-playing "queued-songs"))]
       [:div.globalCaption]
       [:div.scrollbar
         [:div.slider]
