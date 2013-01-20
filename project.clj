@@ -23,7 +23,11 @@
                  [mp3spi "1.9.5"]
                  [tritonus_share "0.3.6"]
                  [vorbisspi "1.0.3"]
-                 [fs "1.1.2"]]
+                 [fs "1.1.2"]
+                 ;; clojurescript deps
+                 [org.clojure/google-closure-library-third-party "0.0-2029"]
+                 [domina "1.0.0"]
+                 [prismatic/dommy "0.0.1"]]
   :plugins [[lein-cljsbuild "0.2.10"]
             [lein-ring "0.8.0"]]
   :source-paths ["src/clj"]

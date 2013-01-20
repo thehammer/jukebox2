@@ -85,7 +85,7 @@
   (html5
     [:head
       [:title "Jukebox2"]
-        [:script {:src "/js/v/bootstrap-2.2.2.min.js"}]
+;        [:script {:src "/js/v/bootstrap-2.2.2.min.js"}]
         [:script {:src "/js/application.js"}]
         (include-css "/css/v/bootstrap-2.2.2.min.css")
         (include-css "/css/v/bootstrap-responsive-2.2.2.min.css")
@@ -100,7 +100,8 @@
               [:li.divider]
               [:li.nav-header "Library"]
               [:li [:a#browse {:href "#"} "Browse"]]
-              [:li [:a#upload {:href "#"} "Upload"]]]]
+              [:li [:a#upload {:href "#"} "Upload"]]]
+            [:div#current-track]]
           [:div#main.span10]]]
       (current-track-template nil)
       (player-controls-template nil)
