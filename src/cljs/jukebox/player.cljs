@@ -1,5 +1,5 @@
 (ns jukebox.player
-  (:require [jukebox.state :as state]
+  (:require [jukebox.core :as jukebox]
             [goog.net.XhrIo :as xhr]
             [domina :as dom]
             [domina.events :as ev]
@@ -15,10 +15,10 @@
   (update-in state ["player" "playing?"] not))
 
 (defn play [_]
-  (xhr/send "/player/play" (fn [_] (swap! state/current toggle-playing))))
+  (xhr/send "/player/play" (fn [_] (swap! jukebox/player-state toggle-playing))))
 
 (defn pause [_]
-  (xhr/send "/player/pause" (fn [_] (swap! state/current toggle-playing))))
+  (xhr/send "/player/pause" (fn [_] (swap! jukebox/player-state toggle-playing))))
 
 (defn render [state]
   (dom/replace-children! (dom/by-id "player-controls")
@@ -26,6 +26,6 @@
   (ev/listen! (dom/by-id "player-play") :click play)
   (ev/listen! (dom/by-id "player-pause") :click pause))
 
-(add-watch state/current
+(add-watch jukebox/player-state
            :player-controls
            (fn [_ _ _ state] (render state)))

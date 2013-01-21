@@ -2,6 +2,7 @@
   (:require [goog.net.XhrIo :as xhr]
             [domina :as dom]
             [dommy.template :as template]
+            [jukebox.core :as jukebox]
             [jukebox.player :as player]))
 
 (defn cover-flow-item [track]
@@ -24,22 +25,11 @@
   (template/node
     [:img {:src (get-in now-playing ["current-song" "large_image"])}]))
 
-(defn render-now-playing [response]
-  (let [data (js->clj (.getResponseJson (.-target response)))]
-    (dom/log data)
-    (dom/log (cover-flow data))
-    (dom/replace-children! (dom/by-id "current-track")
-                           (current-track data))
-    (dom/log "rendering player controls")
-    (player/render data)
-    (dom/replace-children! (dom/by-id "content")
-                           (cover-flow data))
-    (._init (js/ContentFlow. "playlist-flow"))
-    (dom/log (current-track data))))
+(defn render [state]
+  (dom/replace-children! (dom/by-id "content")
+                         (cover-flow state))
+  (._init (js/ContentFlow. "playlist-flow")))
 
-(defn ^:export fetch []
-  (xhr/send "/now-playing"
-            render-now-playing
-            "GET"
-            nil
-            (clj->js {"Accept" "application/json"})))
+(add-watch jukebox/playlist-state
+           :now-playing
+           (fn [_ _ _ state] (render state)))
