@@ -1,5 +1,5 @@
 (ns jukebox.now-playing-test
-  (:use-macros [jukebox.test-macros :only (deftest is)])
+  (:use-macros [jukebox.test-macros :only [deftest is]])
   (:require [domina :as dom]
             [domina.css :as css]
             [jukebox.now-playing :as now-playing]
@@ -21,4 +21,3 @@
                                                       {"xlarge_image" "zz"}]})
         images (dom/nodes (css/sel flow "img.item"))]
     (is (= ["xx" "yy" "zz"] (map #(-> % dom/attrs :src) images)))))
-
