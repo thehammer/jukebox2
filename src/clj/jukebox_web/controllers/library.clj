@@ -1,5 +1,6 @@
 (ns jukebox-web.controllers.library
-  (:require [jukebox-web.views.library :as view]
+  (:require [cheshire.core :as json]
+            [jukebox-web.views.library :as view]
             [jukebox-web.models.library :as library]
             [jukebox-web.models.user :as user]))
 
@@ -18,7 +19,9 @@
     (view/browse request path files)))
 
 (defn artists [request]
-  (view/artists request library/*music-library-title* (library/all-artists)))
+  {:status 200
+   :headers {"Content-Type" "application/json"}
+   :body (json/generate-string (library/all-artists))})
 
 (defn albums-for-artist [request]
   (view/albums request  "foo" (library/albums-for-artist (-> request :params :artist))))
