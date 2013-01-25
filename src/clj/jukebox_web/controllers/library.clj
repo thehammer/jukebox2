@@ -24,8 +24,12 @@
    :body (json/generate-string (library/all-artists))})
 
 (defn albums-for-artist [request]
-  (view/albums request  "foo" (library/albums-for-artist (-> request :params :artist))))
+  {:status 200
+   :headers {"Content-Type" "application/json"}
+   :body (json/generate-string (library/albums-for-artist (-> request :params :artist)))})
 
 (defn tracks-for-album [request]
-  (view/tracks request (library/tracks-for-artists-album (-> request :params :artist)
-                                                         (-> request :params :album))))
+  {:status 200
+   :headers {"Content-Type" "application/json"}
+   :body (json/generate-string (library/tracks-for-artists-album (-> request :params :artist)
+                                                                 (-> request :params :album)))})

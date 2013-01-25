@@ -1,6 +1,5 @@
 (ns jukebox.core
   (:require [goog.net.XhrIo :as xhr]
-            [clojure.data :as d]
             [domina :as dom]))
 
 (def current (atom {}))

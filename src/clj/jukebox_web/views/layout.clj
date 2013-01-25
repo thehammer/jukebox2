@@ -97,12 +97,12 @@
           [:div#gutter.span2
             [:h3 "Jukebox 2"]
             [:div.well
-              [:ul.nav.nav-list
+              [:ul#gutter-nav.nav.nav-list
                 [:li.active [:a#now-playing {:href "#"} "Now Playing"]]
                 [:li.divider]
                 [:li.nav-header "Library"]
-                [:li [:a#browse {:href "#"} "Browse"]]
-                [:li [:a#upload {:href "#"} "Upload"]]]]]
+                [:li [:a#library-browse {:href "#"} "Browse"]]
+                [:li [:a#library-upload {:href "#"} "Upload"]]]]]
           [:div#main.span10
             [:div#content]]
          [:div#footer
