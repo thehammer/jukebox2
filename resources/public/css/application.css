@@ -22,3 +22,8 @@
 #player-controls {
 	display: inline;
 }
+
+#uploader-dropzone {
+  height: 80px;
+  background-color: pink;
+}
