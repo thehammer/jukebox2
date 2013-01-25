@@ -4,7 +4,8 @@
             [domina.events :as ev]
             [dommy.template :as template]
             [jukebox.ajax :as ajax]
-            [jukebox.gutter-nav :as nav]))
+            [jukebox.gutter-nav :as nav]
+            [jukebox.window :as window]))
 
 (defn albums-link [artist-map]
   (let [artist (get artist-map "artist")]
@@ -38,12 +39,12 @@
 (defn show-artists [event]
   (ev/stop-propagation event)
   (nav/make-active! (.-parentNode (ev/target event)))
-  (ajax/replace-remote "main" "/library/artists" render-artists attach-events))
+  (ajax/replace-remote "content" "/library/artists" render-artists attach-events))
 
 (defn show-albums [event]
   (ev/stop-propagation event)
   (let [artist (-> (ev/target event) dom/attrs :data-artist)]
-    (ajax/replace-remote "main"
+    (ajax/replace-remote "content"
                          (str "/library/artists/" artist)
                          (partial render-albums artist)
                          attach-events)))
@@ -52,7 +53,7 @@
   (ev/stop-propagation event)
   (let [artist (-> (ev/target event) dom/attrs :data-artist)
         album (-> (ev/target event) dom/attrs :data-album)]
-    (ajax/replace-remote "main"
+    (ajax/replace-remote "content"
                          (str "/library/artists/" artist "/albums/" album)
                          (partial render-tracks artist album))))
 
@@ -61,4 +62,4 @@
   (ev/listen! (css/sel "#artists a.albums") :click show-albums)
   (ev/listen! (css/sel "#albums a.tracks") :click show-tracks))
 
-(set! (.-onload js/window) attach-events)
+(window/register-onload! attach-events)

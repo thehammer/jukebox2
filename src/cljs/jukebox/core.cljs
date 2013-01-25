@@ -1,6 +1,7 @@
 (ns jukebox.core
   (:require [goog.net.XhrIo :as xhr]
-            [domina :as dom]))
+            [domina :as dom]
+            [jukebox.window :as window]))
 
 (def current (atom {}))
 (def player-state (atom {}))
@@ -24,5 +25,5 @@
             nil
             (clj->js {"Accept" "application/json"})))
 
-(set! (.-onload js/window) poll)
 (js/setInterval poll 2000)
+(window/register-onload! poll)

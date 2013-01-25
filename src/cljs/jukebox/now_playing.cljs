@@ -1,8 +1,11 @@
 (ns jukebox.now-playing
   (:require [goog.net.XhrIo :as xhr]
             [domina :as dom]
+            [domina.events :as ev]
             [dommy.template :as template]
             [jukebox.core :as jukebox]
+            [jukebox.gutter-nav :as nav]
+            [jukebox.window :as window]
             [jukebox.player :as player]))
 
 (defn cover-flow-item [track]
@@ -26,10 +29,21 @@
     [:img {:src (get-in now-playing ["current-song" "large_image"])}]))
 
 (defn render [state]
-  (dom/replace-children! (dom/by-id "content")
-                         (cover-flow state))
+  (dom/replace-children! (dom/by-id "content") (cover-flow state))
   (._init (js/ContentFlow. "playlist-flow")))
+
+(defn show-now-playing [event]
+  (ev/prevent-default event)
+  (nav/make-active! (.-parentNode (ev/target event)))
+  (render @jukebox/playlist-state)
+  (attach-events))
+
+(defn attach-events []
+  (dom/log "attaching now-playing events")
+  (ev/listen-once! (dom/by-id "now-playing") :click show-now-playing))
 
 (add-watch jukebox/playlist-state
            :now-playing
            (fn [_ _ _ state] (render state)))
+
+(window/register-onload! attach-events)
