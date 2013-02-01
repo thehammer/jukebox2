@@ -112,7 +112,15 @@
     (let [user (user/find-by-login "user")
           selections (take 10 (map library/random-song (repeat user)))]
       (is (not (some (partial = "test/clj/fixtures/music/user2/artist2/album/track.mp3")
-                     (map :tempfile_location selections)))))))
+                     (map :tempfile_location selections))))))
+
+  (testing "works for users with only one song"
+    (let [user (user/find-by-login "user2")
+          selections (take 10 (map library/random-song (repeat user)))]
+      (print "test results: ")
+      (prn (doall (map :tempfile_location selections)))
+      (is (every? (partial = "test/clj/fixtures/music/user2/artist2/album/track.mp3")
+                  (map :tempfile_location selections))))))
 
 ;(deftest owners
 ;  (testing "returns nil for a path without a user"

@@ -62,7 +62,7 @@
   (println "starting player thread")
   (.start (Thread. (fn []
                      (sql/with-connection db/*db*
-                        (player/start-player (playlist/playlist-seq)))))))
+                        (player/start-player (playlist/playlist-seq)))) "jukebox-player")))
 
 (defn initialize []
   (db/connect! {:classname "org.apache.derby.jdbc.EmbeddedDriver"
@@ -74,7 +74,7 @@
     (when-not (user/find-by-login "randomizer")
       (let [[randomizer errors] (user/sign-up! {:login "randomizer" :password "p" :password-confirmation "p"})]
         (prn errors)
-        (library/save-file! "music/jukebox2.mp3" randomizer))))
+        (library/save-file! "music/jukebox2.mp3" "jukebox.mp3" randomizer))))
   (run-player))
 
 (defn wrap-db-connection [app]
