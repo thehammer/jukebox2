@@ -1,5 +1,6 @@
 (ns jukebox-web.controllers.users
-  (:require [jukebox-web.views.users :as view]
+  (:require [cheshire.core :as json]
+            [jukebox-web.views.users :as view]
             [jukebox-web.models.user :as user]))
 
 (defn authenticate [request]
@@ -30,6 +31,17 @@
     (if (empty? errors)
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
       (view/sign-up request errors))))
+
+(defn sign-up-api [request]
+  (prn request)
+  (let [[user errors] (user/sign-up! (:params request))]
+    (if (empty? errors)
+      {:status 200
+       :body (json/generate-string user)
+       :session {:current-user (-> request :params :login)}}
+      {:status 422
+       :headers {"Content-Type" "application/json"}
+       :body (json/generate-string errors)})))
 
 (defn index [request]
   (view/index request (user/find-all)))

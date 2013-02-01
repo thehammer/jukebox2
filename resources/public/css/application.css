@@ -39,3 +39,7 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.modal form {
+  margin: 0;
+}

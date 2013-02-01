@@ -8,7 +8,6 @@
             [goog.net.EventType :as EventType]
             [goog.net.IframeIo :as IframeIo]
             [goog.net :as gnet]
-            [jukebox.file-drop :as file-drop]
             [jukebox.gutter-nav :as nav]
             [jukebox.window :as window]))
 

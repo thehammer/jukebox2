@@ -39,6 +39,7 @@
   (POST "/users/authenticate" [] users-controller/authenticate)
   (GET "/users/sign-up" [] users-controller/sign-up-form)
   (POST "/users/sign-up" [] users-controller/sign-up)
+  (POST "/users/sign-up-api" [] users-controller/sign-up-api)
   (POST "/users/toggle-enabled" [] users-controller/toggle-enabled)
   (GET "/users/:id/edit" [] users-controller/edit)
   (POST "/users/:id/update" [] users-controller/update)

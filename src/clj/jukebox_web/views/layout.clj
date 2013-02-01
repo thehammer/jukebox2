@@ -85,7 +85,8 @@
   (html5
     [:head
       [:title "Jukebox2"]
-;        [:script {:src "/js/v/bootstrap-2.2.2.min.js"}]
+        [:script {:src "/js/v/jquery-1.9.0.min.js"}]
+        [:script {:src "/js/v/bootstrap-2.2.2.js"}]
         [:script {:src "/js/application.js"}]
         (include-css "/css/v/bootstrap-2.2.2.min.css")
         [:script {:src "/js/v/contentflow/contentflow.js" :type "text/javascript" :load "jukebox"}]
@@ -96,8 +97,10 @@
     [:body
       [:div.container-fluid
         [:div.row-fluid
+            [:h3.pull-left "Jukebox 2"]
+            [:div#user.pull-right]]
+        [:div.row-fluid
           [:div#gutter.span2
-            [:h3 "Jukebox 2"]
             [:div.well
               [:ul#gutter-nav.nav.nav-list
                 [:li.active [:a#now-playing {:href "#"} "Now Playing"]]
@@ -114,6 +117,7 @@
           [:div#current-track
             [:img {:src "/img/no_art_lrg.png"}]]
           [:div#player-controls]]]
+       [:div#modal-zone]
         (current-track-template nil)
         (player-controls-template nil)
         (playlist-template nil)]]))
