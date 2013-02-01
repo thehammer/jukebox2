@@ -33,6 +33,7 @@
   (GET "/player/play" [] player-controller/play)
   (GET "/player/pause" [] player-controller/pause)
   (GET "/player/skip" [] player-controller/skip)
+  (POST "/lib/ul" [] library-controller/upload)
   (GET "/users" [] users-controller/index)
   (POST "/users/sign-out" [] users-controller/sign-out)
   (POST "/users/authenticate" [] users-controller/authenticate)

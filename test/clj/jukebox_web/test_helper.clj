@@ -43,7 +43,7 @@
 (defn create-library-for-user [login fixture-path]
   (let [[user _] (user/sign-up! (factory/user {:login login}))]
     (doseq [file (filter #(. % isFile) (file-seq (io/as-file fixture-path)))]
-      (library/save-file! (str file) user))))
+      (library/save-file! (str file) (str file) user))))
 
 (defn with-test-music-library [spec]
   (binding [library/*music-library* "test/music"]

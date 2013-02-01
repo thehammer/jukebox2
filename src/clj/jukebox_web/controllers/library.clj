@@ -5,9 +5,10 @@
             [jukebox-web.models.user :as user]))
 
 (defn upload [request]
-  (when-let [current-user (-> request :session :current-user)]
+  (let [current-user "randomizer"]
+  ;(when-let [current-user (-> request :session :current-user)]
     (let [{:keys [tempfile filename]} (-> request :params :file)]
-    (library/save-file! tempfile (user/find-by-login current-user))
+      (library/save-file! tempfile filename (user/find-by-login current-user))
   "upload complete")))
 
 (defn browse-root [request]

@@ -10,9 +10,9 @@
 (use-fixtures :each with-database-connection with-test-music-library)
 
 (deftest uploading-files-saves-metadata
-  (let [file "test/fixtures/music/jukebox2.mp3"
+  (let [file "test/clj/fixtures/music/jukebox2.tmp"
         [user _] (user/sign-up! (factory/user {:login "test"}))
-        track (library/save-file! file user)]
+        track (library/save-file! file "jukebox2.mp3" user)]
     (testing "returns saved track metadata"
       (is (= track (library/find-by-id (:id track)))))
     (testing "metadata has tags"
@@ -28,15 +28,15 @@
       (is (= "/img/no_art_lrg.png" (:xlarge_image track))))))
 
 (deftest uploading-files-makes-the-user-the-owner
-  (let [file "test/fixtures/music/jukebox2.mp3"
+  (let [file "test/clj/fixtures/music/jukebox2.tmp"
         [user _] (user/sign-up! (factory/user {:login "test"}))
-        track (library/save-file! file user)]
+        track (library/save-file! file "jukebox2.mp3" user)]
     (is (= user (library/owner-md track)))))
 
 (deftest uploading-files-stores-in-pool
-  (let [file "test/fixtures/music/jukebox2.mp3"
+  (let [file "test/clj/fixtures/music/jukebox2.tmp"
         [user _] (user/sign-up! (factory/user {:login "test"}))
-        track (library/save-file! file user)]
+        track (library/save-file! file "jukebox2.mp3" user)]
     (testing "copies file to the pool"
       (is (not (= file (:location track))))
       (is (= (enc/sha256 (slurp file))
@@ -111,7 +111,7 @@
   (testing "returns a randome song for the given user"
     (let [user (user/find-by-login "user")
           selections (take 10 (map library/random-song (repeat user)))]
-      (is (not (some (partial = "test/fixtures/music/user2/artist2/album/track.mp3")
+      (is (not (some (partial = "test/clj/fixtures/music/user2/artist2/album/track.mp3")
                      (map :tempfile_location selections)))))))
 
 ;(deftest owners

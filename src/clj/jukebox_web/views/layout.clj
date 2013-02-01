@@ -89,6 +89,8 @@
         [:script {:src "/js/application.js"}]
         (include-css "/css/v/bootstrap-2.2.2.min.css")
         [:script {:src "/js/v/contentflow/contentflow.js" :type "text/javascript" :load "jukebox"}]
+        [:script {:src "/js/v/plupload.full.js" :type "text/javascript"}]
+        [:script {:src "/js/embed_plupload.js" :type "text/javascript"}]
         (include-css "/css/v/bootstrap-responsive-2.2.2.min.css")
         (include-css "/css/application.css")]
     [:body
@@ -102,7 +104,10 @@
                 [:li.divider]
                 [:li.nav-header "Library"]
                 [:li [:a#library-browse {:href "#"} "Browse"]]
-                [:li [:a#library-upload {:href "#"} "Upload"]]]]]
+                [:li [:a#library-upload {:href "#"} "Upload"]]
+                [:li.divider]
+                [:li.nav-header "Stats"]
+                [:li [:a#stats-user {:href "#"} "Users"]]]]]
           [:div#main.span10
             [:div#content]]
          [:div#footer

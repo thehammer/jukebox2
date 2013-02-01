@@ -40,13 +40,10 @@
 (defn find-by-id [id]
   (first (db/find-by-field :tracks :id id)))
 
-(defn save-file! [tempfile owner]
-  (let [{:keys [artist album title duration]} (extract-tags tempfile)
-        {:keys [large extra-large]} (artwork/album-cover album artist)
-        location (nested-location (str (UUID/randomUUID) "." (extension tempfile)))]
-    (.mkdirs (.getParentFile (io/file *music-library* location)))
-    (io/copy (io/as-file tempfile) (io/file *music-library* location))
-    (let [track (db/insert :tracks {:tempfile_location tempfile
+(defn- save-metadata! [original-file location owner]
+  (let [{:keys [artist album title duration]} (extract-tags (io/file *music-library* location))
+        {:keys [large extra-large]} (artwork/album-cover album artist)]
+    (let [track (db/insert :tracks {:tempfile_location original-file
                                     :artist artist
                                     :album album
                                     :title title
@@ -60,6 +57,13 @@
                                 :user_id (:id owner)
                                 :type tracks-users-type-owner})
       track)))
+
+(defn save-file! [tempfile original-file owner]
+  (let [location (nested-location (str (UUID/randomUUID) "." (extension original-file)))]
+    (.mkdirs (.getParentFile (io/file *music-library* location)))
+    (io/copy (io/as-file tempfile) (io/file *music-library* location))
+    (save-metadata! original-file location owner)))
+
 
 (defn owner-md [track]
   (db/find-first [(str "SELECT u.* "

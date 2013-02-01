@@ -44,6 +44,7 @@
                                      "test/cljs/fixtures/phantomjs/unit-test.html"]}
               :builds {:dev {:source-path "src/cljs"
                              :compiler {:output-to "resources/public/js/application.js"
+                                        :externs ["resources/private/js/externs.js"]
                                         :optimizations :whitespace
                                         :pretty-print true}}
                        :test {:source-path "test/cljs"
