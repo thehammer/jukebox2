@@ -45,3 +45,13 @@
       (is (= 0 (get-in json ["queued-songs" 0 "play_count"])))
       (is (not (nil? (get-in json ["queued-songs" 0 "large_image"]))))
       (is (not (nil? (get-in json ["queued-songs" 0 "xlarge_image"])))))))
+
+(deftest returns-the-current-user
+  (let [response (now-playing/current {:headers {"accept" "application/json"} :session {:current-user "user"}})
+        json (json-parser/parse-string (:body response))]
+    (testing "returns the current user"
+      (is (= #{"login" "avatar" "id" "skip_count"} (-> (get json "current-user") keys set)))
+      (is (= "user" (get-in json ["current-user" "login"])))
+      (is (= 0 (get-in json ["current-user" "skip_count"])))
+      (is (= "http://example.com/avatar?d=mm&s=35" (get-in json ["current-user" "avatar"]))))))
+

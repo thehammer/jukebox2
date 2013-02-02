@@ -43,3 +43,9 @@
 .modal form {
   margin: 0;
 }
+
+#user .avatar {
+  height: 20px;
+  width: 20px;
+  padding-right: 5px;
+}

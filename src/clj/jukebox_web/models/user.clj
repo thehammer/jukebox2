@@ -103,3 +103,9 @@
 
 (defn delete! [user]
   (db/delete model (:id user)))
+
+(defn ->resource [user]
+  {:id (:id user)
+   :login (:login user)
+   :skip_count (:skip_count user)
+   :avatar (avatar-url user)})

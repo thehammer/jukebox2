@@ -8,6 +8,8 @@
 
 (defn onload []
   (doseq [onload-event @onload-events]
-    (onload-event)))
+    (try
+      (onload-event)
+      (catch js/Error e (.log js/conosle e)))))
 
 (set! (.-onload js/window) onload)

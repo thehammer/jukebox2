@@ -1,4 +1,4 @@
-(ns jukebox.library
+(ns jukebox.users
   (:require [goog.dom.forms :as form]
             [goog.net.XhrIo :as xhr]
             [domina :as dom]
@@ -8,12 +8,15 @@
             [jukebox.core :as jukebox]
             [jukebox.window :as window]))
 
-(defn render-user []
-  (if-let [current-user (get @jukebox/current "current-user")]
+(defn render-user [current-user]
+  (if current-user
     (template/node
-      [:div
-        [:img {:src (get current-user "avatar")}]
-        [:span (get current-user "login")]])
+      [:ul.nav.nav-pills
+        [:li.dropdown
+          [:a.dropdown-toggle {:data-toggle "dropdown" :href "#"}
+            [:img.avatar {:src (get current-user "avatar")}]
+            (get current-user "login")
+            [:b.caret]]]])
     (template/node
       [:ul.nav.nav-pills
         [:li [:a.#sign-in {:href "#"} "Sign In"]]
@@ -64,8 +67,8 @@
                            [:ul.unstyled
                              (doall (map (fn [msg] [:li [:p.text-error msg]]) errors))])))
 
-(defn show-user []
-  (dom/replace-children! (dom/by-id "user") (render-user)))
+(defn show-user [current-user]
+  (dom/replace-children! (dom/by-id "user") (render-user current-user)))
 
 (defn sign-up-response [response]
   (if (.isSuccess (.-target response))
@@ -95,7 +98,8 @@
   (ev/listen! (dom/by-id "sign-up") :click (partial clear-form "sign-up-form"))
   (ev/listen! (dom/by-id "sign-in") :click show-sign-in))
 
+(add-watch jukebox/current-user-state :current-user (fn [_ _ _ state] (show-user state)))
+
 (window/register-onload! (fn []
-                           (show-user)
                            (stage-modals)
                            (attach-events)))

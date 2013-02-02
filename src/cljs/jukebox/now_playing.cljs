@@ -39,11 +39,8 @@
   (attach-events))
 
 (defn attach-events []
-  (dom/log "attaching now-playing events")
   (ev/listen-once! (dom/by-id "now-playing") :click show-now-playing))
 
-(add-watch jukebox/playlist-state
-           :now-playing
-           (fn [_ _ _ state] (render state)))
+(add-watch jukebox/playlist-state :now-playing (fn [_ _ _ state] (render state)))
 
 (window/register-onload! attach-events)
