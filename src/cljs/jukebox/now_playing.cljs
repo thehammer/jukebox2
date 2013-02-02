@@ -33,14 +33,8 @@
   (._init (js/ContentFlow. "playlist-flow")))
 
 (defn show-now-playing [event]
-  (ev/prevent-default event)
-  (nav/make-active! (.-parentNode (ev/target event)))
-  (render @jukebox/playlist-state)
-  (attach-events))
-
-(defn attach-events []
-  (ev/listen-once! (dom/by-id "now-playing") :click show-now-playing))
+  (render @jukebox/playlist-state))
 
 (add-watch jukebox/playlist-state :now-playing (fn [_ _ _ state] (render state)))
 
-(window/register-onload! attach-events)
+(nav/add-gutter-event "now-playing" show-now-playing)

@@ -37,8 +37,6 @@
         (map (fn [track] [:li (get track "title")]) tracks)]]))
 
 (defn show-artists [event]
-  (ev/stop-propagation event)
-  (nav/make-active! (.-parentNode (ev/target event)))
   (ajax/replace-remote "content" "/library/artists" render-artists attach-events))
 
 (defn show-albums [event]
@@ -58,8 +56,7 @@
                          (partial render-tracks artist album))))
 
 (defn attach-events []
-  (ev/listen! (dom/by-id "library-browse") :click show-artists)
   (ev/listen! (css/sel "#artists a.albums") :click show-albums)
   (ev/listen! (css/sel "#albums a.tracks") :click show-tracks))
 
-(window/register-onload! attach-events)
+(nav/add-gutter-event "library-browse" show-artists)

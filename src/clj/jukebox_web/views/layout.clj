@@ -100,17 +100,7 @@
             [:h3.pull-left "Jukebox 2"]
             [:div#user.pull-right]]
         [:div.row-fluid
-          [:div#gutter.span2
-            [:div.well
-              [:ul#gutter-nav.nav.nav-list
-                [:li.active [:a#now-playing {:href "#"} "Now Playing"]]
-                [:li.divider]
-                [:li.nav-header "Library"]
-                [:li [:a#library-browse {:href "#"} "Browse"]]
-                [:li [:a#library-upload {:href "#"} "Upload"]]
-                [:li.divider]
-                [:li.nav-header "Stats"]
-                [:li [:a#stats-user {:href "#"} "Users"]]]]]
+          [:div#gutter.span2]
           [:div#main.span10
             [:div#content]]
          [:div#footer

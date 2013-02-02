@@ -35,9 +35,7 @@
       [:td "x"]]))
 
 (defn show-upload [event]
-  (nav/make-active! (.-parentNode (ev/target event)))
-  (dom/replace-children! (dom/by-id "content") (render-upload))
-  (attach-events))
+  (dom/replace-children! (dom/by-id "content") (render-upload)))
 
 (defn files-added [plupload files]
   (doseq [file files]
@@ -71,7 +69,6 @@
 
 (defn attach-events []
   (when-let [dropzone (dom/by-id "uploader-dropzone")]
-    (init-plupload))
-  (ev/listen-once! (dom/by-id "library-upload") :click show-upload))
+    (init-plupload)))
 
-(window/register-onload! attach-events)
+(nav/add-gutter-event "library-upload" show-upload)

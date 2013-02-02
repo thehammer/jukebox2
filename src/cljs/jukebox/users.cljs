@@ -110,7 +110,6 @@
             "POST"
             (form/getFormDataString (dom/by-id "sign-up-form"))))
 
-
 (defn sign-in-response [response]
   (if (.isSuccess (.-target response))
     (do
