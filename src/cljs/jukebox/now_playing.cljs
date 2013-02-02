@@ -35,6 +35,10 @@
 (defn show-now-playing [event]
   (render @jukebox/playlist-state))
 
-(add-watch jukebox/playlist-state :now-playing (fn [_ _ _ state] (render state)))
+(defn refresh-now-playing [new-state]
+  (when (= @nav/active-nav "now-playing")
+    (render new-state)))
+
+(add-watch jukebox/playlist-state :now-playing (fn [_ _ _ state] (refresh-now-playing state)))
 
 (nav/add-gutter-event "now-playing" show-now-playing)
