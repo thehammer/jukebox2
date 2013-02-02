@@ -1,4 +1,5 @@
 (ns jukebox-web.controllers.users-test
+  (:require [cheshire.core :as json])
   (:require [jukebox-web.controllers.users :as users-controller])
   (:require [jukebox-web.models.user :as user])
   (:require [jukebox-web.models.factory :as factory])
@@ -78,3 +79,45 @@
     (let [response (users-controller/toggle-enabled {:params {:login "test"}})]
       (is (= 302 (:status response)))
       (is (= {"Location" "/users"} (:headers response))))))
+
+(deftest signing-up-successfully
+  (let [request {:params (factory/user {:login "test"})}
+        response (users-controller/sign-up-api request)]
+    (testing "is a successful response"
+      (is (= 200 (-> response :status))))
+    (testing "logs the user in"
+      (is (= "test" (-> response :session :current-user))))
+    (testing "returns the user"
+      (is (= "test" (get (json/parse-string (:body response)) "login"))))))
+
+(deftest signing-up-unsuccessfully
+  (let [request {:params (factory/user {:password "x" :password-confirmation "y"})}
+        response (users-controller/sign-up-api request)]
+    (testing "is an unprocessable entity"
+      (is (= 422 (-> response :status))))
+    (testing "does not log the user in"
+      (is (nil? (-> response :session :current-user))))
+    (testing "returns the errors"
+      (is (= ["does not match"] (get (json/parse-string (:body response)) "password-confirmation"))))))
+
+(deftest signing-in-successfully
+  (user/sign-up! (factory/user {:login "test" :password "pw" :password-confirmation "pw"}))
+  (let [request {:params {:login "test" :password "pw"}}
+        response (users-controller/sign-in-api request)]
+    (testing "is a successful response"
+      (is (= 200 (-> response :status))))
+    (testing "logs the user in"
+      (is (= "test" (-> response :session :current-user))))
+    (testing "returns the user"
+      (is (= "test" (get (json/parse-string (:body response)) "login"))))))
+
+(deftest signing-in-unsuccessfully
+  (user/sign-up! (factory/user {:login "test" :password "pw" :password-confirmation "pw"}))
+  (let [request {:params {:login "test" :password "bad"}}
+        response (users-controller/sign-in-api request)]
+    (testing "is an unprocessable entity"
+      (is (= 403 (-> response :status))))
+    (testing "does not log the user in"
+      (is (nil? (-> response :session :current-user))))
+    (testing "returns the errors"
+      (is (= ["does not match"] (get (json/parse-string (:body response)) "password"))))))

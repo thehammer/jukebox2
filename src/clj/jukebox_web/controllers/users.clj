@@ -32,12 +32,21 @@
       {:status 302 :headers {"Location" "/playlist"} :session {:current-user (-> request :params :login)}}
       (view/sign-up request errors))))
 
+(defn sign-in-api [request]
+  (let [{:keys [login password]} (:params request)]
+    (if (user/authenticate login password)
+      {:status 200
+       :body (json/generate-string (user/->resource (user/find-by-login login)))
+       :session {:current-user login}}
+      {:status 403
+       :body (json/generate-string {:login ["does not match"]
+                                    :password ["does not match"]})})))
+
 (defn sign-up-api [request]
-  (prn request)
   (let [[user errors] (user/sign-up! (:params request))]
     (if (empty? errors)
       {:status 200
-       :body (json/generate-string user)
+       :body (json/generate-string (user/->resource user))
        :session {:current-user (-> request :params :login)}}
       {:status 422
        :headers {"Content-Type" "application/json"}

@@ -19,8 +19,30 @@
             [:b.caret]]]])
     (template/node
       [:ul.nav.nav-pills
-        [:li [:a.#sign-in {:href "#"} "Sign In"]]
+        [:li [:a.#sign-in {:href "#sign-in-modal" :data-toggle "modal"} "Sign In"]]
         [:li [:a.#sign-up {:href "#sign-up-modal" :data-toggle "modal"} "Sign Up"]]])))
+
+(defn render-sign-in-modal []
+  (template/node
+    [:div#sign-in-modal.modal.hide.fade {:role "dialog" :tabindex "-1" :aria-labelledby "sign-in-modal-label" :aria-hidden "true"}
+      [:div.modal-header
+        [:button.close {:type "button" :data-dismiss "modal" :aria-hidden "true"} "×"]
+        [:h3#sign-in-modal-label "Sign In"]]
+      [:form#sign-in-form.form-horizontal {:action "/users/sign-in-api" :method "POST"}
+        [:div.modal-body
+          [:div.login.control-group
+            [:label.control-label "Login"]
+            [:div.controls
+              [:input {:type "text" :name "login"}]
+              [:div.errors]]]
+          [:div.password.control-group
+            [:label.control-label "Password"]
+            [:div.controls
+              [:input {:type "password" :name "password"}]
+              [:div.errors]]]]
+        [:div.modal-footer
+          [:button.btn {:data-dismiss "modal" :aria-hidden "true"} "Close"]
+          [:input#sign-in-button.btn.btn-primary {:type "submit" :value "Sign In"}]]]]))
 
 (defn render-sign-up-modal []
   (template/node
@@ -35,7 +57,7 @@
             [:div.controls
               [:input {:type "text" :name "login"}]
               [:div.errors]]]
-          [:div..password.control-group
+          [:div.password.control-group
             [:label.control-label "Password"]
             [:div.controls
               [:input {:type "password" :name "password"}]
@@ -74,29 +96,43 @@
   (if (.isSuccess (.-target response))
     (do
       (swap! jukebox/current assoc "current-user" (-> response .-target .getResponseJson js->clj)) 
-      (.modal (js/jQuery "#sign-up-modal") "hide")
-      (show-user))
+      (.modal (js/jQuery "#sign-up-modal") "hide"))
     (doseq [[field errors] (-> response .-target .getResponseJson js->clj)]
       (render-errors field errors))))
 
 (defn sign-up [event]
   (ev/prevent-default event)
-  (.log js/console (dom/by-id "sign-up-form"))
   (xhr/send "/users/sign-up-api"
             sign-up-response
             "POST"
             (form/getFormDataString (dom/by-id "sign-up-form")))
   (dom/log "signup"))
 
-(defn show-sign-in [])
+
+(defn sign-in-response [response]
+  (if (.isSuccess (.-target response))
+    (do
+      (swap! jukebox/current assoc "current-user" (-> response .-target .getResponseJson js->clj)) 
+      (.modal (js/jQuery "#sign-in-modal") "hide"))
+    (doseq [[field errors] (-> response .-target .getResponseJson js->clj)]
+      (render-errors field errors))))
+
+(defn sign-in [event]
+  (ev/prevent-default event)
+  (xhr/send "/users/sign-in-api"
+            sign-in-response
+            "POST"
+            (form/getFormDataString (dom/by-id "sign-in-form"))))
 
 (defn stage-modals []
+  (dom/append! (dom/by-id "modal-zone") (render-sign-in-modal))
   (dom/append! (dom/by-id "modal-zone") (render-sign-up-modal)))
 
 (defn attach-events []
   (ev/listen! (dom/by-id "sign-up-button") :click sign-up)
-  (ev/listen! (dom/by-id "sign-up") :click (partial clear-form "sign-up-form"))
-  (ev/listen! (dom/by-id "sign-in") :click show-sign-in))
+  (ev/listen! (dom/by-id "sign-in-button") :click sign-in)
+  (.on (js/jQuery "#sign-up-modal") "show" (partial clear-form "sign-up-form"))
+  (.on (js/jQuery "#sign-in-modal") "show" (partial clear-form "sign-in-form")))
 
 (add-watch jukebox/current-user-state :current-user (fn [_ _ _ state] (show-user state)))
 
