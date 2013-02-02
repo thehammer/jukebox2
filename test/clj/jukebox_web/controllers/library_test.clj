@@ -15,7 +15,6 @@
       (is (= ["artist" "artist2"]
              (map #(get % "artist") (json/parse-string (:body response))))))))
 
-
 (deftest return-albums-for-artist
   (let [response (library-controller/albums-for-artist {:params {:artist "artist"}})]
     (testing "renders json successfully"

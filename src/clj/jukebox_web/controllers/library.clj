@@ -5,11 +5,13 @@
             [jukebox-web.models.user :as user]))
 
 (defn upload [request]
-  (let [current-user "randomizer"]
-  ;(when-let [current-user (-> request :session :current-user)]
+  (if-let [current-user (-> request :session :current-user)]
     (let [{:keys [tempfile filename]} (-> request :params :file)]
-      (library/save-file! tempfile filename (user/find-by-login current-user))
-  "upload complete")))
+      {:status 200
+       :body (json/generate-string
+               (library/save-file! tempfile filename (user/find-by-login current-user)))})
+    {:status 403
+     :body (json/generate-string {:file ["must be logged in"]})}))
 
 (defn browse-root [request]
   (view/browse request library/*music-library-title* (library/list-directory)))

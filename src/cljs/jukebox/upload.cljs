@@ -35,7 +35,8 @@
       [:td "x"]]))
 
 (defn show-upload [event]
-  (dom/replace-children! (dom/by-id "content") (render-upload)))
+  (dom/replace-children! (dom/by-id "content") (render-upload))
+  (init-plupload))
 
 (defn files-added [plupload files]
   (doseq [file files]
@@ -59,16 +60,11 @@
                                          "max_file_size" "10MB"
                                          "drop_element" "uploader-dropzone"
                                          "autostart" true
-                                         "chunk_size" "1MB"
                                          "unique_names" false}))]
     (.init plupload)
     (.bind plupload "FilesAdded" files-added)
     (.bind plupload "Error" upload-error)
     (.bind plupload "UploadProgress" upload-progress)
     (.bind plupload "FileUploaded" upload-complete)))
-
-(defn attach-events []
-  (when-let [dropzone (dom/by-id "uploader-dropzone")]
-    (init-plupload)))
 
 (nav/add-gutter-event "library-upload" show-upload)
