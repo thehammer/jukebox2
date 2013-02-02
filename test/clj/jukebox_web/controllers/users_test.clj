@@ -61,18 +61,6 @@
       (is (nil? (:status response)))
       (is (nil? (:headers response))))))
 
-(deftest sign-out-users
-  (user/sign-up! (factory/user {:login "bob" :password "pass"}))
-  (users-controller/authenticate {:params {:login "bob" :password "pass"}})
-
-  (let [response (users-controller/sign-out {})]
-    (testing "redirects to the playlist"
-      (is (= 302 (:status response)))
-      (is (= {"Location" "/playlist"} (:headers response))))
-
-    (testing "removes the current user from the session"
-      (is (nil? (-> response :session :current-user))))))
-
 (deftest toggles-enabled
   (testing "redirects back to users index"
     (user/sign-up! (factory/user {:login "test"}))
@@ -121,3 +109,12 @@
       (is (nil? (-> response :session :current-user))))
     (testing "returns the errors"
       (is (= ["does not match"] (get (json/parse-string (:body response)) "password"))))))
+
+(deftest signing-out
+  (let [request {:session {:current-user "foo"}}
+        response (users-controller/sign-out request)]
+    (testing "is a successful response"
+      (is (= 200 (-> response :status))))
+    (testing "signs out user"
+      (is (nil? (-> response :session :current-user))))))
+

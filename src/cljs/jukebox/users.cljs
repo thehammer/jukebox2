@@ -16,7 +16,9 @@
           [:a.dropdown-toggle {:data-toggle "dropdown" :href "#"}
             [:img.avatar {:src (get current-user "avatar")}]
             (get current-user "login")
-            [:b.caret]]]])
+            [:b.caret]]
+         [:ul.dropdown-menu
+           [:li [:a#sign-out {:href "#"} "Sign Out"]]]]])
     (template/node
       [:ul.nav.nav-pills
         [:li [:a.#sign-in {:href "#sign-in-modal" :data-toggle "modal"} "Sign In"]]
@@ -90,7 +92,8 @@
                              (doall (map (fn [msg] [:li [:p.text-error msg]]) errors))])))
 
 (defn show-user [current-user]
-  (dom/replace-children! (dom/by-id "user") (render-user current-user)))
+  (dom/replace-children! (dom/by-id "user") (render-user current-user))
+  (attach-events))
 
 (defn sign-up-response [response]
   (if (.isSuccess (.-target response))
@@ -105,14 +108,13 @@
   (xhr/send "/users/sign-up-api"
             sign-up-response
             "POST"
-            (form/getFormDataString (dom/by-id "sign-up-form")))
-  (dom/log "signup"))
+            (form/getFormDataString (dom/by-id "sign-up-form"))))
 
 
 (defn sign-in-response [response]
   (if (.isSuccess (.-target response))
     (do
-      (swap! jukebox/current assoc "current-user" (-> response .-target .getResponseJson js->clj)) 
+      (swap! jukebox/current assoc "current-user" (-> response .-target .getResponseJson js->clj))
       (.modal (js/jQuery "#sign-in-modal") "hide"))
     (doseq [[field errors] (-> response .-target .getResponseJson js->clj)]
       (render-errors field errors))))
@@ -124,6 +126,14 @@
             "POST"
             (form/getFormDataString (dom/by-id "sign-in-form"))))
 
+(defn sign-out-response [response]
+  (if (.isSuccess (.-target response))
+    (swap! jukebox/current dissoc "current-user")))
+
+(defn sign-out [event]
+  (ev/prevent-default event)
+  (xhr/send "/users/sign-out" sign-out-response "POST"))
+
 (defn stage-modals []
   (dom/append! (dom/by-id "modal-zone") (render-sign-in-modal))
   (dom/append! (dom/by-id "modal-zone") (render-sign-up-modal)))
@@ -131,6 +141,7 @@
 (defn attach-events []
   (ev/listen! (dom/by-id "sign-up-button") :click sign-up)
   (ev/listen! (dom/by-id "sign-in-button") :click sign-in)
+  (ev/listen! (dom/by-id "sign-out") :click sign-out)
   (.on (js/jQuery "#sign-up-modal") "show" (partial clear-form "sign-up-form"))
   (.on (js/jQuery "#sign-in-modal") "show" (partial clear-form "sign-in-form")))
 
