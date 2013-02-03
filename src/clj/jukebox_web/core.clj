@@ -29,6 +29,7 @@
   (POST "/playlist/add" [] playlist-controller/add)
   (DELETE "/playlist/:id/delete" [] playlist-controller/delete)
   (GET ["/playlist/add/:song" :song #".*"] [] playlist-controller/add)
+  (POST ["/playlist/add-track/:id"] [] playlist-controller/add-track)
   (GET ["/playlist/add-album/:album-dir" :album-dir #".*"] [] playlist-controller/add-album)
   (GET "/player/play" [] player-controller/play)
   (GET "/player/pause" [] player-controller/pause)

@@ -48,6 +48,13 @@
     (json/response (build-playlist user))
     {:status 302 :headers {"Location" "/playlist"}})))
 
+(defn add-track [request]
+  (if-let [login (-> request :session :current-user)]
+    (let [track (library/find-by-id (-> request :params :track-id))]
+      (playlist/add-song! track login)
+      {:status 200})
+    {:status 403}))
+
 (defn add [request]
   (let [song (-> request :params :song)
         user (current-user request)]
