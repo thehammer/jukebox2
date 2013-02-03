@@ -50,9 +50,11 @@
 
 (defn add-track [request]
   (if-let [login (-> request :session :current-user)]
-    (let [track (library/find-by-id (-> request :params :track-id))]
-      (playlist/add-song! track login)
-      {:status 200})
+    (if-let [track (library/find-by-id (-> request :params :track-id))]
+      (do
+        (playlist/add-song! track login)
+        {:status 200})
+      {:status 404})
     {:status 403}))
 
 (defn add [request]

@@ -19,6 +19,11 @@
         response (playlist-controller/add-track request)]
     (is (= 403 (:status response)))))
 
+(deftest add-track-returns-missing-if-track-does-not-exist
+  (let [request {:params {:track-id 0} :session {:current-user "user"}}
+        response (playlist-controller/add-track request)]
+    (is (= 404 (:status response)))))
+
 (deftest add-track-adds-the-given-track-to-the-playlist
   (let [request {:params {:track-id 1} :session {:current-user "user"}}
         response (playlist-controller/add-track request)]
