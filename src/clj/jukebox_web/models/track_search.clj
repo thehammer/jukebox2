@@ -8,8 +8,6 @@
   (:import [java.io File]
            [java.util]))
 
-(def matcher (ref ""))
-
 (defn- audio [file]
   (re-find #"mp3|m4a$" file))
 
@@ -21,19 +19,16 @@
     (keep tracks (.listFiles file))
     (.toString file)))
 
-(defn matches? [file]
-  (.matches (.getName file) (str "(?i).*" @matcher ".*")))
-
-(defn matches [file]
+(defn matches [match? file]
   (if (.isDirectory file)
-    (if (matches? file)
+    (if (match? file)
       (tracks file)
-      (keep matches (.listFiles file)))
-    (if (matches? file)
+      (keep (partial matches match?) (.listFiles file)))
+    (if (match? file)
       (.toString file))))
 
 (defn execute [text]
-  (let [library (io/file library/*music-library*)]
-    (dosync (ref-set matcher text))
+  (let [library (io/file library/*music-library*)
+        match? (fn [file] (.matches (.getName file) (str "(?i).*" text ".*")))]
     (when (.exists library)
-      (filter audio (flatten (keep matches (.listFiles library)))))))
+      (filter audio (flatten (keep (partial matches match?) (.listFiles library)))))))
