@@ -18,6 +18,5 @@
   (testing "finds artwork for an album"
     (let [album (artwork/album-cover "21" "Adele")]
       (is (not (nil? album)))
-      (is (= {:large "http://userserve-ak.last.fm/serve/174s/55125087.png"
-              :extra-large "http://userserve-ak.last.fm/serve/_/55125087/21++600x600+HQ+PNG.png"}
-             album)))))
+      (is (.startsWith (:large album) "http://userserve-ak.last.fm/serve"))
+      (is (.startsWith (:extra-large album) "http://userserve-ak.last.fm/serve")))))
