@@ -11,7 +11,7 @@
   (use-fixtures :each with-test-music-library)
 
   (testing "returns directories and .mp3 files for a basic directory"
-    (is (= (file-set ["jukebox2.m4a" "jukebox2.mp3" "user" "user2"])
+    (is (= (file-set ["jukebox2.m4a" "jukebox2.mp3" "$pecial.mp3" "user" "user2"])
            (set (util-file/ls "test/music" "")))))
 
   (testing "returns relative paths for a directory + path"
@@ -19,5 +19,5 @@
            (set (util-file/ls "test/music" "user/artist")))))
 
   (testing "returns only known files(mp3 and m4a)"
-    (is (= (file-set ["jukebox2.m4a", "jukebox2.mp3"])
+    (is (= (file-set ["jukebox2.m4a", "$pecial.mp3", "jukebox2.mp3"])
            (set (util-file/ls "test/music" "" util-file/has-known-extension?))))))

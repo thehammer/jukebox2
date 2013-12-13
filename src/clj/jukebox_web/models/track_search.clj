@@ -6,7 +6,8 @@
   (:use [ring.util.codec :only (url-encode)]
         [jukebox-web.util.file :only (has-known-extension?)])
   (:import [java.io File]
-           [java.util]))
+           [java.util]
+           [java.util.regex Pattern]))
 
 (defn- audio [file]
   (re-find #"mp3|m4a$" file))
@@ -29,6 +30,6 @@
 
 (defn execute [text]
   (let [library (io/file library/*music-library*)
-        match? (fn [file] (.matches (.getName file) (str "(?i).*" text ".*")))]
+        match? (fn [file] (.matches (.getName file) (str "(?i).*" (Pattern/quote text) ".*")))]
     (when (.exists library)
       (filter audio (flatten (keep (partial matches match?) (.listFiles library)))))))

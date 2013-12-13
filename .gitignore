@@ -1,6 +1,7 @@
 /classes
 /lib
 /music
+/test/music/*
 /data
 /target
 /.sass-cache

@@ -12,6 +12,10 @@
     (is (= #{"jukebox2.m4a", "jukebox2.mp3"}
            (set (map filename (track-search/execute "jukebox"))))))
 
+  (testing "searches the file system for tracks with special characters"
+    (is (= #{"$pecial.mp3"}
+           (set (map filename (track-search/execute "$pecial"))))))
+
   (testing "searches file system for artist and returns all tracks"
     (let [tracks (track-search/execute "artist")]
       (is (= 4 (count tracks)))))
