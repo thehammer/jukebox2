@@ -88,7 +88,7 @@
       [:head
        [:title (str title " - jukebox2")]
        [:script {:src "http://use.typekit.com/ygg5mdb.js"}]
-       [:script {:src "/js/v/jquery-1.6.4.min.js"}]
+       [:script {:src "/js/v/jquery-3.7.1.min.js"}]
        [:script {:src "/js/v/underscore-min.js"}]
        [:script {:src "/js/jukebox.js"}]
        [:script {:src "/js/keyboard_shortcuts.js"}]

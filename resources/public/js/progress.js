@@ -9,7 +9,7 @@
       this.duration = parseInt($progress.data('duration'));
       this.playing = $('a.btn.pause').length > 0;
       self.render();
-      $('body').delegate('#player-controls', 'track.tick', function(e, data) {
+      $('body').on('track.tick', '#player-controls', function(e, data) {
         return self.tick(data);
       });
       this.songTimer = setInterval(function() {

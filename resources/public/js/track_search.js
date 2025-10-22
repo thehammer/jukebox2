@@ -11,18 +11,18 @@
       this.loggedIn = $('.logged-in').length > 0;
       this.el = $('#track-search-results');
       this.template = _.template($('#track-result-template').html());
-      $('#query').bind('ajax:success', this.render);
-      $('body').bind('click', function(e) {
+      $('#query').on('ajax:success', this.render);
+      $('body').on('click', function(e) {
         if ($(e.srcElement).parents('form#search').length) {
           return true;
         }
         return self.el.hide();
       });
-      $('#query').bind('focus', function(e) {
+      $('#query').on('focus', function(e) {
         return self.el.show();
       });
-      $('#query').bind('keyup', this.load);
-      this.el.find('li a').bind('click', function() {
+      $('#query').on('keyup', this.load);
+      this.el.find('li a').on('click', function() {
         return self.el.hide();
       });
     }
@@ -69,12 +69,12 @@
       }
       self = this;
       this.focused = this.el.find('li:first-child');
-      this.el.bind('keydown', function(e) {
+      this.el.on('keydown', function(e) {
         if (e.keyCode !== 13) {
           return e.preventDefault();
         }
       });
-      this.el.bind('keyup', function(e) {
+      this.el.on('keyup', function(e) {
         switch (e.keyCode) {
           case 40:
             self.focused = self.focused.next('li');
@@ -85,7 +85,7 @@
               return self.focused.find('a').focus();
             } else {
               $('#query').focus();
-              return self.el.unbind('keyup');
+              return self.el.off('keyup');
             }
         }
       });

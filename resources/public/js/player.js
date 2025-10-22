@@ -8,13 +8,13 @@
       this.trackTemplate = _.template($('#track-template').html());
       this.playerTemplate = _.template($('#player-template').html());
       this.title = $('#current_track .album-cover').data('title');
-      $('body').delegate('#track', 'track.render', function(e, data) {
+      $('body').on('track.render', '#track', function(e, data) {
         return self.render(data);
       });
-      $('body').delegate('#track', 'track.refresh', function() {
+      $('body').on('track.refresh', '#track', function() {
         return self.refresh();
       });
-      $('body').delegate('.controls', 'ajax:success', function(e, data) {
+      $('body').on('ajax:success', '.controls', function(e, data) {
         return self.render(data);
       });
       setInterval(function() {

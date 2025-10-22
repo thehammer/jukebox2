@@ -6,13 +6,13 @@
       self = this;
       this.template = _.template($('#playlist-template').html());
       this.url = '/playlist';
-      $('body').delegate('.controls', 'ajax:success', function() {
+      $('body').on('ajax:success', '.controls', function() {
         return self.load();
       });
-      $('body').delegate('a.delete-playlist-track', 'ajax:success', function(e, data) {
+      $('body').on('ajax:success', 'a.delete-playlist-track', function(e, data) {
         return self.render(data);
       });
-      $('.topbar').delegate('a.update-playlist', 'ajax:success', function(e, data) {
+      $('.topbar').on('ajax:success', 'a.update-playlist', function(e, data) {
         return self.render(data);
       });
       this.playlistTimer = setInterval(function() {

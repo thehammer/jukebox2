@@ -6,8 +6,8 @@
         evaluate: /<%([\s\S]+?)%>/g,
         interpolate: /\{\{(.+?)\}\}/g
       };
-      $('body').delegate('a[data-remote=true]', 'click', this.remote);
-      $('body').delegate('form[data-remote=true]', 'submit', this.remote);
+      $('body').on('click', 'a[data-remote=true]', this.remote);
+      $('body').on('submit', 'form[data-remote=true]', this.remote);
       $('.topbar').dropdown();
       Typekit.load();
     }

@@ -31,10 +31,10 @@
     function FileNotification(root, template) {
       FileNotification.__super__.constructor.call(this, root);
       this.template = _.template($(template).html());
-      this.root.delegate('li', 'ajax:success', this.success);
-      this.root.delegate('li', 'ajax:error', this.error);
-      this.root.delegate('li', 'upload:progress', this.progress);
-      this.root.delegate('li', 'notification:remove', this.remove);
+      this.root.on('ajax:success', 'li', this.success);
+      this.root.on('ajax:error', 'li', this.error);
+      this.root.on('upload:progress', 'li', this.progress);
+      this.root.on('notification:remove', 'li', this.remove);
     }
     FileNotification.prototype.render = function(data) {
       this.view = $(this.template({
@@ -73,7 +73,7 @@
         title: 'Now Playing',
         body: ''
       };
-      $('#enable-notifications').bind('click', this.askForPermission);
+      $('#enable-notifications').on('click', this.askForPermission);
     }
     PlayerNotification.prototype.render = function(options) {
       var body, notification, title, url, _ref;
@@ -88,7 +88,7 @@
       }, 5000);
     };
     PlayerNotification.prototype.renderButton = function() {
-      return $('#enable-notifications').text('Notifications Enabled').unbind('click');
+      return $('#enable-notifications').text('Notifications Enabled').off('click');
     };
     PlayerNotification.prototype.removeButton = function() {
       $('#enable-notifications').parent('li').remove();
